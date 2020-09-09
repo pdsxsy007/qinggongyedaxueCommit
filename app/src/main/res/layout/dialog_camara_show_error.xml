@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rl_bg"
+    android:background="@color/black1"
+    >
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginLeft="@dimen/dp5"
+        android:layout_marginTop="@dimen/dp45"
+
+        android:src="@mipmap/close" />
+
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未识别到有效二维码信息，请更换更清晰的照片或重新尝试"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/dp10"
+        android:layout_marginLeft="@dimen/dp10"
+        android:textStyle="bold"
+        android:maxLength="100"
+        android:ellipsize="end"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_result2"
+        android:layout_below="@id/tv_result"
+
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="轻触屏幕 继续扫描"
+        android:textColor="@color/gray"
+        android:textSize="12sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="@dimen/dp10"
+        android:layout_marginLeft="@dimen/dp10"
+        android:textStyle="bold"
+        android:maxLength="100"
+        android:ellipsize="end"
+        />
+
+</RelativeLayout>

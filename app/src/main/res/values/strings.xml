@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">i 轻工大</string>
+
+
+    <string name="input_phoneNum">登录账号</string>
+    <string name="input_passWord">登录密码</string>
+    <string name="login">登录</string>
+    <string name="exit_out">退出登录</string>
+    <string name="setting">设置</string>
+    <string name="tab_home">首页</string>
+    <string name="tab_service">应用服务</string>
+    <string name="tab_find">综合信息</string>
+    <string name="tab_my">个人中心</string>
+    <string name="find_pwd1">下一步，设置新密码</string>
+    <string name="find_pwd2">提交</string>
+    <string name="find_pwd3">上一步，信息验证</string>
+    <string name="fingerprint_account">Hello,%s</string>
+    <string name="fingerprintChangeTip">您设备的指纹发生了变化或系统出错,指纹登录已关闭.请使用其他方式登录后重新开启.</string>
+    <string name="add_new_website_short">打开扫一扫</string>
+    <string name="add_new_website_short2">打开课表</string>
+    <string name="disable_shortcut">取消</string>
+    <string name="disable_shortcut2">取消</string>
+
+    <string name="jwstr_scan_it">扫码</string>
+    <string name="jwstr_scan_text">将二维码放入框内，即可自动扫描 </string>
+    <string name="jwstr_prompt">Prompt</string>
+    <string name="jwstr_select_pic_from_album">选择相册中的图片</string>
+    <string name="jwstr_pic_no_qrcode">图中无二维码或二维码难以识别</string>
+    <string name="jwstr_camera_error">相机异常</string>
+    <string name="jwstr_confirm">Confirm</string>
+    <string name="login_info">登录说明：2020级新生用户名为准考证号，密码为zzuli+身份证后6位；2020级第二学位新生用户名为身份证号，密码为zzuli+报名时使用的手机号；在校生/教职工用户名为学/工号，默认密码为zzuli+身份证12-17位(详情请参考应用服务-用户手册)。
+                              \n根据招生批次，一些地区学生会先接到录取通知书，待相关部门完成编班之后方能登陆i轻工大APP，如新生遇不能登录的情况请耐心等待。</string>
+</resources>
