@@ -1,0 +1,12 @@
+{
+	"client":{
+		"cp_id":"890086000102249722",
+		"product_id":"7519896637536742273",
+		"client_id":"422141549627835456",
+		"client_secret":"9307D9245BE940E5A6EA6EED664DFF7DE8B9B4B73A00022EF414DA17973B4139",
+		"app_id":"100674355",
+		"package_name":"io.cordova.zhqy",
+		"api_key":"CgB6e3x9KHgqi9TidpKo6QHaCMfT7AcWqWvE3KsRPCfOXCF437vspO7GypX3B2JsLB2UzPFzvlO/owwNEHlZeRFw"
+	},
+	"configuration_version":"1.0"
+}

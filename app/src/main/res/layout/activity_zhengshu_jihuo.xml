@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/view2"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/title_bar_bg"
+
+        >
+        <RelativeLayout
+            android:id="@+id/layout_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:onClick="onBack">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp5"
+                android:src="@mipmap/navibar_back" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="@dimen/sp12"
+                android:text="数字证书管理"
+                android:textSize="@dimen/sp16"
+                android:textColor="@color/white"/>
+
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="@dimen/dp100"
+       android:background="@color/title_bar_bg"
+       android:orientation="vertical"
+       >
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/dp50"
+           android:orientation="horizontal">
+
+           <RelativeLayout
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               >
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:layout_alignParentRight="true"
+                   >
+                   <LinearLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:orientation="vertical"
+                       >
+                       <ImageView
+                           android:layout_width="@dimen/dp20"
+                           android:layout_height="@dimen/dp20"
+                           android:src="@mipmap/yuan"
+                           />
+                   </LinearLayout>
+
+
+                   <TextView
+                       android:layout_width="88dp"
+                       android:layout_height="1dp"
+                       android:background="@color/white"
+                       android:layout_marginLeft="@dimen/dp_10"
+                       android:alpha="0.5"
+                       />
+               </LinearLayout>
+
+           </RelativeLayout>
+
+           <RelativeLayout
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               >
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   >
+                   <TextView
+                       android:layout_width="88dp"
+                       android:layout_height="1dp"
+                       android:background="@color/white"
+                       android:layout_marginRight="@dimen/dp_10"
+                       android:alpha="0.5"
+                       />
+                   <ImageView
+                       android:layout_width="@dimen/dp20"
+                       android:layout_height="@dimen/dp20"
+                       android:src="@mipmap/yuan1"
+                       />
+
+
+               </LinearLayout>
+
+           </RelativeLayout>
+
+       </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/dp40"
+           android:orientation="horizontal">
+
+           <LinearLayout
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               android:gravity="center_horizontal"
+               >
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="身份验证"
+                   android:textColor="#1296db"
+                   android:textSize="@dimen/sp16"
+                   />
+
+               <TextView
+                   android:layout_width="@dimen/dp10"
+                   android:layout_height="1dp"
+                   android:background="@color/white"
+                   android:layout_marginLeft="@dimen/dp25"
+                   android:alpha="0.5"
+                   android:visibility="invisible"
+                   />
+           </LinearLayout>
+
+           <RelativeLayout
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               >
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:gravity="center_horizontal"
+                   >
+                   <TextView
+                       android:layout_width="@dimen/dp10"
+                       android:layout_height="1dp"
+                       android:background="@color/white"
+                       android:layout_marginRight="@dimen/dp25"
+                       android:alpha="0.5"
+                       android:visibility="invisible"
+                       />
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="激活"
+                       android:textColor="#ffffff"
+                       android:textSize="@dimen/sp16"
+                       />
+
+
+               </LinearLayout>
+
+           </RelativeLayout>
+
+       </LinearLayout>
+
+   </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp50">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请输入您的姓名、身份证号进行验证"
+            android:textSize="16sp"
+            android:layout_marginTop="@dimen/dp15"
+            android:layout_marginLeft="@dimen/dp_10"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
+        <requestFocus />
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="姓名"
+            android:gravity="start"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp16"
+            android:background="@null"
+            android:alpha="0.5"
+            android:padding="@dimen/sp12"/>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp1"
+        android:background="@color/white"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp1"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@color/view2"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
+        <requestFocus />
+        <EditText
+            android:id="@+id/et_cardnum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="身份证号"
+            android:gravity="start"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp16"
+            android:background="@null"
+            android:alpha="0.5"
+            android:padding="@dimen/sp12"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/rl_sign"
+            android:layout_width="120dp"
+            android:layout_height="@dimen/dp40"
+            android:background="@drawable/shape_button_blue"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp50"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="验证"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp16"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/colorPrimary"
+        >
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textSize="@dimen/sp16"
+            android:textColor="@android:color/white"
+            android:text="扫码验签结果"
+            android:layout_centerInParent="true"
+            />
+        <ImageView
+            android:id="@+id/tv_app_setting"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@mipmap/navibar_back"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="@dimen/dp5"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp130">
+
+        <ImageView
+            android:id="@+id/iv_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:layout_centerInParent="true"
+            android:src="@mipmap/icon_success"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp10"
+        android:layout_marginLeft="@dimen/dp_40"
+        android:layout_marginRight="@dimen/dp_40"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/dp20"
+        android:text=""
+        android:gravity="center"
+        android:textStyle="bold"
+        android:includeFontPadding="false"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/tv_shijian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp10"
+            android:layout_marginLeft="@dimen/dp_40"
+            android:layout_marginRight="@dimen/dp_40"
+            android:textSize="14sp"
+            android:text=""
+
+            />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp10"
+            android:layout_marginLeft="@dimen/dp_40"
+            android:layout_marginRight="@dimen/dp_40"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/sp14"
+            android:text=""
+            android:gravity="center"
+            />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:id="@+id/rl_show"
+        >
+        <Button
+            android:id="@+id/btn_show"
+            android:layout_width="@dimen/dp130"
+            android:layout_height="@dimen/dp30"
+            android:background="@drawable/shape_button_blue"
+            android:text="完整预览原文件"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"
+            ></Button>
+    </RelativeLayout>
+
+
+</LinearLayout>
