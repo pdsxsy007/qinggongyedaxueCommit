@@ -56,11 +56,7 @@ import io.cordova.zhqy.bean.AppListBean;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
 
-/**
- * Created by xsy on 2018/11/29 0029.
- * xiugai;''
- * jjjjs
- */
+
 
 public class AppSearchActivity extends BaseActivity2 implements PermissionsUtil.IPermissionsCallback{
     @BindView(R.id.tv_title)
