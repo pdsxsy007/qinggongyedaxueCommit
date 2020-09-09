@@ -60,10 +60,6 @@ import io.cordova.zhqy.utils.SPUtils;
 
 public class AppSearchActivity extends BaseActivity2 implements PermissionsUtil.IPermissionsCallback{
 
-
-
-
-
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.tv_result)
