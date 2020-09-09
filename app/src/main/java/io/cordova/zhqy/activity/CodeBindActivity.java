@@ -50,8 +50,6 @@ import static io.cordova.zhqy.utils.AesEncryptUtile.openid;
  */
 
 public class CodeBindActivity extends BaseActivity2 implements View.OnClickListener {
-
-
     @BindView(R.id.tv_title)
     TextView tvTitle;
 
