@@ -2779,15 +2779,12 @@ public class BaseWebActivity4 extends SupportActivity implements GestureDetector
 
             mwebView.stopLoading();
             mwebView.onPause();
-            //mwebView.clearHistory();
-            //mwebView.clearCache(true);
+
             mwebView.clearFormData();
-            //mwebView.clearSslPreferences();
-            WebStorage.getInstance().deleteAllData();
+
             mwebView.destroyDrawingCache();
             mwebView.removeAllViews();
-
-            // 最后再去webView.destroy();
+            //WebStorage.getInstance().deleteAllData();
             mwebView.destroy();
         }
     }

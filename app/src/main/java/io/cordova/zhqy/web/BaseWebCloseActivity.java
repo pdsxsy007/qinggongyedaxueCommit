@@ -2717,14 +2717,12 @@ String ratios = null;
 
             mwebView.stopLoading();
             mwebView.onPause();
-            //mwebView.clearHistory();
-            //mwebView.clearCache(true);
+
             mwebView.clearFormData();
-            //mwebView.clearSslPreferences();
-            WebStorage.getInstance().deleteAllData();
+
             mwebView.destroyDrawingCache();
             mwebView.removeAllViews();
-
+            //WebStorage.getInstance().deleteAllData();
             // 最后再去webView.destroy();
             mwebView.destroy();
         }

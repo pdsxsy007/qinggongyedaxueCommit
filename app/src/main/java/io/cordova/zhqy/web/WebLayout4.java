@@ -139,11 +139,11 @@ public class WebLayout4 implements IWebLayout {
 */
         setting.setJavaScriptEnabled(true);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
-        setting.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        setting.setDomStorageEnabled(true);
+        //setting.setCacheMode(WebSettings.LOAD_NO_CACHE);
+
         setting.setDatabaseEnabled(true);
-        setting.setAppCacheEnabled(true);
-        setting.setAllowFileAccess(false);
+
+        setting.setAllowFileAccess(true);
         setting.setAllowFileAccessFromFileURLs(false);
         setting.setSavePassword(false);
         setting.setSupportZoom(true);
@@ -151,6 +151,14 @@ public class WebLayout4 implements IWebLayout {
         setting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         setting.setUseWideViewPort(true);
 
+
+
+        mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.getSettings().setAppCacheMaxSize(1024*1024*8);
+        String appCachePath = activity.getCacheDir().getAbsolutePath();
+        mWebView.getSettings().setAppCachePath(appCachePath);
+        mWebView.getSettings().setAllowFileAccess(true);
+        setting.setAppCacheEnabled(true);
 
         if (imei.isEmpty()){
             String userAgent = setting.getUserAgentString();
