@@ -94,6 +94,7 @@ import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.JPluginPlatformInterface;
 import cn.jpush.android.api.JPushInterface;
 
+import io.cordova.zhqy.activity.DialogActivity;
 import io.cordova.zhqy.activity.FaceNewActivity;
 import io.cordova.zhqy.activity.InfoDetailsActivity;
 import io.cordova.zhqy.activity.InfoDetailsActivity2;
@@ -266,15 +267,19 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
             }
         }
 
-        /*Intent intent = new Intent(Main2Activity.this,InfoDetailsActivity.class);
-        intent.putExtra("appUrl","http://platform.gilight.cn/portal/portal-app/download/index.html");
-        startActivity(intent);*/
+       /* startActivity(new Intent(Main2Activity.this, DialogActivity.class));
+        overridePendingTransition(R.anim.bottom_in,R.anim.bottom_silent);*/
+
+
         //initChannel();
 
         //jPluginPlatformInterface = new JPluginPlatformInterface(this);
 
     }
-   /* JPluginPlatformInterface jPluginPlatformInterface;
+   /*
+   //此方法是华为EMUI服务版本过低的情况下，提示更新服务，更新完成之后可正常接收到厂商通知信息
+
+   JPluginPlatformInterface jPluginPlatformInterface;
 
     protected void onStart() {
         super.onStart();
