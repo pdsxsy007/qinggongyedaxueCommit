@@ -56,6 +56,7 @@ import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
+import io.cordova.zhqy.widget.CustomDialog;
 import io.cordova.zhqy.widget.MyDialog;
 import io.cordova.zhqy.widget.finger.CommonTipDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog;
@@ -373,7 +374,7 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
 
     private MyDialog m_Dialog;
     private void logOut() {
-        m_Dialog = new MyDialog(this, R.style.dialogdialog);
+       /* m_Dialog = new MyDialog(this, R.style.dialogdialog);
         Window window = m_Dialog.getWindow();
         window.setGravity(Gravity.CENTER);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_logout, null);
@@ -398,7 +399,26 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
                 m_Dialog.dismiss();
                 netExit();
             }
+        });*/
+        final CustomDialog dialog = new CustomDialog(AppSetting.this,R.layout.custom_dialog);
+        RelativeLayout rl_sure = dialog.findViewById(R.id.rl_sure);
+        RelativeLayout rl_sure1 = dialog.findViewById(R.id.rl_sure1);
+        rl_sure1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
         });
+        rl_sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                netExit();
+            }
+        });
+        dialog.show();
+
+
     }
 
     private void netExit() {

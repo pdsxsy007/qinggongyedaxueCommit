@@ -9,8 +9,7 @@ public class MyDialog extends Dialog {
 
 	public MyDialog(Context context, int theme) {
 		super(context, theme);
-		getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//设置Dialog背景透明
-		//getWindow().setDimAmount(0f);//设置Dialog窗口后面的透明度
+
 	}
 
 	protected MyDialog(Context context, boolean cancelable,
