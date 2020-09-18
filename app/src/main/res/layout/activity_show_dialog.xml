@@ -184,6 +184,19 @@
                 android:background="@drawable/shape_button_sign"
                 android:layout_marginBottom="@dimen/dp20"
                 />
+
+            <TextView
+                android:id="@+id/tv_sign_guoqi"
+                android:visibility="gone"
+                android:layout_width="@dimen/dp200"
+                android:layout_height="@dimen/dp40"
+                android:textColor="@android:color/white"
+                android:text="已过期"
+                android:gravity="center"
+                android:background="@drawable/shape_button_sign"
+                android:layout_marginBottom="@dimen/dp20"
+                />
+
             <TextView
                 android:id="@+id/tv_download_ca"
                 android:visibility="gone"

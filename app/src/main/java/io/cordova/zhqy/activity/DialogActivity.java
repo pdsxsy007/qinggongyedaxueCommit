@@ -84,6 +84,9 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
     @BindView(R.id.tv_signName)
     TextView tv_signName;
 
+    @BindView(R.id.tv_sign_guoqi)
+    TextView tv_sign_guoqi;
+
     String signId;
 
     String sendTime;
@@ -387,22 +390,17 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
 
 
     private void changeTVBgColor() {
-        long nowTime = SystemClock.currentThreadTimeMillis() ;//当前时间
+        long nowTime = System.currentTimeMillis();
         if(null != sendTime){
-            long beforeTime = Long.parseLong(sendTime);
-            if((nowTime-beforeTime) > 3600*1000){
-                tv_sign.setBackgroundColor(getResources().getColor(R.color.view2));
-                tv_sign.setTextColor(Color.parseColor("#000000"));
-                tv_sign.setAlpha(0.5f);
 
-                tv_sign.setText("已过期");
-                tv_sign.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ToastUtils.showToast(DialogActivity.this,"点击了");
-                    }
-                });
-                tv_sign.setClickable(false);
+            long beforeTime = Long.parseLong(sendTime);
+
+            if((nowTime-beforeTime) > 3600*1000){
+                tv_sign_guoqi.setBackgroundColor(getResources().getColor(R.color.view2));
+                tv_sign_guoqi.setTextColor(Color.parseColor("#000000"));
+                tv_sign_guoqi.setAlpha(0.5f);
+                tv_sign_guoqi.setVisibility(View.VISIBLE);
+                tv_sign.setVisibility(View.GONE);
             }
         }
 
