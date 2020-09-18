@@ -6,10 +6,7 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
-import io.cordova.zhqy.activity.LoginActivity;
 
 
 /**

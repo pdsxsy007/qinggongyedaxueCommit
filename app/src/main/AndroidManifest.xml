@@ -482,6 +482,10 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> </activity>
         <activity android:name=".activity.DialogActivity" />
+        <activity android:name=".activity.CertificateActivateNextTwoActivity" />
+        <activity android:name=".activity.FaceCertActivity" />
+        <activity android:name=".activity.FaceDialogActivity" />
+        <activity android:name=".activity.FaceDialogManagerActivity" />
     </application>
 
 </manifest>

@@ -267,7 +267,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
             }
         }
 
-       /* startActivity(new Intent(Main2Activity.this, DialogActivity.class));
+        /*startActivity(new Intent(Main2Activity.this, DialogActivity.class));
         overridePendingTransition(R.anim.bottom_in,R.anim.bottom_silent);*/
 
 
@@ -1133,7 +1133,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
     /**
      * 根据UserId 绑定Jpush*/
     private void bindJpush() {
-        OkGo.<String>get(UrlRes.HOME4_URL+UrlRes.Registration_Id)
+        OkGo.<String>get(UrlRes.HOME_URL+UrlRes.Registration_Id)
                 .tag("Jpush")
                 .params("equipType","android")
                 .params("userId",(String) SPUtils.get(getInstance(),"userId",""))
@@ -1593,6 +1593,10 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                                 SPUtils.put(getApplicationContext(),"TGC",tgt);
                                 SPUtils.put(getApplicationContext(),"username",s1);
                                 SPUtils.put(getApplicationContext(),"password",s2);
+
+                                String msspid = loginBean.getAttributes().getMsspid();
+                                SPUtils.put(getApplicationContext(),"msspID",msspid);
+
                                 webView.setWebViewClient(mWebViewClient);
                                 webView.loadUrl("http://iapp.zzuli.edu.cn/portal/login/appLogin");
                                 Intent intent = new Intent();

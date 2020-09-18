@@ -49,6 +49,7 @@ public class LoginBean {
 
         private String tgt;
         private String username;
+        private String msspid;
 
         public String getTgt() {
             return tgt;
@@ -64,6 +65,14 @@ public class LoginBean {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+
+        public String getMsspid() {
+            return msspid;
+        }
+
+        public void setMsspid(String msspid) {
+            this.msspid = msspid;
         }
     }
 }

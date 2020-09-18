@@ -203,6 +203,8 @@ public class CaptureActivity extends Activity implements
         animation.setRepeatMode(Animation.RESTART);
         scanLine.startAnimation(animation);
 
+
+
         ll_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -271,6 +273,51 @@ public class CaptureActivity extends Activity implements
         }
 
         inactivityTimer.onResume();
+
+        String clickWhich = getIntent().getStringExtra("clickWhich");
+        if(null != clickWhich){
+            if(clickWhich.equals("0")){
+                cameraManager.stopPreview();
+                handler = null;
+                if (isHasSurface) {
+                    initCamera(scanPreview.getHolder());
+                } else {
+                    scanPreview.getHolder().addCallback(CaptureActivity.this);
+                }
+
+                inactivityTimer.onResume();
+                capture_crop_view2.setVisibility(View.GONE);
+                scanCropView.setVisibility(View.VISIBLE);
+                rl_title.setVisibility(View.VISIBLE);
+                tag = 0;
+                iv_left.setImageResource(R.drawable.code2);
+                tv_left.setTextColor(Color.parseColor("#1d4481"));
+                tv_right.setTextColor(Color.parseColor("#ffffff"));
+                iv_right.setImageResource(R.drawable.yq2);
+                capture_mask_bottom.setVisibility(View.VISIBLE);
+            } else {
+                cameraManager.stopPreview();
+                handler = null;
+                if (isHasSurface) {
+                    initCamera(scanPreview.getHolder());
+                } else {
+                    scanPreview.getHolder().addCallback(CaptureActivity.this);
+                }
+
+                inactivityTimer.onResume();
+                capture_crop_view2.setVisibility(View.VISIBLE);
+                flowLineView.setCameraManager(cameraManager);
+                scanCropView.setVisibility(View.GONE);
+                rl_title.setVisibility(View.GONE);
+                capture_mask_bottom.setVisibility(View.INVISIBLE);
+                tag = 1;
+                iv_left.setImageResource(R.drawable.code1);
+                tv_left.setTextColor(Color.parseColor("#ffffff"));
+                tv_right.setTextColor(Color.parseColor("#1d4481"));
+                iv_right.setImageResource(R.drawable.yq1);
+            }
+        }
+
     }
 
     @Override

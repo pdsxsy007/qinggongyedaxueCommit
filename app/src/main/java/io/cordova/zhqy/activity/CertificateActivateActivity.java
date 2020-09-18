@@ -14,10 +14,12 @@ import butterknife.BindView;
 import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
+import io.cordova.zhqy.bean.BaseBean;
 import io.cordova.zhqy.bean.LoginBean;
 import io.cordova.zhqy.bean.NewStudentBean;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity;
+import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.PermissionsUtil;
@@ -67,11 +69,12 @@ public class CertificateActivateActivity extends BaseActivity {
     private void addData(String name, String cardNum) {
         ViewUtils.createLoadingDialog(this);
         String userId = (String) SPUtils.get(MyApp.getInstance(), "userId", "");
+        final String msspID = (String) SPUtils.get(CertificateActivateActivity.this, "msspID", "");
         try {
             String memberIdNumber = AesEncryptUtile.encrypt(cardNum,key) ;
             OkGo.<String>post(UrlRes.HOME_URL + UrlRes.getAuthCodeUrl)
                     .tag(this)
-                    .params("msspid","")
+                    .params("msspid",msspID)
                     .params("memberIdNumber",memberIdNumber)
                     .params("memberId",userId)
                     .params("memberNickname",name)
@@ -80,13 +83,15 @@ public class CertificateActivateActivity extends BaseActivity {
                         public void onSuccess(Response<String> response) {
                             Log.e("获取激活码",response.body());
                             ViewUtils.cancelLoadingDialog();
-                            LoginBean loginBean = JsonUtil.parseJson(response.body(),LoginBean.class);
-                            boolean success = loginBean.isSuccess();
+                            BaseBean baseBean = JsonUtil.parseJson(response.body(),BaseBean.class);
+                            boolean success = baseBean.isSuccess();
                             if(success){
                                 Intent intent = new Intent(CertificateActivateActivity.this,CertificateActivateNextActivity.class);
                                 startActivity(intent);
+                                FinishActivity.addActivity(CertificateActivateActivity.this);
+                                SPUtils.put(CertificateActivateActivity.this,"msspID",msspID);
                             }else {
-                                ToastUtils.showToast(CertificateActivateActivity.this,loginBean.getMsg());
+                                ToastUtils.showToast(CertificateActivateActivity.this,baseBean.getMsg());
                             }
 
 

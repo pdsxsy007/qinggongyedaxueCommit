@@ -332,6 +332,11 @@ public class SplashActivity extends AppCompatActivity {
                                     SPUtils.put(getApplicationContext(),"TGC",tgt);
                                     SPUtils.put(getApplicationContext(),"username",s1);
                                     SPUtils.put(getApplicationContext(),"password",s2);
+
+                                    String msspid = loginBean.getAttributes().getMsspid();
+                                    SPUtils.put(getApplicationContext(),"msspID",msspid);
+
+
                                /* webView.setWebViewClient(mWebViewClient);
                                 webView.loadUrl("http://iapp.zzuli.edu.cn/portal/login/appLogin");*/
                                     Intent intent = new Intent(MyApp.getInstance(),Main2Activity.class);

@@ -104,8 +104,7 @@ dependencies {
 
     /*注解*/
     implementation 'com.jakewharton:butterknife:8.4.0'
-    implementation files('libs\\clientutil.jar')
-    implementation files('libs\\cosssdk_release_V2.0.5R.jar')
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     /*通用adapter*/

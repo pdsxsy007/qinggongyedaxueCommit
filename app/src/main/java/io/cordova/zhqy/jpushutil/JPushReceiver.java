@@ -21,6 +21,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,12 +30,15 @@ import cn.jpush.android.api.JPushInterface;
 
 import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
+import io.cordova.zhqy.activity.DialogActivity;
 import io.cordova.zhqy.activity.MyShenqingActivity;
 import io.cordova.zhqy.activity.OaMsgActivity;
 import io.cordova.zhqy.activity.OpenClickActivity;
 import io.cordova.zhqy.activity.SplashActivity;
 import io.cordova.zhqy.activity.SystemMsgActivity;
+import io.cordova.zhqy.bean.NoticeCaBean;
 import io.cordova.zhqy.utils.ExampleUtil;
+import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
@@ -42,6 +47,7 @@ import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static cn.jpush.android.api.JPushInterface.clearAllNotifications;
 
 
 /**
@@ -66,9 +72,31 @@ public class JPushReceiver extends BroadcastReceiver {
                 Log.e(TAG, "[MyReceiver] 接收自定义消息 : "+ bundle.getString(JPushInterface.EXTRA_EXTRA));
                 //ToastUtils.showToast(context,"[MyReceiver] 接收自定义消息");
                 //processCustomMessage(context,bundle);
-                String msg =bundle.getString(JPushInterface.EXTRA_MESSAGE);
-                String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
-                showNotification(context,bundle.getString(JPushInterface.EXTRA_EXTRA),msg,title);
+                clearAllNotifications(context);
+                String string = bundle.getString(JPushInterface.EXTRA_EXTRA);
+                if(string.contains("sign")){
+
+                    NoticeCaBean noticeCaBean = JsonUtil.parseJson(string,NoticeCaBean.class);
+                    String sign = noticeCaBean.getSign();
+                    String signDataId = noticeCaBean.getSignDataId();
+                    String sendTime = noticeCaBean.getSendTime();
+                    String messageId = noticeCaBean.getMessageId();
+                    String title = noticeCaBean.getTitle();
+                    Intent intent1 = new Intent(context, DialogActivity.class);
+                    intent1.putExtra("fromWhere","notice");
+                    intent1.putExtra("signId",signDataId);
+                    intent1.putExtra("sendTime",sendTime);
+                    intent1.putExtra("messageId",messageId);
+                    intent1.putExtra("title",title);
+                    context.startActivity(intent1);
+
+
+                }else {
+                    String msg =bundle.getString(JPushInterface.EXTRA_MESSAGE);
+                    String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
+                    showNotification(context,bundle.getString(JPushInterface.EXTRA_EXTRA),msg,title);
+                }
+
 
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                     Log.e(TAG, "[MyReceiver] 接收到推送下来的通知"+ JPushInterface.EXTRA_MESSAGE);

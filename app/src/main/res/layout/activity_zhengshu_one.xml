@@ -56,15 +56,27 @@
         android:gravity="center_vertical"
         android:background="@color/white">
 
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_weight="1"
-            android:text="查看证书"
-            android:gravity="center|start"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sp16"
-            android:padding="@dimen/sp12"/>
+            android:gravity="center_vertical"
+            >
+            <ImageView
+                android:src="@mipmap/see_ca"
+                android:layout_width="@dimen/dp30"
+                android:layout_height="@dimen/dp25"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看证书"
+                android:gravity="center|start"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp16"
+                android:padding="@dimen/sp8"/>
+        </LinearLayout>
+
 
         <ImageView
             android:layout_width="wrap_content"
@@ -88,55 +100,6 @@
         android:layout_height="@dimen/dp1"
         />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp80"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="更换新设备"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sp16"
-            android:padding="@dimen/sp12"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="需人脸识别验证"
-                    android:textSize="@dimen/sp14"
-                    android:padding="@dimen/sp12"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@mipmap/iv_go"
-                    android:padding="@dimen/sp12"
-                    android:layout_gravity="center"
-                    android:visibility="visible"
-                    />
-            </LinearLayout>
-
-        </RelativeLayout>
-
-
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp1"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -145,108 +108,10 @@
         android:gravity="center_vertical"
         android:background="@color/white">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PIN码忘记"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sp16"
-            android:padding="@dimen/sp12"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="需人脸识别验证"
-                    android:textSize="@dimen/sp14"
-                    android:padding="@dimen/sp12"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@mipmap/iv_go"
-                    android:padding="@dimen/sp12"
-                    android:layout_gravity="center"
-                    android:visibility="visible"
-                    />
-            </LinearLayout>
-
-        </RelativeLayout>
-
-
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp1"
-        />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp80"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="证书激活"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sp16"
-            android:padding="@dimen/sp12"/>
-
-        <RelativeLayout
-            android:id="@+id/rl_jihuo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="需人脸识别验证"
-                    android:textSize="@dimen/sp14"
-                    android:padding="@dimen/sp12"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@mipmap/iv_go"
-                    android:padding="@dimen/sp12"
-                    android:layout_gravity="center"
-                    android:visibility="visible"
-                    />
-            </LinearLayout>
-
-        </RelativeLayout>
-
-
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp1"
-        />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp80"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@color/white">
+        <ImageView
+            android:src="@mipmap/delete_ca"
+            android:layout_width="@dimen/dp30"
+            android:layout_height="@dimen/dp25"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -254,7 +119,7 @@
             android:text="删除证书"
             android:textColor="@color/black"
             android:textSize="@dimen/sp16"
-            android:padding="@dimen/sp12"/>
+            android:padding="@dimen/sp8"/>
 
         <RelativeLayout
             android:id="@+id/rl_delete"
@@ -287,6 +152,174 @@
 
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp1"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp80"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/white">
+
+        <ImageView
+            android:src="@mipmap/download_ca"
+            android:layout_width="@dimen/dp30"
+            android:layout_height="@dimen/dp25"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="重新下载证书"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp16"
+            android:padding="@dimen/sp8"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_jihuo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="需人脸识别验证"
+                    android:textSize="@dimen/sp14"
+                    android:padding="@dimen/sp12"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/iv_go"
+                    android:padding="@dimen/sp12"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp1"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp80"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更换新设备"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp16"
+            android:padding="@dimen/sp12"/>
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="需人脸识别验证"
+                    android:textSize="@dimen/sp14"
+                    android:padding="@dimen/sp12"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/iv_go"
+                    android:padding="@dimen/sp12"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp1"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_faceService"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp80"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/white">
+
+        <ImageView
+            android:src="@mipmap/face_ca"
+            android:layout_width="@dimen/dp30"
+            android:layout_height="@dimen/dp25"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="人脸采集维护"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp16"
+            android:padding="@dimen/sp8"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/sp14"
+                    android:padding="@dimen/sp12"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/iv_go"
+                    android:padding="@dimen/sp12"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp1"

@@ -34,21 +34,29 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.org.bjca.signet.coss.api.SignetCossApi;
+import cn.org.bjca.signet.coss.bean.CossGetCertResult;
+import cn.org.bjca.signet.coss.component.core.enums.CertType;
+import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.activity.AppSetting;
+import io.cordova.zhqy.activity.CertificateActivateActivity;
 import io.cordova.zhqy.activity.LoginActivity2;
 import io.cordova.zhqy.activity.ManagerCertificateOneActivity;
 import io.cordova.zhqy.activity.MyCollectionActivity;
 import io.cordova.zhqy.activity.MyDataActivity;
 import io.cordova.zhqy.activity.MyToDoMsgActivity;
+import io.cordova.zhqy.bean.CheckRoleCodeBean;
 import io.cordova.zhqy.bean.CountBean;
 import io.cordova.zhqy.bean.MyCollectionBean;
+import io.cordova.zhqy.bean.NoticeInfoBean;
 import io.cordova.zhqy.bean.OAMsgListBean;
 import io.cordova.zhqy.bean.ServiceAppListBean;
 import io.cordova.zhqy.bean.UserMsgBean;
@@ -59,6 +67,7 @@ import io.cordova.zhqy.utils.DargeFaceByMefColletUtils;
 import io.cordova.zhqy.utils.DargeFaceByMefgUtils;
 import io.cordova.zhqy.utils.DargeFaceUtils;
 import io.cordova.zhqy.utils.FinishActivity;
+import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.LighterHelper;
 import io.cordova.zhqy.utils.MobileInfoUtils;
 import io.cordova.zhqy.utils.MyApp;
@@ -72,6 +81,7 @@ import io.cordova.zhqy.utils.netState;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
 import io.cordova.zhqy.widget.XCRoundImageView;
+import io.cordova.zhqy.zixing.activity.CaptureActivity;
 import me.samlss.lighter.Lighter;
 import me.samlss.lighter.interfaces.OnLighterListener;
 import me.samlss.lighter.parameter.Direction;
@@ -80,6 +90,7 @@ import me.samlss.lighter.parameter.MarginOffset;
 import me.samlss.lighter.shape.CircleShape;
 
 
+import static io.cordova.zhqy.UrlRes.findLoginTypeListUrl;
 import static io.cordova.zhqy.utils.MyApp.getInstance;
 
 /**
@@ -124,6 +135,15 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
     @BindView(R.id.rl_in)
     RelativeLayout rl_in;
 
+    @BindView(R.id.ll_isShow)
+    LinearLayout ll_isShow;
+    @BindView(R.id.ll_sign)
+    LinearLayout ll_sign;
+    @BindView(R.id.ll_yan_sign)
+    LinearLayout ll_yan_sign;
+    @BindView(R.id.tv_name)
+    TextView tv_name;
+
     boolean isLogin = false;
     BadgeView badge1;
     @Override
@@ -161,7 +181,151 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
         registerBoradcastReceiver2();
         registerBoradcastReceiver3();
         registerBoradcastReceiver4();
+        registerBoradcastReceiver5();
 
+        getCaShowInfo();
+
+        ll_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                permissionsUtil=  PermissionsUtil
+                        .with(MyPre2Fragment.this)
+                        .requestCode(1)
+                        .isDebug(true)//开启log
+                        .permissions(PermissionsUtil.Permission.Camera.CAMERA,PermissionsUtil.Permission.Storage.READ_EXTERNAL_STORAGE,PermissionsUtil.Permission.Storage.WRITE_EXTERNAL_STORAGE)
+                        .request();
+
+                if(isOpen == 1){
+                    Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                    intent.putExtra("clickWhich","0");
+                    startActivity(intent);
+                }
+            }
+        });
+
+        ll_yan_sign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                permissionsUtil=  PermissionsUtil
+                        .with(MyPre2Fragment.this)
+                        .requestCode(1)
+                        .isDebug(true)//开启log
+                        .permissions(PermissionsUtil.Permission.Camera.CAMERA,PermissionsUtil.Permission.Storage.READ_EXTERNAL_STORAGE,PermissionsUtil.Permission.Storage.WRITE_EXTERNAL_STORAGE)
+                        .request();
+
+                if(isOpen == 1){
+                    Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                    intent.putExtra("clickWhich","1");
+                    startActivity(intent);
+                }
+            }
+        });
+
+    }
+
+
+
+    private String certContent = "";
+    private int flag = 0;
+    /**
+     * 查看证书
+     */
+    private void checkCertInfo() {
+
+        String msspID = (String) SPUtils.get(getActivity(), "msspID", "");
+        if(msspID.equals("")){
+            tv_name.setText("下载");
+            flag = 1;
+
+        }else {
+            final CossGetCertResult result = SignetCossApi.getCossApiInstance(AesEncryptUtile.APP_ID, AesEncryptUtile.CA_ADDRESS).cossGetCert(getActivity(), msspID, CertType.ALL_CERT);
+            HashMap<CertType, String> certMap = result.getCertMap();
+
+            for(HashMap.Entry<CertType, String> entry : certMap.entrySet()){
+                //System.out.println("key = " + entry.getKey() + ", value = " + entry.getValue());
+                if(entry.getValue() != null){
+                    certContent = entry.getValue();
+                }
+            }
+
+            if(!certContent.equals("")){//证书已存在
+                tv_name.setText("进入");
+                flag = 0;
+            }else {//证书不存在
+                tv_name.setText("下载");
+                flag = 1;
+            }
+        }
+
+        rl_in.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (flag){
+                    case 0://进入
+                        Intent intent = new Intent(MyApp.getInstance(), ManagerCertificateOneActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 1://安装
+                        Intent intent1 = new Intent(MyApp.getInstance(), CertificateActivateActivity.class);
+                        startActivity(intent1);
+                        break;
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 判断角色是否展示Ca模块
+     */
+    private void getCaShowInfo() {
+
+        OkGo.<String>get(UrlRes.HOME_URL +findLoginTypeListUrl)
+                .tag(this)
+                .params("type","enableShowCertificate")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("展示ca类型", response.body());
+                        //rolecodes
+                        CheckRoleCodeBean checkRoleCodeBean = JsonUtil.parseJson(response.body(), CheckRoleCodeBean.class);
+                        boolean success = checkRoleCodeBean.getSuccess();
+                        if (success) {
+                            List<CheckRoleCodeBean.Obj> obj = checkRoleCodeBean.getObj();
+                            if (null != obj) {
+                                String rolecodes = (String) SPUtils.get(getActivity(), "rolecodes", "");
+                                String[] split = rolecodes.split(",");
+                                for (int j = 0; j < split.length; j++) {
+                                    String userRole = split[j];
+                                    for (int i = 0; i < obj.size(); i++) {
+                                        if (obj.get(i).getConfigValue().contains(userRole)) {//符合后台提供显示角色的类型
+
+                                            ll_isShow.setVisibility(View.VISIBLE);
+                                        }
+
+                                    }
+
+                                }
+
+                                if(ll_isShow.isShown()){
+                                    checkCertInfo();
+                                }
+
+
+                            }
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
     }
 
     private void registerBoradcastReceiverCollet() {
@@ -184,6 +348,27 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
             }
         }
     };
+
+    private void registerBoradcastReceiver5() {
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction("refreshCAResult");
+        //注册广播
+        getActivity().registerReceiver(broadcastReceiverCAResult, myIntentFilter);
+    }
+
+    private BroadcastReceiver broadcastReceiverCAResult = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if(action.equals("refreshCAResult")){
+
+                checkCertInfo();
+            }
+        }
+    };
+
 
     private void registerBoradcastReceiver4() {
         IntentFilter myIntentFilter = new IntentFilter();
@@ -406,7 +591,7 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
     }
 
     /**点击事件*/
-    @OnClick({R.id.rv_user_data, R.id.rv_my_collection, R.id.rv_my_to_do_msg, R.id.exit_login,R.id.tv_app_setting1,R.id.tv_app_msg,R.id.rl_in})
+    @OnClick({R.id.rv_user_data, R.id.rv_my_collection, R.id.rv_my_to_do_msg, R.id.exit_login,R.id.tv_app_setting1,R.id.tv_app_msg})
     public void onViewClicked(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -436,10 +621,7 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
                     FinishActivity.addActivity(getActivity());
                 }
                 break;
-            case R.id.rl_in:
-                intent = new Intent(MyApp.getInstance(), ManagerCertificateOneActivity.class);
-                startActivity(intent);
-                break;
+
         }
     }
 
@@ -1155,6 +1337,7 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
         getActivity().unregisterReceiver(broadcastReceiverCollet);
         getActivity().unregisterReceiver(broadcastReceiverFace);
         getActivity().unregisterReceiver(broadcastReceiverShoucang);
+        getActivity().unregisterReceiver(broadcastReceiverCAResult);
     }
 
     CountBean countBean1;

@@ -121,11 +121,13 @@ import gdut.bsx.share2.Share2;
 import gdut.bsx.share2.ShareContentType;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
+import io.cordova.zhqy.activity.DialogActivity;
 import io.cordova.zhqy.activity.FaceYiQingActivity;
 import io.cordova.zhqy.activity.LoginActivity2;
 import io.cordova.zhqy.adapter.BrowserAdapter;
 import io.cordova.zhqy.bean.AppOrthBean;
 import io.cordova.zhqy.bean.BaseBean;
+import io.cordova.zhqy.bean.CheckRoleCodeBean;
 import io.cordova.zhqy.bean.DownLoadBean;
 import io.cordova.zhqy.bean.ImeiBean;
 import io.cordova.zhqy.bean.LocalFaceBean;
@@ -134,12 +136,14 @@ import io.cordova.zhqy.bean.LocationBean;
 import io.cordova.zhqy.bean.LocationBean2;
 import io.cordova.zhqy.bean.LogInTypeBean;
 import io.cordova.zhqy.bean.NaturePicBean;
+import io.cordova.zhqy.bean.SignCAResultBean;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity2;
 import io.cordova.zhqy.utils.BitmapUtils;
 import io.cordova.zhqy.utils.ChangeBrightnessUtils;
 import io.cordova.zhqy.utils.CookieUtils;
 import io.cordova.zhqy.utils.DensityUtil;
+import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MobileInfoUtils;
 import io.cordova.zhqy.utils.MyApp;
@@ -167,6 +171,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 import static android.webkit.WebSettings.LOAD_NO_CACHE;
 import static io.cordova.zhqy.UrlRes.HOME_URL;
 import static io.cordova.zhqy.UrlRes.addPortalReadingAccessUrl;
+import static io.cordova.zhqy.UrlRes.findLoginTypeListUrl;
 import static io.cordova.zhqy.UrlRes.functionInvocationLogUrl;
 import static io.cordova.zhqy.activity.SplashActivity.getLocalVersionName;
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
@@ -224,6 +229,7 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
     @Override
     protected void initView() {
         super.initView();
+
         downLoadType = (String) SPUtils.get(BaseWebCloseActivity.this, "downLoadType", "");
         ButterKnife.bind(this);
         mLocationClient = new LocationClient(this);
@@ -365,10 +371,16 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
 
         registerBoradcastReceiver();
         registerBoradcastReceiver2();
+        registerBoradcastReceiver3();
     }
 
 
-
+    private void registerBoradcastReceiver3() {
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction("addJsResultData");
+        //注册广播
+        registerReceiver(addJsResultDataReceiver, myIntentFilter);
+    }
 
     private void registerBoradcastReceiver2() {
         IntentFilter myIntentFilter = new IntentFilter();
@@ -377,6 +389,54 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
         registerReceiver(broadcastReceiver2, myIntentFilter);
     }
 
+
+    private BroadcastReceiver addJsResultDataReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if(action.equals("addJsResultData")){
+                String signature = intent.getStringExtra("signature");
+                String cert = intent.getStringExtra("cert");
+                String signId = intent.getStringExtra("signId");
+                String message = intent.getStringExtra("message");
+                SignCAResultBean signCAResultBean = new SignCAResultBean();
+
+                if(null != signature){
+                    signCAResultBean.setSuccess(true);
+                    signCAResultBean.setMessage("签名成功");
+                    signCAResultBean.setCert(cert);
+                    signCAResultBean.setSignature(signature);
+                    signCAResultBean.setSignId(signId);
+                }else {
+                    signCAResultBean.setSuccess(false);
+                    if(null != message){
+                        signCAResultBean.setMessage(message);
+                    }else {
+                        signCAResultBean.setMessage("签名失败");
+                    }
+
+                    signCAResultBean.setCert("");
+                    signCAResultBean.setSignature("");
+                    signCAResultBean.setSignId(signId);
+                }
+                Gson gson = new Gson();
+                String s = gson.toJson(signCAResultBean);
+                String jsonParams = s;
+                String url2 = "javascript:getCAResultParams('"+jsonParams+"')";
+                mAgentWeb.getWebCreator().getWebView().evaluateJavascript(url2, new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        //此处为 js 返回的结果
+                        Log.e("value",value);
+                    }
+                });
+
+
+            }
+        }
+    };
 
     private BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() {
 
@@ -1793,6 +1853,60 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
         }
 
 
+
+
+
+        @JavascriptInterface
+        public void nativeCASign(final String invocationLogAppId,final String invocationLogFunction,final String signDataId,final String sendTime,final boolean closeFlag,final String title) {
+            Log.e("nativeCASign","nativeCASign执行了");
+            String username = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
+            String userId  = null;
+            try {
+                userId = AesEncryptUtile.encrypt(username+ "_"+ Calendar.getInstance().getTimeInMillis(),key);
+                OkGo.<String>post(HOME_URL+functionInvocationLogUrl)
+                        .params("invocationLogAppId",invocationLogAppId)
+                        .params("invocationLogMember",userId)
+                        .params("invocationLogFunction",invocationLogFunction)
+                        .params("domainName",appServiceUrl)
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(Response<String> response) {
+
+                                Log.e("js调用扫码",response.body());
+
+                                AppOrthBean appOrthBean = JsonUtil.parseJson(response.body(),AppOrthBean.class);
+                                boolean success = appOrthBean.getSuccess();
+                                if(success == true){
+                                    final String invocationLogFunction = appOrthBean.getObj().getInvocationLogFunction();
+                                    if(invocationLogFunction.equals("nativeCASign")){
+                                        deliver.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                showDialogActivity(invocationLogAppId,invocationLogFunction,signDataId,sendTime,closeFlag,title);
+
+                                            }
+                                        });
+                                    }
+                                }else {
+                                    ToastUtils.showToast(BaseWebCloseActivity.this,"没有使用该功能的权限!");
+
+                                }
+                            }
+                            @Override
+                            public void onError(Response<String> response) {
+                                super.onError(response);
+                                Log.e("s",response.toString());
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
         /**关闭当前页面*/
         @JavascriptInterface
         public void closeCurrentPage() {
@@ -1843,7 +1957,93 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
         }
     }
 
-String ratios = null;
+    private int isture = 0;
+    private int showFlag = 0;
+    private void showDialogActivity(String invocationLogAppId, String invocationLogFunction, final String signDataId, final String sendTime, final boolean closeFlag, final String title) {
+
+        OkGo.<String>get(UrlRes.HOME_URL +findLoginTypeListUrl)
+                .tag(this)
+                .params("type","enableShowCertificate")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("展示ca类型", response.body());
+                        //rolecodes
+                        CheckRoleCodeBean checkRoleCodeBean = JsonUtil.parseJson(response.body(), CheckRoleCodeBean.class);
+                        boolean success = checkRoleCodeBean.getSuccess();
+                        if (success) {
+                            List<CheckRoleCodeBean.Obj> obj = checkRoleCodeBean.getObj();
+                            if (null != obj) {
+                                String rolecodes = (String) SPUtils.get(BaseWebCloseActivity.this, "rolecodes", "");
+                                String[] split = rolecodes.split(",");
+                                for (int j = 0; j < split.length; j++) {
+                                    String userRole = split[j];
+                                    for (int i = 0; i < obj.size(); i++) {
+                                        if (obj.get(i).getConfigValue().contains(userRole)) {//符合后台提供显示角色的类型
+
+                                            showFlag = 1;
+                                        }
+
+                                    }
+
+                                }
+
+                                if(showFlag == 1){//有权限弹出CA DialogActivity
+
+                                    Log.e("signId",signDataId);
+                                    Log.e("sendTime",sendTime);
+                                    Intent intent = new Intent(BaseWebCloseActivity.this, DialogActivity.class);
+                                    intent.putExtra("fromWhere","qrScan");
+                                    intent.putExtra("signId",signDataId);
+                                    intent.putExtra("sendTime",sendTime);
+                                    intent.putExtra("title",title);
+                                    startActivity(intent);
+
+                                    Log.e("closeFlag",closeFlag+"");
+                                    if(closeFlag == true){
+                                        FinishActivity.addActivity(BaseWebCloseActivity.this);
+                                        isture = 1;
+                                    }
+                                }else {
+                                    //ToastUtils.showToast(BaseWebCloseActivity.this,"当前用户无操作权限");
+
+                                    SignCAResultBean signCAResultBean = new SignCAResultBean();
+                                    signCAResultBean.setSuccess(true);
+                                    signCAResultBean.setMessage("当前用户无操作权限");
+                                    signCAResultBean.setCert("");
+                                    signCAResultBean.setSignature("");
+                                    signCAResultBean.setSignId(signDataId);
+                                    Gson gson = new Gson();
+                                    String s = gson.toJson(signCAResultBean);
+                                    String jsonParams = s;
+                                    String url2 = "javascript:getCAResultParams('"+jsonParams+"')";
+                                    mAgentWeb.getWebCreator().getWebView().evaluateJavascript(url2, new ValueCallback<String>() {
+                                        @Override
+                                        public void onReceiveValue(String value) {
+                                            //此处为 js 返回的结果
+                                            Log.e("value",value);
+                                        }
+                                    });
+
+                                }
+
+
+                            }
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+    String ratios = null;
     private void ceshiDataNativeGetPicture(String appid, String function, String nativeGetPicture, final String ratio) {
         ratios = ratio;
         String username = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
@@ -2130,6 +2330,7 @@ String ratios = null;
                                                     Log.e("value",value);
                                                 }
                                             });
+
 
 
                                         }
@@ -2712,6 +2913,7 @@ String ratios = null;
         //mLocationClient.stop();
         unregisterReceiver(broadcastReceiver);
         unregisterReceiver(broadcastReceiver2);
+        unregisterReceiver(addJsResultDataReceiver);
         WebView mwebView = mAgentWeb.getWebCreator().getWebView();
         if (mwebView != null) {
 

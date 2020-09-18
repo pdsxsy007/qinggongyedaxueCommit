@@ -446,7 +446,8 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
                         SPUtils.put(getApplicationContext(),"count","0");
                         SPUtils.put(getApplicationContext(),"bitmap","");
                         SPUtils.put(getApplicationContext(),"bitmap2","");
-                        SPUtils.put(getApplicationContext(),"bitmapnewsd","");
+                        SPUtils.put(getApplicationContext(),"deleteOrSign","");
+                        SPUtils.put(getApplicationContext(),"signId","");
                         if(!update.equals("")){
                             SPUtils.put(MyApp.getInstance(),"update",portalVersionNumber);
                         }
@@ -497,7 +498,7 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
 
     CurrencyBean currencyBean;
     private void initRelieve() {
-        OkGo.<String>get(UrlRes.HOME4_URL + UrlRes.Relieve_Registration_Id)
+        OkGo.<String>get(UrlRes.HOME_URL + UrlRes.Relieve_Registration_Id)
                 .tag("Jpush")
                 .params("userId", (String) SPUtils.get(MyApp.getInstance(), "userId", ""))
                 .params("portalEquipmentMemberEquipmentId", (String) SPUtils.get(MyApp.getInstance(), "registrationId", ""))

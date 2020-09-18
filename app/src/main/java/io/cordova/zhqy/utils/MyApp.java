@@ -83,7 +83,6 @@ public class MyApp extends Application {
         //本机号码一键登录
         JVerificationInterface.setDebugMode(true);
         JVerificationInterface.init(instance);
-
         Cockroach.install(new Cockroach.ExceptionHandler() {
 
             // handlerException内部建议手动try{  你的异常处理逻辑  }catch(Throwable e){ } ，以防handlerException内部再次抛出异常，导致循环调用handlerException

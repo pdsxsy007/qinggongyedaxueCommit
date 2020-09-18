@@ -14,24 +14,20 @@ public class UrlRes {
     /**
      * 服务器地址
      */
-    public static String HOME_URL ="http://iapp.zzuli.edu.cn";
+    //public static String HOME_URL ="http://iapp.zzuli.edu.cn";
       //public static String HOME_URL ="http://192.168.30.68:8080";  //韩鹏
-     //public static String HOME_URL ="http://192.168.30.28:8080";  //毛兵
+     public static String HOME_URL ="http://192.168.30.28:8080";  //毛兵
 
 
 
     /*tgt  相关*/
-    public static String HOME2_URL ="http://kys.zzuli.edu.cn";
+    //public static String HOME2_URL ="http://kys.zzuli.edu.cn";
      //public static String HOME2_URL ="http://192.168.30.68:8090";  //韩鹏
-    //public static String HOME2_URL ="http://192.168.30.28:8090";  //毛兵
+    public static String HOME2_URL ="http://192.168.30.28:8090";  //毛兵
 
-
-
-    /*绑定极光*/
-    public static String HOME4_URL ="http://iapp.zzuli.edu.cn";
 
     /*图片前缀*/
-    public static String HOME3_URL ="http://iapp.zzuli.edu.cn/portal/public/getImg?path=";
+    public static String HOME3_URL =HOME_URL+"/portal/public/getImg?path=";
 
 
     /**
@@ -235,8 +231,6 @@ public class UrlRes {
    /**
     意见反馈
     */
-   //public static String fankuiUrl = "http://iapp.zzuli.edu.cn/portal/portal-qy/portal-app/app-5/feedback/feedback.html";
-   //public static String fankuiUrl = "http://iapp.zzuli.edu.cn/portal/portal-app/app-5/feedback/feedback.html";
    public static String fankuiUrl = "http://iapp.zzuli.edu.cn/portal/login/appLogin?tourl=/portal-app/app-5/feedback/feedback.html";
 
    public static String huanxingUrl = "http://iapp.zzuli.edu.cn/portal/portal-app/app-5/huanxing.html";
@@ -247,8 +241,51 @@ public class UrlRes {
      */
     public static String xieyiUrl = "http://kys.zzuli.edu.cn/authentication/authentication/views/appNative/privacyProtocol.html";
 
-    public static String findLoginTypeListUrl = "/portal/mobile/config/findLoginTypeList?type=promptInformation";
+    public static String findLoginTypeListUrl = "/portal/mobile/config/findLoginTypeList";
 
+    /**
+     * 获取激活码
+     */
     public static String getAuthCodeUrl = "/portal/mobile/ca/getAuthCode";
+
+    /**
+     * 查询证书
+     */
+    public static String queryCertUrl = "/portal/mobile/ca/queryCert";
+
+    /**
+     * 解析证书
+     */
+    public static String getCertInfoUrl = "/portal/mobile/ca/getCertInfo";
+
+    /**
+     * 扫码签名----扫完码之后调用此接口
+     */
+    public static String scanQrCodeUrl = "/portal/mobile/ca/scanQrCode";
+
+   /**
+    * 消息通知弹出页面调用此接口
+    */
+   public static String waiteSignUrl = "/portal/mobile/ca/waiteSign";
+
+    /**
+     * App签名---仅在消息通知打开弹出页面后，先调用SDK签名，拿到签名结果之后调用此接口
+     */
+    public static String clickSignUrl = "/portal/mobile/ca/clickSign";
+
+    /**
+     * 取消签名
+     */
+    public static String cancelSignUrl = "/portal/mobile/ca/cancelSign";
+
+    /**
+     * 上传msPid
+     */
+    public static String saveMemberAndCAUrl = "/portal/mobile/ca/saveMemberAndCA";
+
+   /**
+    * 上传错误信息到服务器
+    */
+   public static String signFailedUrl = "/portal/mobile/ca/signFailed";
 
 }

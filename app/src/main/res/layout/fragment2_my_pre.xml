@@ -229,241 +229,257 @@
 
             </LinearLayout>
 
-            <RelativeLayout
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp80"
-                android:layout_marginTop="@dimen/dp_10"
-                android:background="@color/white"
-                android:padding="@dimen/dp_10"
-                >
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical"
-                    >
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-                        <ImageView
-                            android:layout_width="@dimen/dp10"
-                            android:layout_height="@dimen/dp20"
-                            android:background="@color/colorPrimary"
-                            />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="数字证书管理中心"
-                            android:textColor="@color/black"
-                            android:layout_marginLeft="@dimen/dp5"
-                            />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="100dp"
-                        android:text="用于您的数字证书安装，激活，管理等操作"
-                        android:textColor="@color/black3"
-                        android:layout_marginTop="@dimen/dp5"
-                        android:textSize="@dimen/sp12"
-                        />
-
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_in"
-                    android:layout_width="@dimen/dp80"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_button_blue"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:padding="@dimen/dp5"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="进入"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp12"
-                        android:layout_centerInParent="true"
-                        />
-                </RelativeLayout>
-            </RelativeLayout>
-
             <LinearLayout
+                android:id="@+id/ll_isShow"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:background="@color/white"
+                android:orientation="vertical"
+                >
+                <RelativeLayout
+                    android:visibility="visible"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/sp12"
-                    android:text="快捷扫码入口"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="@color/black2"/>
+                    android:layout_height="@dimen/dp80"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@color/white"
+                    android:padding="@dimen/dp_10"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            >
+
+                            <ImageView
+                                android:layout_width="@dimen/dp20"
+                                android:layout_height="@dimen/dp15"
+                                android:src="@mipmap/me_ca" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="数字证书管理中心"
+                                android:textColor="@color/black"
+                                android:layout_marginLeft="@dimen/dp5"
+                                android:textStyle="bold"
+                                />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="100dp"
+                            android:text="用于您的数字证书安装，激活，管理等操作"
+                            android:textColor="@color/black3"
+                            android:layout_marginTop="@dimen/dp5"
+                            android:textSize="@dimen/sp12"
+                            />
+
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_in"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_button_blue"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="@dimen/dp5"
+                        >
+                        <TextView
+                            android:id="@+id/tv_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="进入"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp12"
+                            android:layout_centerInParent="true"
+                            />
+                    </RelativeLayout>
+                </RelativeLayout>
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp100"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/dp0.5"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    >
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:background="@color/white"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center_vertical"
-                        >
-                        <RelativeLayout
-                            android:layout_width="@dimen/dp80"
-                            android:layout_height="wrap_content">
-                            <RelativeLayout
-                                android:layout_width="@dimen/dp80"
-                                android:layout_height="55dp"
-                                android:layout_centerInParent="true"
-                                >
-                                <ImageView
-                                    android:id="@+id/iv_app_icon"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:layout_centerInParent="true"
-                                    android:src="@mipmap/zwt"
-                                    />
+                        android:padding="@dimen/sp12"
+                        android:text="快捷扫码入口"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="@color/black2"/>
 
-                                <ImageView
-                                    android:visibility="gone"
-                                    android:id="@+id/iv_del"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_marginRight="@dimen/dp10"
-
-                                    />
-
-
-                                <TextView
-                                    android:visibility="gone"
-                                    android:id="@+id/iv_lock_open"
-                                    android:layout_width="19dp"
-                                    android:layout_height="19dp"
-                                    android:background="@drawable/shape_juxing_bg_cheng"
-                                    android:text="一"
-                                    android:gravity="center"
-                                    android:textColor="@color/white"
-                                    android:textSize="12dp"
-                                    android:layout_marginRight="@dimen/dp10"
-                                    android:layout_alignParentRight="true"/>
-
-                                <ImageView
-                                    android:visibility="gone"
-                                    android:id="@+id/iv_lock_close"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_marginLeft="@dimen/dp5"
-                                    android:layout_alignParentBottom="true"
-                                    />
-
-                            </RelativeLayout>
-                        </RelativeLayout>
-
-
-
-                        <TextView
-                            android:id="@+id/tv_app_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:textSize="@dimen/sp14"
-                            android:textColor="@color/black2"
-                            android:layout_marginTop="@dimen/dp5"
-                            android:singleLine="true"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="扫码签名"/>
-                    </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp100"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/dp0.5"
+                        android:background="@color/white"
                         android:gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp5"
                         >
-                        <RelativeLayout
-                            android:layout_width="@dimen/dp80"
-                            android:layout_height="wrap_content">
-                            <RelativeLayout
-                                android:layout_width="@dimen/dp80"
-                                android:layout_height="55dp"
-                                android:layout_centerInParent="true"
-                                >
-                                <ImageView
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:layout_centerInParent="true"
-                                    android:src="@mipmap/zwt"
-                                    />
-
-                                <ImageView
-                                    android:visibility="gone"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_marginRight="@dimen/dp10"
-
-                                    />
-
-
-                                <TextView
-                                    android:visibility="gone"
-                                    android:layout_width="19dp"
-                                    android:layout_height="19dp"
-                                    android:background="@drawable/shape_juxing_bg_cheng"
-                                    android:text="一"
-                                    android:gravity="center"
-                                    android:textColor="@color/white"
-                                    android:textSize="12dp"
-                                    android:layout_marginRight="@dimen/dp10"
-                                    android:layout_alignParentRight="true"/>
-
-                                <ImageView
-                                    android:visibility="gone"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_marginLeft="@dimen/dp5"
-                                    android:layout_alignParentBottom="true"
-                                    />
-
-                            </RelativeLayout>
-                        </RelativeLayout>
-
-
-
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/ll_sign"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:textSize="@dimen/sp14"
-                            android:textColor="@color/black2"
-                            android:layout_marginTop="@dimen/dp5"
-                            android:singleLine="true"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="扫码验签"/>
+                            android:orientation="vertical"
+                            android:gravity="center_vertical"
+                            >
+                            <RelativeLayout
+                                android:layout_width="@dimen/dp80"
+                                android:layout_height="wrap_content">
+                                <RelativeLayout
+                                    android:layout_width="@dimen/dp80"
+                                    android:layout_height="55dp"
+                                    android:layout_centerInParent="true"
+                                    >
+                                    <ImageView
+                                        android:id="@+id/iv_app_icon"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:layout_centerInParent="true"
+                                        android:src="@mipmap/scan_left"
+                                        />
+
+                                    <ImageView
+                                        android:visibility="gone"
+                                        android:id="@+id/iv_del"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginRight="@dimen/dp10"
+
+                                        />
+
+
+                                    <TextView
+                                        android:visibility="gone"
+                                        android:id="@+id/iv_lock_open"
+                                        android:layout_width="19dp"
+                                        android:layout_height="19dp"
+                                        android:background="@drawable/shape_juxing_bg_cheng"
+                                        android:text="一"
+                                        android:gravity="center"
+                                        android:textColor="@color/white"
+                                        android:textSize="12dp"
+                                        android:layout_marginRight="@dimen/dp10"
+                                        android:layout_alignParentRight="true"/>
+
+                                    <ImageView
+                                        android:visibility="gone"
+                                        android:id="@+id/iv_lock_close"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginLeft="@dimen/dp5"
+                                        android:layout_alignParentBottom="true"
+                                        />
+
+                                </RelativeLayout>
+                            </RelativeLayout>
+
+
+
+                            <TextView
+                                android:id="@+id/tv_app_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:textSize="@dimen/sp14"
+                                android:textColor="@color/black2"
+                                android:layout_marginTop="@dimen/dp5"
+                                android:singleLine="true"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="扫码签名"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_yan_sign"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical"
+                            >
+                            <RelativeLayout
+                                android:layout_width="@dimen/dp80"
+                                android:layout_height="wrap_content">
+                                <RelativeLayout
+                                    android:layout_width="@dimen/dp80"
+                                    android:layout_height="55dp"
+                                    android:layout_centerInParent="true"
+                                    >
+                                    <ImageView
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:layout_centerInParent="true"
+                                        android:src="@mipmap/scan_right"
+                                        />
+
+                                    <ImageView
+                                        android:visibility="gone"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginRight="@dimen/dp10"
+
+                                        />
+
+
+                                    <TextView
+                                        android:visibility="gone"
+                                        android:layout_width="19dp"
+                                        android:layout_height="19dp"
+                                        android:background="@drawable/shape_juxing_bg_cheng"
+                                        android:text="一"
+                                        android:gravity="center"
+                                        android:textColor="@color/white"
+                                        android:textSize="12dp"
+                                        android:layout_marginRight="@dimen/dp10"
+                                        android:layout_alignParentRight="true"/>
+
+                                    <ImageView
+                                        android:visibility="gone"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginLeft="@dimen/dp5"
+                                        android:layout_alignParentBottom="true"
+                                        />
+
+                                </RelativeLayout>
+                            </RelativeLayout>
+
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:textSize="@dimen/sp14"
+                                android:textColor="@color/black2"
+                                android:layout_marginTop="@dimen/dp5"
+                                android:singleLine="true"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="扫码验签"/>
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </LinearLayout>

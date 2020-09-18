@@ -280,7 +280,7 @@ public class UpdatePwdInfoActivity extends BaseActivity implements View.OnClickL
 
     CurrencyBean currencyBean;
     private void initRelieve() {
-        OkGo.<String>get(UrlRes.HOME4_URL + UrlRes.Relieve_Registration_Id)
+        OkGo.<String>get(UrlRes.HOME_URL + UrlRes.Relieve_Registration_Id)
                 .tag("Jpush")
                 .params("userId", (String) SPUtils.get(MyApp.getInstance(), "userId", ""))
                 .params("portalEquipmentMemberEquipmentId", (String) SPUtils.get(MyApp.getInstance(), "registrationId", ""))

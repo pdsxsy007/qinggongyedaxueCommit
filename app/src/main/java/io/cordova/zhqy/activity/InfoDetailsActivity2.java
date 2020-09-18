@@ -314,7 +314,7 @@ public class InfoDetailsActivity2 extends BaseActivity {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.contains("http://kys.zzuli.edu.cn/cas/login")) {
                 if (StringUtils.isEmpty((String)SPUtils.get(MyApp.getInstance(),"username",""))){
-                    Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                    Intent intent = new Intent(getApplicationContext(),LoginActivity2.class);
                     startActivity(intent);
                     finish();
 

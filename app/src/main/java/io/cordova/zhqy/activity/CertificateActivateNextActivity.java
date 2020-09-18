@@ -1,5 +1,6 @@
 package io.cordova.zhqy.activity;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -12,6 +13,8 @@ import cn.org.bjca.signet.coss.interfaces.CossReqCertCallBack;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity;
+import io.cordova.zhqy.utils.FinishActivity;
+import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.ToastUtils;
 
 public class CertificateActivateNextActivity extends BaseActivity {
@@ -42,7 +45,15 @@ public class CertificateActivateNextActivity extends BaseActivity {
                     return;
                 }
 
-                SignetCossApi.getCossApiInstance(AesEncryptUtile.APP_ID, AesEncryptUtile.CA_ADDRESS).cossReqCert(CertificateActivateNextActivity.this, jihuoma, new CossReqCertCallBack() {
+
+                Intent intent = new Intent(CertificateActivateNextActivity.this,CertificateActivateNextTwoActivity.class);
+                intent.putExtra("jihuoma",jihuoma);
+                intent.putExtra("title","PIN");
+                intent.putExtra("type","0");
+                startActivity(intent);
+                FinishActivity.addActivity(CertificateActivateNextActivity.this);
+
+                /*SignetCossApi.getCossApiInstance(AesEncryptUtile.APP_ID, AesEncryptUtile.CA_ADDRESS).cossReqCertWithPin(CertificateActivateNextActivity.this, jihuoma, "123456", new CossReqCertCallBack() {
                     @Override
                     public void onCossReqCert(final CossReqCertResult result) {
                         if (result.getErrCode().equalsIgnoreCase(successCode)) {
@@ -52,6 +63,7 @@ public class CertificateActivateNextActivity extends BaseActivity {
                                 public void run() {
                                     String msspID = result.getMsspID();
                                     Log.e("msspID",msspID+"");
+                                    SPUtils.put(CertificateActivateNextActivity.this,"msspID",msspID);
                                 }
                             });
                         }else if (result.getErrCode().equalsIgnoreCase("0x81400003")) {
@@ -72,7 +84,8 @@ public class CertificateActivateNextActivity extends BaseActivity {
                             });
                         }
                     }
-                });
+                });*/
+
             }
         });
     }

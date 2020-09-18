@@ -240,6 +240,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
     private void getNoticeInfo() {
         OkGo.<String>get(UrlRes.HOME_URL +findLoginTypeListUrl)
                .tag(this)
+                .params("type","promptInformation")
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -427,6 +428,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                                     //webView.loadUrl("http://iapp.zzuli.edu.cn/portal/login/appLogin");
                                     webView.loadUrl(HOME_URL+"/portal/login/appLogin");
                                     String userId  = AesEncryptUtile.encrypt(userName+ "_"+ Calendar.getInstance().getTimeInMillis(),key);
+
                                     SPUtils.put(MyApp.getInstance(),"time",Calendar.getInstance().getTimeInMillis()+"");
                                     SPUtils.put(MyApp.getInstance(),"userId",userId);
                                     SPUtils.put(MyApp.getInstance(),"personName",userName);
@@ -434,6 +436,8 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                                     SPUtils.put(getApplicationContext(),"username",s1);
                                     SPUtils.put(getApplicationContext(),"password",s2);
 
+                                    String msspid = loginBean.getAttributes().getMsspid();
+                                    SPUtils.put(getApplicationContext(),"msspID",msspid);
 
 
                                     if(update != null){
@@ -685,7 +689,8 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                                     SPUtils.put(MyApp.getInstance(),"username",uname+"");
                                     SPUtils.put(MyApp.getInstance(),"password",pwd+"");
 
-
+                                    String msspid = loginBean.getAttributes().getMsspid();
+                                    SPUtils.put(getApplicationContext(),"msspID",msspid);
 
                                     if(update != null){
                                         Intent intent = new Intent(LoginActivity2.this,Main2Activity.class);

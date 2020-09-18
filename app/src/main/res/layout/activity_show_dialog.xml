@@ -2,8 +2,209 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/view2"
+    android:background="@color/white"
     android:orientation="vertical"
    >
 
+    <ImageView
+        android:id="@+id/iv_close"
+        android:padding="@dimen/dp20"
+        android:src="@mipmap/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    <ImageView
+        android:padding="@dimen/dp20"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/computer"
+        android:layout_width="@dimen/dp200"
+        android:layout_height="@dimen/dp200"/>
+
+
+    <LinearLayout
+        android:id="@+id/ll_true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/dp40"
+            android:layout_marginRight="@dimen/dp40"
+            >
+            <TextView
+
+                android:text="签名任务ID："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+
+                />
+            <TextView
+                android:text="123456"
+                android:id="@+id/tv_signId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp5"
+            android:layout_marginLeft="@dimen/dp40"
+            android:layout_marginRight="@dimen/dp40"
+            >
+            <TextView
+
+                android:text="签名任务标题："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                />
+            <TextView
+                android:id="@+id/tv_sign_title"
+                android:text="123456"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp5"
+            android:layout_marginLeft="@dimen/dp40"
+            android:layout_marginRight="@dimen/dp40"
+            >
+            <TextView
+
+                android:text="当前签名人员："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                />
+            <TextView
+                android:id="@+id/tv_signName"
+                android:text="123456"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                />
+        </LinearLayout>
+
+
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_wrong"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+
+                android:text="未查到证书（原因）："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                />
+            <TextView
+                android:text="1、未下载证书"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp12"
+                android:layout_marginTop="@dimen/dp10"
+                android:textColor="@color/red"
+                />
+            <TextView
+                android:text="2、可能更换设备"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp12"
+                android:textColor="@color/red"
+                />
+
+
+
+        </LinearLayout>
+
+        <TextView
+            android:text="点击下方 “下载证书” ，进行下载"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp20"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp16"
+            android:textColor="@color/red"
+            />
+
+
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            >
+            <TextView
+                android:id="@+id/tv_sign"
+                android:layout_width="@dimen/dp200"
+                android:layout_height="@dimen/dp40"
+                android:textColor="@android:color/white"
+                android:text="立即签名"
+                android:gravity="center"
+                android:background="@drawable/shape_button_sign"
+                android:layout_marginBottom="@dimen/dp20"
+                />
+            <TextView
+                android:id="@+id/tv_download_ca"
+                android:visibility="gone"
+                android:layout_width="@dimen/dp200"
+                android:layout_height="@dimen/dp40"
+                android:textColor="@android:color/white"
+                android:text="下载证书"
+                android:gravity="center"
+                android:background="@drawable/shape_button_sign"
+                android:layout_marginBottom="@dimen/dp20"
+                />
+
+            <TextView
+                android:id="@+id/tv_cancel_sign"
+                android:layout_width="@dimen/dp200"
+                android:layout_height="@dimen/dp40"
+                android:text="取消签名"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/dp20"
+                />
+
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
