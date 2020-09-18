@@ -3,6 +3,7 @@ package io.cordova.zhqy.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,6 +11,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -115,6 +117,9 @@ public class FaceDialogManagerActivity extends BaseActivity3 {
               }
           });
 
+
+        tv_pin.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
+        tv_pin.setText(Html.fromHtml("<u>"+"使用PIN码验证"+"<u/>"));
         tv_pin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
