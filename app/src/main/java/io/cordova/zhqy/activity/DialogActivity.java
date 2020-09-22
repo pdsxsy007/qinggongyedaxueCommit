@@ -524,7 +524,8 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                     public void onError(Response<String> response) {
                         super.onError(response);
                         ViewUtils.cancelLoadingDialog();
-
+                        FinishActivity.clearActivity();
+                        finish();
                     }
                 });
     }

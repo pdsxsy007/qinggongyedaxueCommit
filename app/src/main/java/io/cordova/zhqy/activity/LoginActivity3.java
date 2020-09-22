@@ -84,7 +84,7 @@ public class LoginActivity3 extends BaseActivity implements View.OnClickListener
     private TextView tv_title;
     private XCRoundImageView iv_user_head;
 
-
+    String splash;
     @Override
     protected int getResourceId() {
         return R.layout.login_activity2;
@@ -101,6 +101,8 @@ public class LoginActivity3 extends BaseActivity implements View.OnClickListener
         tv_title.setText("指纹登录");
         iv_fingerprint_login.setEnabled(true);
         String account = SPUtil.getInstance().getString(Constants.SP_ACCOUNT);
+
+        splash = getIntent().getStringExtra("splash");
        /* if (!TextUtils.isEmpty(account)) {
             if (account.length() == 11) {
                 account = account.substring(0, 3) + "****" + account.substring(7, account.length());
@@ -145,7 +147,7 @@ public class LoginActivity3 extends BaseActivity implements View.OnClickListener
             @Override
             public void changePage(int flag) {
                 if (flag == PASSWORD_LOGIN_FLAG){
-                    Intent intent = new Intent(LoginActivity3.this,LoginActivity4.class);
+                    Intent intent = new Intent(LoginActivity3.this,LoginActivity2.class);
                     startActivity(intent);
                     finish();
                     helper.stopAuthenticate();
@@ -270,6 +272,10 @@ public class LoginActivity3 extends BaseActivity implements View.OnClickListener
             fingerprintVerifyDialog.dismiss();
         }
         Intent intent = new Intent(this, Main2Activity.class);
+        if(null != splash){
+            intent.putExtra("splash","splash");
+        }
+
         startActivity(intent);
         if (loginPageOperationListener != null) {
             loginPageOperationListener.onFinish();

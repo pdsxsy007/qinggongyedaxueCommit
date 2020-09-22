@@ -22,7 +22,7 @@ public class UrlRes {
 
     /*tgt  相关*/
     public static String HOME2_URL ="http://kys.zzuli.edu.cn";
-//     public static String HOME2_URL ="http://192.168.30.68:8090";  //韩鹏
+    //public static String HOME2_URL ="http://192.168.30.68:8090";  //韩鹏
     //public static String HOME2_URL ="http://192.168.30.28:8090";  //毛兵
 
 

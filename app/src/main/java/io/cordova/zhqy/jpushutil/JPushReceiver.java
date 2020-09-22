@@ -1,6 +1,7 @@
 package io.cordova.zhqy.jpushutil;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -92,12 +93,6 @@ public class JPushReceiver extends BroadcastReceiver {
                     String messageId = noticeCaBean.getMessageId();
                     String title = noticeCaBean.getTitle();
 
-
-                    //解决多次弹窗
-                    if(isActivityTop(DialogActivity.class,context)) {
-                        ActivityUtils.getActivityManager().finishLastActivity();
-                    }
-
                     Intent intent1 = new Intent(context, DialogActivity.class);;
                     intent1.putExtra("fromWhere","notice");
                     intent1.putExtra("signId",signDataId);
@@ -106,8 +101,14 @@ public class JPushReceiver extends BroadcastReceiver {
                     intent1.putExtra("messageId",messageId);
                     intent1.putExtra("title",title);
                     context.startActivity(intent1);
+                    if(isActivityTop(DialogActivity.class,context)) {
+                        ActivityUtils.getActivityManager().finishLastActivity();
+                    }
 
 
+                    if(!Main2Activity.isForeground){
+                        ActivityUtils.getActivityManager().finishClassActivity(DialogActivity.class);
+                    }
                 }else {
                     String msg =bundle.getString(JPushInterface.EXTRA_MESSAGE);
                     String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);

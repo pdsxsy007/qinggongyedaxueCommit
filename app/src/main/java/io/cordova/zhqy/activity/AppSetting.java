@@ -138,7 +138,6 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
         //startNoticeON();
         setcachesize();
         checkVersion2();
-        Log.e("versionName", getLocalVersionName(this)+"  -防空导弹-");
 
         localVersionName = getLocalVersionName(this);
         tv_version.setText(localVersionName);
@@ -188,7 +187,6 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
                     .getPackageManager()
                     .getPackageInfo(ctx.getPackageName(), 0);
             localVersion = packageInfo.versionName;
-            Log.d("TAG", "本软件的版本号。。" + localVersion);
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -223,7 +221,6 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.e("DataClean","  ==  "+dataSize);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
