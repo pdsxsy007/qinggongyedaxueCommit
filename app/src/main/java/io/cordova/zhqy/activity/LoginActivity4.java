@@ -139,7 +139,7 @@ public class LoginActivity4 extends BaseActivity {
         }
 
 
-        OkGo.<String>get(UrlRes.HOME2_URL +"/cas/casApiLoginController")
+        OkGo.<String>get(UrlRes.HOME2_URL +UrlRes.loginUrl)
                 .params("openid",AesEncryptUtile.openid)
                 .params("username",s1)
                 .params("password",s2)

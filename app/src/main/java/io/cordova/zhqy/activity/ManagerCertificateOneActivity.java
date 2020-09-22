@@ -166,7 +166,7 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
                 try {
                     //String secret  = AesEncryptUtile.encrypt(Calendar.getInstance().getTimeInMillis()+ "_"+"123456",key);
                     String secret = AesEncryptUtile.encrypt(username,key);
-                    OkGo.<String>post(UrlRes.HOME2_URL+"/authentication/api/face/distinguishFace")
+                    OkGo.<String>post(UrlRes.HOME2_URL+UrlRes.distinguishFaceUrl)
                             .tag(this)
                             .params( "openId",AesEncryptUtile.openid)
                             .params( "memberId",secret)
@@ -195,7 +195,7 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
                                             CossClearCertResult result = SignetCossApi.getCossApiInstance(AesEncryptUtile.APP_ID, AesEncryptUtile.CA_ADDRESS).cossClearCert(ManagerCertificateOneActivity.this, msspID, CertType.ALL_CERT);
                                             if (result.getErrCode().equalsIgnoreCase(successCode)) {
                                                 ToastUtils.showToast(ManagerCertificateOneActivity.this,"删除成功!");
-
+                                                finish();
                                             } else {
                                                 ToastUtils.showToast(ManagerCertificateOneActivity.this,result.getErrMsg());
 
@@ -204,6 +204,7 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
                                             Intent intent2 = new Intent();
                                             intent2.setAction("refreshCAResult");
                                             sendBroadcast(intent2);
+
 
                                         }else {//激活
                                             Intent intent = new Intent(ManagerCertificateOneActivity.this,CertificateActivateActivity.class);

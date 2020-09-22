@@ -165,8 +165,8 @@ public class CodeBindActivity extends BaseActivity2 implements View.OnClickListe
             SPUtils.put(MyApp.getInstance(),"phone",AesEncryptUtile.decrypt(uname)+"");
             SPUtils.put(MyApp.getInstance(),"pwd",AesEncryptUtile.decrypt(pwd)+"");
             String imei =  AesEncryptUtile.encrypt((String) SPUtils.get(this, "imei", ""), key);
-            OkGo.<String>get(UrlRes.HOME2_URL +"/cas/casApiLoginController")
-                    .params("openid","123456")
+            OkGo.<String>get(UrlRes.HOME2_URL +UrlRes.loginUrl)
+                    .params("openid", openid)
                     .params("username",uname)
                     .params("password",pwd)
                     .params("type","9")
@@ -196,7 +196,8 @@ public class CodeBindActivity extends BaseActivity2 implements View.OnClickListe
                                     SPUtils.put(MyApp.getInstance(),"username",uname+"");
                                     SPUtils.put(MyApp.getInstance(),"password",pwd+"");
 
-
+                                    String msspid = loginBean.getAttributes().getMssPid();
+                                    SPUtils.put(getApplicationContext(),"msspID",msspid);
                                     FinishActivity.clearActivity();
                                     finish();
                                     Intent intent = new Intent();

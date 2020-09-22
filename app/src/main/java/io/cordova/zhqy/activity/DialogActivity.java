@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.ColorUtils;
 import android.util.Log;
 import android.view.View;
@@ -96,6 +97,8 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
         return R.layout.activity_show_dialog;
     }
 
+    private LocalBroadcastManager broadcastManager;
+
     @Override
     protected void initListener() {
         super.initListener();
@@ -129,6 +132,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
 
         //noticeData("123456");
     }
+
 
     private String nameResult = "";
     private void getCAUserInfoList() {
@@ -192,7 +196,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                 try {
                     //String secret  = AesEncryptUtile.encrypt(Calendar.getInstance().getTimeInMillis()+ "_"+"123456",key);
                     String secret = AesEncryptUtile.encrypt(username,key);
-                    OkGo.<String>post(UrlRes.HOME2_URL+"/authentication/api/face/distinguishFace")
+                    OkGo.<String>post(UrlRes.HOME2_URL+UrlRes.distinguishFaceUrl)
                             .tag(this)
                             .params( "openId",AesEncryptUtile.openid)
                             .params( "memberId",secret)
@@ -540,7 +544,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
             @Override
             public void onCossSignPin(final CossSignPinResult result) {
                 if (result.getErrCode().equalsIgnoreCase(successCode)) {
-                    ToastUtils.showToast(DialogActivity.this,"签名成功!");
+//                    ToastUtils.showToast(DialogActivity.this,"签名成功!");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

@@ -14,16 +14,16 @@ public class UrlRes {
     /**
      * 服务器地址
      */
-    //public static String HOME_URL ="http://iapp.zzuli.edu.cn";
-      //public static String HOME_URL ="http://192.168.30.68:8080";  //韩鹏
-     public static String HOME_URL ="http://192.168.30.28:8080";  //毛兵
+    public static String HOME_URL ="http://iapp.zzuli.edu.cn";
+    //public static String HOME_URL ="http://192.168.30.68:8080";  //韩鹏
+    //public static String HOME_URL ="http://192.168.30.28:8080";  //毛兵
 
 
 
     /*tgt  相关*/
-    //public static String HOME2_URL ="http://kys.zzuli.edu.cn";
-     //public static String HOME2_URL ="http://192.168.30.68:8090";  //韩鹏
-    public static String HOME2_URL ="http://192.168.30.28:8090";  //毛兵
+    public static String HOME2_URL ="http://kys.zzuli.edu.cn";
+//     public static String HOME2_URL ="http://192.168.30.68:8090";  //韩鹏
+    //public static String HOME2_URL ="http://192.168.30.28:8090";  //毛兵
 
 
     /*图片前缀*/
@@ -41,6 +41,13 @@ public class UrlRes {
      * portal/mobile/login
      * */
     public static String Relieve_Registration_Id = "/portal/mobile/equipment/del";
+
+    /**
+     * 登录
+     *
+     * */
+    public static String loginUrl = "/cas/casApiLoginController";
+
 
     /**
      * 退出登录*/
@@ -159,6 +166,11 @@ public class UrlRes {
      * 人脸识别
      */
     public static String getPassByFaceUrl="/authentication/api/face/getPassByFace";
+
+    /**
+     * 人脸校验
+     */
+    public static String distinguishFaceUrl="/authentication/api/face/distinguishFace";
 
     /**
      * 人脸识别上传图片
@@ -281,7 +293,7 @@ public class UrlRes {
     /**
      * 上传msPid
      */
-    public static String saveMemberAndCAUrl = "/portal/mobile/ca/saveMemberAndCA";
+    public static String saveMemberAndCAUrl = "/authentication/api/v1/ca/saveMemberAndCA";
 
    /**
     * 上传错误信息到服务器

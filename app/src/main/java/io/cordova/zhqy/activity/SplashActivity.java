@@ -309,7 +309,7 @@ public class SplashActivity extends AppCompatActivity {
 
         try {
             String imei = AesEncryptUtile.encrypt((String) SPUtils.get(this, "imei", ""), key);
-            OkGo.<String>get(UrlRes.HOME2_URL +"/cas/casApiLoginController")
+            OkGo.<String>get(UrlRes.HOME2_URL +UrlRes.loginUrl)
                     .params("openid",AesEncryptUtile.openid)
                     .params("username",s1)
                     .params("password",s2)
@@ -333,7 +333,7 @@ public class SplashActivity extends AppCompatActivity {
                                     SPUtils.put(getApplicationContext(),"username",s1);
                                     SPUtils.put(getApplicationContext(),"password",s2);
 
-                                    String msspid = loginBean.getAttributes().getMsspid();
+                                    String msspid = loginBean.getAttributes().getMssPid();
                                     SPUtils.put(getApplicationContext(),"msspID",msspid);
 
 

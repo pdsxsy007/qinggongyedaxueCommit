@@ -49,7 +49,7 @@ public class LoginBean {
 
         private String tgt;
         private String username;
-        private String msspid;
+        private String mssPid;
 
         public String getTgt() {
             return tgt;
@@ -67,12 +67,12 @@ public class LoginBean {
             this.username = username;
         }
 
-        public String getMsspid() {
-            return msspid;
+        public String getMssPid() {
+            return mssPid;
         }
 
-        public void setMsspid(String msspid) {
-            this.msspid = msspid;
+        public void setMssPid(String mssPid) {
+            this.mssPid = mssPid;
         }
     }
 }

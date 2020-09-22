@@ -2292,7 +2292,7 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
                         try {
                             //String secret  = AesEncryptUtile.encrypt(Calendar.getInstance().getTimeInMillis()+ "_"+"123456",key);
                             String secret = AesEncryptUtile.encrypt(username,key);
-                            OkGo.<String>post(UrlRes.HOME2_URL+"/authentication/api/face/distinguishFace")
+                            OkGo.<String>post(UrlRes.HOME2_URL+UrlRes.distinguishFaceUrl)
                             //OkGo.<String>post("http://192.168.30.68:8084/authentication/api/face/distinguishFace")
                                     .params( "openId",AesEncryptUtile.openid)
                                     .params( "memberId",secret)

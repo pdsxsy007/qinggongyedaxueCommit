@@ -1362,7 +1362,7 @@ public class ChangeUpdatePwdWebActivity extends AppCompatActivity {
 
         try {
             String imei = AesEncryptUtile.encrypt((String) SPUtils.get(this, "imei", ""), key);
-            OkGo.<String>get(UrlRes.HOME2_URL +"/cas/casApiLoginController")
+            OkGo.<String>get(UrlRes.HOME2_URL +UrlRes.loginUrl)
                     .params("openid",AesEncryptUtile.openid)
                     .params("username",sName)
                     .params("password",sPwd)

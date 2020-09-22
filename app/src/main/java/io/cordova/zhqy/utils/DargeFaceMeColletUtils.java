@@ -289,7 +289,7 @@ public class DargeFaceMeColletUtils {
 
         try {
             String secret = AesEncryptUtile.encrypt(username,AesEncryptUtile.key);
-            OkGo.<String>post(UrlRes.HOME2_URL+"/authentication/api/face/distinguishFace")
+            OkGo.<String>post(UrlRes.HOME2_URL+UrlRes.distinguishFaceUrl)
                     .params( "openId",AesEncryptUtile.openid)
                     .params( "memberId",secret)
                     .params( "img",s )

@@ -1,6 +1,7 @@
 package io.cordova.zhqy.jpushutil;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
@@ -9,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,6 +40,7 @@ import io.cordova.zhqy.activity.OpenClickActivity;
 import io.cordova.zhqy.activity.SplashActivity;
 import io.cordova.zhqy.activity.SystemMsgActivity;
 import io.cordova.zhqy.bean.NoticeCaBean;
+import io.cordova.zhqy.utils.ActivityUtils;
 import io.cordova.zhqy.utils.ExampleUtil;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MyApp;
@@ -58,6 +62,10 @@ import static cn.jpush.android.api.JPushInterface.clearAllNotifications;
 public class JPushReceiver extends BroadcastReceiver {
 
     private static final String TAG = "JPushReceiver";
+
+
+ private LocalBroadcastManager broadcastManager;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         //initChannel(context);
@@ -69,6 +77,7 @@ public class JPushReceiver extends BroadcastReceiver {
                 MyApp.registrationId  = regId;
 
             } else if(JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
+
                 Log.e(TAG, "[MyReceiver] 接收自定义消息 : "+ bundle.getString(JPushInterface.EXTRA_EXTRA));
                 //ToastUtils.showToast(context,"[MyReceiver] 接收自定义消息");
                 //processCustomMessage(context,bundle);
@@ -82,10 +91,18 @@ public class JPushReceiver extends BroadcastReceiver {
                     String sendTime = noticeCaBean.getSendTime();
                     String messageId = noticeCaBean.getMessageId();
                     String title = noticeCaBean.getTitle();
-                    Intent intent1 = new Intent(context, DialogActivity.class);
+
+
+                    //解决多次弹窗
+                    if(isActivityTop(DialogActivity.class,context)) {
+                        ActivityUtils.getActivityManager().finishLastActivity();
+                    }
+
+                    Intent intent1 = new Intent(context, DialogActivity.class);;
                     intent1.putExtra("fromWhere","notice");
                     intent1.putExtra("signId",signDataId);
                     intent1.putExtra("sendTime",sendTime);
+
                     intent1.putExtra("messageId",messageId);
                     intent1.putExtra("title",title);
                     context.startActivity(intent1);
@@ -132,6 +149,19 @@ public class JPushReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+
+    /**
+     *
+     * 判断某activity是否处于栈顶
+     * @return true在栈顶 false不在栈顶
+     */
+    private boolean isActivityTop(Class cls,Context context){
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        return name.equals(cls.getName());
     }
 
 

@@ -221,7 +221,7 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
         }
 
 
-        OkGo.<String>post(UrlRes.HOME_URL+ UrlRes.saveMemberAndCAUrl)
+        OkGo.<String>post(UrlRes.HOME2_URL+ UrlRes.saveMemberAndCAUrl)
                 .params( "memberCaMsspid",msspID)
                 .params( "memberCaMemberId",userId)
                 .params( "memberCaPin",et_01content)
@@ -256,7 +256,7 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
             @Override
             public void onCossSignPin(final CossSignPinResult result) {
                 if (result.getErrCode().equalsIgnoreCase(successCode)) {
-                    ToastUtils.showToast(CertificateActivateNextTwoActivity.this,"签名成功!");
+//                    ToastUtils.showToast(CertificateActivateNextTwoActivity.this,"签名成功!");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

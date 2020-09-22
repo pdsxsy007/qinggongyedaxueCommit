@@ -271,9 +271,9 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
         overridePendingTransition(R.anim.bottom_in,R.anim.bottom_silent);*/
 
 
-        //initChannel();
+//        initChannel();
 
-        //jPluginPlatformInterface = new JPluginPlatformInterface(this);
+//        jPluginPlatformInterface = new JPluginPlatformInterface(this);
 
     }
    /*
@@ -1566,7 +1566,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
         }
 
 
-        OkGo.<String>get(HOME2_URL +"/cas/casApiLoginController")
+        OkGo.<String>get(HOME2_URL +UrlRes.loginUrl)
                 .params("openid",AesEncryptUtile.openid)
                 .params("username",s1)
                 .params("password",s2)
@@ -1594,7 +1594,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                                 SPUtils.put(getApplicationContext(),"username",s1);
                                 SPUtils.put(getApplicationContext(),"password",s2);
 
-                                String msspid = loginBean.getAttributes().getMsspid();
+                                String msspid = loginBean.getAttributes().getMssPid();
                                 SPUtils.put(getApplicationContext(),"msspID",msspid);
 
                                 webView.setWebViewClient(mWebViewClient);

@@ -402,7 +402,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
        ;
         try {
             String imei =  AesEncryptUtile.encrypt((String) SPUtils.get(this, "imei", ""), key);
-            OkGo.<String>get(HOME2_URL +"/cas/casApiLoginController")
+            OkGo.<String>get(HOME2_URL +UrlRes.loginUrl)
                     .tag(this)
                     .params("openid",AesEncryptUtile.openid)
                     .params("username",s1)
@@ -436,7 +436,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                                     SPUtils.put(getApplicationContext(),"username",s1);
                                     SPUtils.put(getApplicationContext(),"password",s2);
 
-                                    String msspid = loginBean.getAttributes().getMsspid();
+                                    String msspid = loginBean.getAttributes().getMssPid();
                                     SPUtils.put(getApplicationContext(),"msspID",msspid);
 
 
@@ -658,7 +658,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
             SPUtils.put(MyApp.getInstance(),"phone",AesEncryptUtile.decrypt(uname)+"");
             SPUtils.put(MyApp.getInstance(),"pwd",AesEncryptUtile.decrypt(pwd)+"");
             String imei =  AesEncryptUtile.encrypt((String) SPUtils.get(this, "imei", ""), key);
-            OkGo.<String>get(HOME2_URL +"/cas/casApiLoginController")
+            OkGo.<String>get(HOME2_URL +UrlRes.loginUrl)
                     .params("openid",AesEncryptUtile.openid)
                     .params("username",uname)
                     .params("password",pwd)
@@ -689,7 +689,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                                     SPUtils.put(MyApp.getInstance(),"username",uname+"");
                                     SPUtils.put(MyApp.getInstance(),"password",pwd+"");
 
-                                    String msspid = loginBean.getAttributes().getMsspid();
+                                    String msspid = loginBean.getAttributes().getMssPid();
                                     SPUtils.put(getApplicationContext(),"msspID",msspid);
 
                                     if(update != null){
