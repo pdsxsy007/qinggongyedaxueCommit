@@ -13,6 +13,7 @@
         android:id="@+id/id_title">
     </include>
 
+
     <LinearLayout
         android:visibility="visible"
         android:id="@+id/ll_msg_off"
