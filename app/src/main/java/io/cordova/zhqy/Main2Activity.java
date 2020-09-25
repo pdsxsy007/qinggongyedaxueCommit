@@ -238,6 +238,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
         getDownLoadType();
 
         registerBoradcastReceiver();
+        registerBoradcastReceiver2();
 
         String splash =getIntent().getStringExtra("splash");
         String  st = (String)SPUtils.get(this,"showys","");
@@ -810,6 +811,35 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
     }
 
 
+    public void registerBoradcastReceiver2() {
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction("refreshJpush");
+        //注册广播
+        registerReceiver(broadcastReceiver2, myIntentFilter);
+    }
+
+    private BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Log.e("收到推送通知","收到推送通知");
+
+            String fromWhere = intent.getStringExtra("fromWhere");
+            String signId = intent.getStringExtra("signId");
+            String sendTime = intent.getStringExtra("sendTime");
+            String messageId = intent.getStringExtra("messageId");
+            String title = intent.getStringExtra("title");
+            Intent intent1 = new Intent(Main2Activity.this, DialogActivity.class);;
+            intent1.putExtra("fromWhere",fromWhere);
+            intent1.putExtra("signId",signId);
+            intent1.putExtra("sendTime",sendTime);
+
+            intent1.putExtra("messageId",messageId);
+            intent1.putExtra("title",title);
+            startActivity(intent1);
+        }
+    };
 
 
     public void registerBoradcastReceiver() {

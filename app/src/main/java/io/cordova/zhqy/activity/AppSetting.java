@@ -60,6 +60,7 @@ import io.cordova.zhqy.widget.CustomDialog;
 import io.cordova.zhqy.widget.MyDialog;
 import io.cordova.zhqy.widget.finger.CommonTipDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog;
+import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
 import me.samlss.lighter.Lighter;
 import me.samlss.lighter.interfaces.OnLighterListener;
 import me.samlss.lighter.parameter.Direction;
@@ -107,7 +108,7 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
     private int flag = 0;
     private boolean isOpen;
     private FingerprintHelper helper;
-    private FingerprintVerifyDialog fingerprintVerifyDialog;
+    private FingerprintVerifyDialog2 fingerprintVerifyDialog;
     private CommonTipDialog fingerprintVerifyErrorTipDialog;
     private CommonTipDialog closeFingerprintTipDialog;
     private int type = 0;
@@ -369,34 +370,8 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
 
 
 
-    private MyDialog m_Dialog;
     private void logOut() {
-       /* m_Dialog = new MyDialog(this, R.style.dialogdialog);
-        Window window = m_Dialog.getWindow();
-        window.setGravity(Gravity.CENTER);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_logout, null);
-        RelativeLayout rl_sure = view.findViewById(R.id.rl_sure);
-        RelativeLayout rl_sure1 = view.findViewById(R.id.rl_sure1);
 
-        int width = ScreenSizeUtils.getWidth(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width - DensityUtil.dip2px(this,24),
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        m_Dialog.setContentView(view, layoutParams);
-        m_Dialog.show();
-        m_Dialog.setCanceledOnTouchOutside(true);
-        rl_sure1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                m_Dialog.dismiss();
-            }
-        });
-        rl_sure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                m_Dialog.dismiss();
-                netExit();
-            }
-        });*/
         final CustomDialog dialog = new CustomDialog(AppSetting.this,R.layout.custom_dialog);
         RelativeLayout rl_sure = dialog.findViewById(R.id.rl_sure);
         RelativeLayout rl_sure1 = dialog.findViewById(R.id.rl_sure1);
@@ -527,6 +502,7 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
             type = 0;
             showCloseFingerprintTipDialog();
         } else {
+            //type = 1;
             openFingerprintLogin();
         }
     }
@@ -562,10 +538,10 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
 
         helper.generateKey();
         if (fingerprintVerifyDialog == null) {
-            fingerprintVerifyDialog = new FingerprintVerifyDialog(this);
+            fingerprintVerifyDialog = new FingerprintVerifyDialog2(this,2);
         }
         fingerprintVerifyDialog.setContentText("请验证指纹");
-        fingerprintVerifyDialog.setOnCancelButtonClickListener(new FingerprintVerifyDialog.OnDialogCancelButtonClickListener() {
+        fingerprintVerifyDialog.setOnCancelButtonClickListener(new FingerprintVerifyDialog2.OnDialogCancelButtonClickListener() {
             @Override
             public void onCancelClick(View v) {
                 helper.stopAuthenticate();
@@ -578,14 +554,16 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
 
     @Override
     public void onAuthenticationSucceeded(String value) {
-        SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, true);
+
         if(type == 0){
             if (fingerprintVerifyDialog != null && fingerprintVerifyDialog.isShowing()) {
                 fingerprintVerifyDialog.dismiss();
                 Toast.makeText(this, "指纹登录已开启", Toast.LENGTH_SHORT).show();
                 isOpen = true;
+                SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, true);
                 setSwitchStatus();
                 saveLocalFingerprintInfo();
+                type = 1;
             }
         }else {
             if (fingerprintVerifyDialog != null && fingerprintVerifyDialog.isShowing()) {
@@ -595,6 +573,7 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
                 SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, false);
                 setSwitchStatus();
                 helper.closeAuthenticate();
+                type = 0;
             }
         }
 
@@ -610,6 +589,7 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
         if (fingerprintVerifyDialog != null && fingerprintVerifyDialog.isShowing()) {
             fingerprintVerifyDialog.dismiss();
         }
+        Log.e("指纹多次登录失败",errorCode+"---------"+errString.toString());
         showTipDialog(errorCode, errString.toString());
     }
 

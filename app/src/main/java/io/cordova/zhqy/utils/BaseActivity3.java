@@ -1,6 +1,7 @@
 package io.cordova.zhqy.utils;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,6 +10,7 @@ import com.cxz.swipelibrary.SwipeBackActivity;
 import com.lzy.okgo.OkGo;
 
 import butterknife.ButterKnife;
+import io.cordova.zhqy.activity.DialogActivity;
 
 
 /**
@@ -91,6 +93,14 @@ public abstract class BaseActivity3 extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

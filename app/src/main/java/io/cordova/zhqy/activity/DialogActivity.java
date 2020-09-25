@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.SystemClock;
+import android.security.keystore.KeyProperties;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -40,23 +41,29 @@ import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.bean.AddFaceBean;
 import io.cordova.zhqy.bean.BaseBean;
+import io.cordova.zhqy.bean.Constants;
 import io.cordova.zhqy.bean.FaceBean;
+import io.cordova.zhqy.fingerprint.FingerprintHelper;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity3;
 import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.PermissionsUtil;
+import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
+import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
+import io.cordova.zhqy.widget.finger.CommonTipDialog;
+import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
 
 import static io.cordova.zhqy.UrlRes.HOME2_URL;
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
 
-public class DialogActivity extends BaseActivity3 implements View.OnClickListener, PermissionsUtil.IPermissionsCallback {
+public class DialogActivity extends BaseActivity3 implements View.OnClickListener, PermissionsUtil.IPermissionsCallback, FingerprintHelper.SimpleAuthenticationCallback {
 
     @BindView(R.id.tv_sign)
     TextView tv_sign;
@@ -91,6 +98,11 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
     String signId;
 
     String sendTime;
+
+    private FingerprintHelper helper;
+
+    private boolean isOpenFinger;
+
 
     @Override
     protected int getResourceId() {
@@ -129,9 +141,30 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
         tv_cancel_sign.setOnClickListener(this);
         iv_close.setOnClickListener(this);
         registerBoradcastReceiver1();
-
+        registerBoradcastReceiver5();
         //noticeData("123456");
     }
+
+    private void registerBoradcastReceiver5() {
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction("refreshCAResult");
+        //注册广播
+        registerReceiver(broadcastReceiverCAResult, myIntentFilter);
+    }
+
+    private BroadcastReceiver broadcastReceiverCAResult = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if(action.equals("refreshCAResult")){
+
+                checkCertInfo();
+            }
+        }
+    };
+
 
 
     private String nameResult = "";
@@ -297,6 +330,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                         }
                     });
         }else {
+            Log.e("signId",signId);
             OkGo.<String>post(UrlRes.HOME_URL+ UrlRes.waiteSignUrl)
                     .params( "signId",signId)
                     .execute(new StringCallback(){
@@ -399,7 +433,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
 
             long beforeTime = Long.parseLong(sendTime);
 
-            if((nowTime-beforeTime) > 3600*1000){
+            if((nowTime-beforeTime) > 600*1000){
                 tv_sign_guoqi.setBackgroundColor(getResources().getColor(R.color.view2));
                 tv_sign_guoqi.setTextColor(Color.parseColor("#000000"));
                 tv_sign_guoqi.setAlpha(0.5f);
@@ -462,36 +496,122 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                 cancelSignData();
                 break;
             case R.id.tv_sign://立即签名
-                //0.弹出人脸验证（1.人脸识别 2.切换到PIN码）
-                //1.调用SDK签名
-                //2.将签名结果提交到服务器
-                SPUtils.put(DialogActivity.this,"deleteOrSign","2");
-                SPUtils.put(DialogActivity.this,"signId",signId);
-                permissionsUtil=  PermissionsUtil
-                        .with(this)
-                        .requestCode(12)
-                        .isDebug(true)//开启log
-                        .permissions(PermissionsUtil.Permission.Camera.CAMERA)
-                        .request();
+                //验证消息是否过期
+                long nowTime = System.currentTimeMillis();
+                if(null != sendTime){
 
-                if(isOpen == 1){
-                    SPUtils.put(this,"bitmap","");
-                    Intent intent = new Intent(this,FaceDialogActivity.class);
-                    startActivityForResult(intent,99);
-                    FinishActivity.addActivity(this);
-                    imageid = 0;
+                    long beforeTime = Long.parseLong(sendTime);
+
+                    if((nowTime-beforeTime) > 600*1000){
+                        ToastUtils.showToast(DialogActivity.this,"当前签名任务已过期");
+                        finish();
+                    }else {//默认弹出人脸识别页面
+                        //0.弹出人脸验证（1.人脸识别 2.切换到PIN码）
+                        //1.调用SDK签名
+                        //2.将签名结果提交到服务器
+                        SPUtils.put(DialogActivity.this,"deleteOrSign","2");
+                        SPUtils.put(DialogActivity.this,"signId",signId);
+
+                        String signType = (String) SPUtils.get(DialogActivity.this, "signType", "");//0人脸 1指纹 2pin码
+                        if(signType.equals("0") || signType.equals("")){
+                            permissionsUtil=  PermissionsUtil
+                                    .with(this)
+                                    .requestCode(12)
+                                    .isDebug(true)//开启log
+                                    .permissions(PermissionsUtil.Permission.Camera.CAMERA)
+                                    .request();
+
+                            if(isOpen == 1){
+                                SPUtils.put(this,"bitmap","");
+                                Intent intent = new Intent(this,FaceDialogActivity.class);
+                                startActivityForResult(intent,99);
+                                FinishActivity.addActivity(this);
+                                imageid = 0;
+                            }
+                        }else if(signType.equals("1")){
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                helper = FingerprintHelper.getInstance();
+                                helper.init(getApplicationContext());
+                                helper.setCallback(this);
+                                if (helper.checkFingerprintAvailable(this) != -1) {
+
+                                    //判断指纹功能是否开启
+                                    isOpenFinger = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
+                                    if(isOpenFinger){
+
+                                        openFingerprintLogin();
+                                    }else {
+                                        Intent intent = new Intent(DialogActivity.this,FingerManagerActivity.class);
+                                        startActivity(intent);
+                                    }
+
+                                }else {
+                                    ToastUtils.showToast(this,"设备不支持指纹登录");
+                                }
+                            }
+
+                        }else {
+
+                            Intent intent = new Intent(DialogActivity.this,CertificateActivateNextTwoActivity.class);
+                            intent.putExtra("title","使用PIN码验证");
+                            intent.putExtra("type","1");
+                            intent.putExtra("isShow","1");
+                            startActivity(intent);
+                            FinishActivity.addActivity(DialogActivity.this);
+                        }
+
+                    }
                 }
+
+
 
                 break;
             case R.id.tv_download_ca://立即下载
                 Intent intent = new Intent(DialogActivity.this,CertificateActivateActivity.class);
                 startActivity(intent);
-                FinishActivity.addActivity(this);
+                //FinishActivity.addActivity(this);
                 break;
             case R.id.iv_close:
                 cancelSignData();
                 break;
         }
+    }
+
+    private FingerprintVerifyDialog2 fingerprintVerifyDialog;
+    /**
+     * @description 开启指纹登录功能
+     * @author HaganWu
+     * @date 2019/1/29-10:20
+     */
+    private void openFingerprintLogin() {
+        Log.e("hagan", "openFingerprintLogin");
+
+        helper.generateKey();
+        if (fingerprintVerifyDialog == null) {
+            fingerprintVerifyDialog = new FingerprintVerifyDialog2(this,3);
+        }
+        fingerprintVerifyDialog.setContentText("请验证指纹");
+        fingerprintVerifyDialog.setOnCancelButtonClickListener(new FingerprintVerifyDialog2.OnDialogCancelButtonClickListener() {
+            @Override
+            public void onCancelClick(View v) {
+                helper.stopAuthenticate();
+            }
+        });
+        fingerprintVerifyDialog.show();
+        helper.setPurpose(KeyProperties.PURPOSE_ENCRYPT);
+        helper.authenticate();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("执行onPause","执行onPause");
+        if(fingerprintVerifyDialog != null){
+            fingerprintVerifyDialog.dismiss();
+            helper.stopAuthenticate();
+            fingerprintVerifyDialog = null;
+        }
+
     }
 
     /**
@@ -698,6 +818,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(broadcastReceiverCAResult);
     }
 
     @Override
@@ -705,4 +826,62 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
         //super.onBackPressed();
     }
 
+
+    @Override
+    public void onAuthenticationSucceeded(String value) {
+        if (fingerprintVerifyDialog != null && fingerprintVerifyDialog.isShowing()) {
+            fingerprintVerifyDialog.dismiss();
+            //Toast.makeText(this, "指纹登录已开启", Toast.LENGTH_SHORT).show();
+            isOpenFinger = true;
+            SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, true);
+            saveLocalFingerprintInfo();
+            //SPUtils.put(CertificateSignTypeActivity.this,"signType","1");
+            getSDKSignData();
+        }
+    }
+
+    @Override
+    public void onAuthenticationFail() {
+        showFingerprintVerifyErrorInfo("指纹不匹配");
+    }
+
+    @Override
+    public void onAuthenticationError(int errorCode, CharSequence errString) {
+        if (fingerprintVerifyDialog != null && fingerprintVerifyDialog.isShowing()) {
+            fingerprintVerifyDialog.dismiss();
+        }
+        //showTipDialog(errorCode, errString.toString());
+    }
+
+    @Override
+    public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+        showFingerprintVerifyErrorInfo(helpString.toString());
+    }
+
+    private CommonTipDialog fingerprintVerifyErrorTipDialog;
+    private void showTipDialog(int errorCode, CharSequence errString) {
+        if (fingerprintVerifyErrorTipDialog == null) {
+            fingerprintVerifyErrorTipDialog = new CommonTipDialog(this);
+        }
+        fingerprintVerifyErrorTipDialog.setContentText(errString+"");
+        fingerprintVerifyErrorTipDialog.setSingleButton(true);
+        fingerprintVerifyErrorTipDialog.setOnSingleConfirmButtonClickListener(new CommonTipDialog.OnDialogSingleConfirmButtonClickListener() {
+            @Override
+            public void onConfirmClick(View v) {
+                helper.stopAuthenticate();
+            }
+        });
+        fingerprintVerifyErrorTipDialog.show();
+    }
+
+
+    private void showFingerprintVerifyErrorInfo(String info) {
+        if (fingerprintVerifyDialog != null && fingerprintVerifyDialog.isShowing()) {
+            fingerprintVerifyDialog.setContentText(info);
+        }
+    }
+
+    private void saveLocalFingerprintInfo() {
+        SPUtil.getInstance().putString(Constants.SP_LOCAL_FINGERPRINT_INFO, FingerprintUtil.getFingerprintInfoString(getApplicationContext()));
+    }
 }

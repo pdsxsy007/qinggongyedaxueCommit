@@ -187,9 +187,9 @@ public class FingerprintHelper extends FingerprintManager.AuthenticationCallback
     @Override
     public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
         Log.e("hagan", "onAuthenticationHelp->helpCode:>" + helpCode + ",helpString:" + helpString.toString());
-        if (callback != null) {
+        /*if (callback != null) {
             callback.onAuthenticationHelp(helpCode, helpString);
-        }
+        }*/
     }
 
     @Override

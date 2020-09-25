@@ -72,7 +72,7 @@ public class CertificateActivateActivity extends BaseActivity {
         final String msspID = (String) SPUtils.get(CertificateActivateActivity.this, "msspID", "");
         try {
             String memberIdNumber = AesEncryptUtile.encrypt(cardNum,key) ;
-            OkGo.<String>post(UrlRes.HOME_URL + UrlRes.getAuthCodeUrl)
+            OkGo.<String>post(UrlRes.HOME2_URL + UrlRes.getAuthCodeUrl)
                     .tag(this)
                     .params("msspid",msspID)
                     .params("memberIdNumber",memberIdNumber)

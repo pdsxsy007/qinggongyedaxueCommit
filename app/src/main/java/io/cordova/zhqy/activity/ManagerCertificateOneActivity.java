@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.webkit.ValueCallback;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -78,6 +79,12 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
     @BindView(R.id.ll_faceService)
     LinearLayout ll_faceService;
 
+    @BindView(R.id.ll_sign_type)
+    LinearLayout ll_sign_type;
+
+    @BindView(R.id.ll_finger_sign)
+    LinearLayout ll_finger_sign;
+
     private int flag = 0;
     @Override
     protected int getResourceId() {
@@ -92,6 +99,8 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
         rl_delete.setOnClickListener(this);
         ll_device.setOnClickListener(this);
         ll_faceService.setOnClickListener(this);
+        ll_sign_type.setOnClickListener(this);
+        ll_finger_sign.setOnClickListener(this);
         registerBoradcastReceiver1();
         registerBoradcastReceiver2();
         registerBoradcastReceiver3();
@@ -346,17 +355,65 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
                 break;
             case R.id.ll_faceService://人脸信息维护
 
-                permissionsUtil=  PermissionsUtil
-                        .with(this)
-                        .requestCode(1)
-                        .isDebug(true)//开启log
-                        .permissions(PermissionsUtil.Permission.Camera.CAMERA)
-                        .request();
-
-
-
+                showUserDialog();
                 break;
+            case R.id.ll_sign_type://验证方式
+
+                Intent intent = new Intent(ManagerCertificateOneActivity.this,CertificateSignTypeActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.ll_finger_sign://指纹开启
+
+                Intent intent1 = new Intent(ManagerCertificateOneActivity.this,FingerManagerActivity.class);
+                startActivity(intent1);
+                break;
+
         }
+    }
+
+    private void showUserDialog() {
+        final CustomDialog dialog = new CustomDialog(ManagerCertificateOneActivity.this,R.layout.custom_dialog_cert_sign);
+        RelativeLayout rl_sure = dialog.findViewById(R.id.rl_sure);
+        RelativeLayout rl_sure1 = dialog.findViewById(R.id.rl_sure1);
+        final EditText et_userPwd = dialog.findViewById(R.id.et_userPwd);
+
+
+        rl_sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String trim = et_userPwd.getText().toString().trim();
+                if(trim.equals("")){
+                    ToastUtils.showToast(ManagerCertificateOneActivity.this,"请输入用户密码");
+                    return;
+                }
+                String userPwd =  (String) SPUtils.get(MyApp.getInstance(),"pwd","");
+                if(userPwd.equals(trim)){//用户输入密码正确，进行人脸校验
+
+                    permissionsUtil=  PermissionsUtil
+                            .with(ManagerCertificateOneActivity.this)
+                            .requestCode(1)
+                            .isDebug(true)//开启log
+                            .permissions(PermissionsUtil.Permission.Camera.CAMERA)
+                            .request();
+                }else {
+                    ToastUtils.showToast(ManagerCertificateOneActivity.this,"您输入的用户密码错误");
+                }
+                dialog.dismiss();
+
+
+            }
+        });
+
+        rl_sure1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
     }
 
     private void getCerInfo(String certContent) {

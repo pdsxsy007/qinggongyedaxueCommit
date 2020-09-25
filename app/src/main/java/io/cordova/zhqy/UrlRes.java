@@ -258,7 +258,8 @@ public class UrlRes {
     /**
      * 获取激活码
      */
-    public static String getAuthCodeUrl = "/portal/mobile/ca/getAuthCode";
+    public static String getAuthCodeUrl = "/authentication/api/v1/ca/getAuthCode";
+    //public static String getAuthCodeUrl = "/portal/mobile/ca/getAuthCode";
 
     /**
      * 查询证书

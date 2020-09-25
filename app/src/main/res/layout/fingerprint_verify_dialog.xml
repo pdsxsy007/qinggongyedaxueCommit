@@ -17,12 +17,12 @@
         android:padding="18dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp50"
+            android:layout_height="@dimen/dp50"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
             android:background="@color/white"
-            android:src="@mipmap/fingerprint_icon"/>
+            android:src="@mipmap/finger_printer"/>
 
 
         <TextView
@@ -46,6 +46,36 @@
             android:layout_marginTop="16dp"
             android:background="#e6e6e6"/>
 
+        <LinearLayout
+            android:id="@+id/ll_sign_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:background="@color/white"
+            >
+            <TextView
+                android:id="@+id/tv_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_tip_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="切换验证方式"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/font_normal2"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="16dp"
+                android:background="#e6e6e6"/>
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/tv_fingerprint_button_cancel"
@@ -59,7 +89,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="取消"
-            android:textColor="@color/text_black_color"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/font_normal2"/>
 
 

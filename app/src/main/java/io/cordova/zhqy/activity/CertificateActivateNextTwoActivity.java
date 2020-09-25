@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -54,7 +55,11 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
     LinearLayout ll_bottom;
 
 
+    @BindView(R.id.iv_back)
+    ImageView iv_back;
 
+    @BindView(R.id.tv_change)
+    TextView tv_change;
     private String successCode = "0x00000000";
 
 
@@ -66,10 +71,29 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
     @Override
     protected void initListener() {
         super.initListener();
-
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         final String jihuoma = getIntent().getStringExtra("jihuoma");
         String title = getIntent().getStringExtra("title");
         final String type = getIntent().getStringExtra("type");
+        String isShow = getIntent().getStringExtra("isShow");
+        if(null != isShow){//表示默认pin码验证
+            tv_change.setVisibility(View.VISIBLE);
+        }
+
+        tv_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CertificateActivateNextTwoActivity.this,CertificateSignTypeActivity.class);
+                intent.putExtra("signType","2");
+                startActivity(intent);
+                FinishActivity.addActivity(CertificateActivateNextTwoActivity.this);
+            }
+        });
         if(type.equals("0")){//从证书激活第二步传过来的
 
         }else if(type.equals("1")){//从FaceDialog传过来了
@@ -326,7 +350,7 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
                         Log.e("App签名",response.body());
                         BaseBean baseBean = JsonUtil.parseJson(response.body(),BaseBean.class);
                         if(baseBean.isSuccess()){
-
+                            ToastUtils.showToast(CertificateActivateNextTwoActivity.this,baseBean.getMsg());
                             Intent intent2 = new Intent();
                             intent2.setAction("addJsResultData");
                             intent2.putExtra("signature",signature);

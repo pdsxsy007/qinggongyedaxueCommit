@@ -93,16 +93,30 @@ public class JPushReceiver extends BroadcastReceiver {
                     String messageId = noticeCaBean.getMessageId();
                     String title = noticeCaBean.getTitle();
 
-                    Intent intent1 = new Intent(context, DialogActivity.class);;
-                    intent1.putExtra("fromWhere","notice");
-                    intent1.putExtra("signId",signDataId);
-                    intent1.putExtra("sendTime",sendTime);
 
-                    intent1.putExtra("messageId",messageId);
-                    intent1.putExtra("title",title);
-                    context.startActivity(intent1);
-                    if(isActivityTop(DialogActivity.class,context)) {
-                        ActivityUtils.getActivityManager().finishLastActivity();
+
+                    if(null != messageId){
+                        Intent intent2 = new Intent();
+                        intent2.putExtra("fromWhere","notice");
+                        intent2.putExtra("signId",signDataId);
+                        intent2.putExtra("sendTime",sendTime);
+                        intent2.putExtra("messageId",messageId);
+                        intent2.putExtra("title",title);
+                        intent2.setAction("refreshJpush");
+                        context.sendBroadcast(intent2);
+                    }else {
+                        if(isActivityTop(DialogActivity.class,context)) {
+                            ActivityUtils.getActivityManager().finishLastActivity();
+                        }
+                        Intent intent1 = new Intent(context, DialogActivity.class);;
+                        intent1.putExtra("fromWhere","notice");
+                        intent1.putExtra("signId",signDataId);
+                        intent1.putExtra("sendTime",sendTime);
+
+                        intent1.putExtra("messageId",messageId);
+                        intent1.putExtra("title",title);
+                        context.startActivity(intent1);
+
                     }
 
 

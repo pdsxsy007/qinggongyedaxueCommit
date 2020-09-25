@@ -83,7 +83,6 @@
             android:layout_alignParentBottom="true"
             >
             <TextView
-                android:id="@+id/tv_pin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/sp12"
@@ -117,8 +116,9 @@
     </RelativeLayout>
 
 
-   <!-- <TextView
+    <TextView
         android:id="@+id/tv_pin"
+        android:visibility="gone"
         android:layout_below="@id/rl_face"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp40"
@@ -130,7 +130,6 @@
         android:background="@drawable/shape_button_sign"
         android:layout_marginBottom="@dimen/dp20"
         />
--->
 
     <ImageView
         android:id="@+id/iv"

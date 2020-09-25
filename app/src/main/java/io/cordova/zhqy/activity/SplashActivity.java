@@ -287,7 +287,7 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }else {
 
-                if (SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN)) {
+                /*if (SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN)) {
                    Intent intent = new Intent(SplashActivity.this,LoginActivity3.class);
                    intent.putExtra("splash","splash");
                    startActivity(intent);
@@ -295,7 +295,8 @@ public class SplashActivity extends AppCompatActivity {
                 }else {
                     netWorkLogin();
                 }
-
+*/
+                netWorkLogin();
             }
             //netWorkLogin();
 

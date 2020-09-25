@@ -36,7 +36,7 @@ import io.cordova.zhqy.utils.SPUtils;
  * Created by Administrator on 2019/7/4 0004.
  */
 
-public class FaceDialogManagerActivity extends BaseActivity3 {
+public class FaceDialogChooseActivity extends BaseActivity3 {
 
     io.cordova.zhqy.face2.CameraView cameraView;
     FaceView faceView;
@@ -44,7 +44,7 @@ public class FaceDialogManagerActivity extends BaseActivity3 {
 
     private SensorManager sensorManager;
     private Sensor sensor;
-    private FaceDialogManagerActivity.MySensorListener mySensorListener;
+    private FaceDialogChooseActivity.MySensorListener mySensorListener;
     private int sensorBright = 0;
     private ImageView iv;
 
@@ -60,12 +60,17 @@ public class FaceDialogManagerActivity extends BaseActivity3 {
     @BindView(R.id.tv_pin)
     TextView tv_pin;
 
+    @BindView(R.id.tv_finger)
+    TextView tv_finger;
+
     @BindView(R.id.tv_signType)
     TextView tv_signType;
 
+
+
     @Override
     protected int getResourceId() {
-        return R.layout.activity_face_dialog_manager;
+        return R.layout.activity_face_dialog;
     }
     long l0;
     @Override
@@ -120,20 +125,35 @@ public class FaceDialogManagerActivity extends BaseActivity3 {
               }
           });
 
-
         tv_signType.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
         tv_signType.setText(Html.fromHtml("<u>"+"切换验证方式"+"<u/>"));
         tv_signType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent(FaceDialogManagerActivity.this,CertificateSignTypeManagerActivity.class);
+                Intent intent = new Intent(FaceDialogChooseActivity.this,CertificateSignTypeActivity.class);
+                intent.putExtra("signType","0");
                 startActivity(intent);
-                FinishActivity.addActivity(FaceDialogManagerActivity.this);
+                FinishActivity.addActivity(FaceDialogChooseActivity.this);
+            }
+        });
+        tv_pin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(FaceDialogChooseActivity.this,CertificateActivateNextTwoActivity.class);
+                intent.putExtra("title","使用PIN码验证");
+                intent.putExtra("type","1");
+                startActivity(intent);
+                FinishActivity.addActivity(FaceDialogChooseActivity.this);
 
             }
         });
+
+
     }
+
+
+
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
@@ -151,9 +171,9 @@ public class FaceDialogManagerActivity extends BaseActivity3 {
                     String s = bitmapToBase64(scaledBitmap);
 
                      Log.e("人脸",s+"");
-                    SPUtils.put(FaceDialogManagerActivity.this,"bitmap",s);
+                    SPUtils.put(FaceDialogChooseActivity.this,"bitmap",s);
                     Intent intent = new Intent();
-                    intent.setAction("faceDialogManager");
+                    intent.setAction("faceDialogChoose");
                     intent.putExtra("FaceActivity","FaceActivity");
                     sendBroadcast(intent);
                 }
@@ -163,6 +183,10 @@ public class FaceDialogManagerActivity extends BaseActivity3 {
         }
     };
 
+
+    /**
+     * 人脸前置摄像头捕捉人脸头像
+     */
     private class MySensorListener implements SensorEventListener {
 
         @Override
@@ -236,6 +260,10 @@ public class FaceDialogManagerActivity extends BaseActivity3 {
         }
         return result;
     }
+
+
+
+
 
 
 }

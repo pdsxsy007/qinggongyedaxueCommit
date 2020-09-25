@@ -9,8 +9,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.security.keystore.KeyProperties;
 import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
@@ -19,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,13 +32,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import butterknife.BindView;
+import cn.org.bjca.signet.coss.api.SignetCossApi;
+import cn.org.bjca.signet.coss.bean.CossSignPinResult;
+import cn.org.bjca.signet.coss.interfaces.CossSignPinCallBack;
 import io.cordova.zhqy.R;
+import io.cordova.zhqy.UrlRes;
+import io.cordova.zhqy.bean.BaseBean;
+import io.cordova.zhqy.bean.Constants;
 import io.cordova.zhqy.face.view.RefreshProgress;
 import io.cordova.zhqy.face2.FaceView;
+import io.cordova.zhqy.fingerprint.FingerprintHelper;
+import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity3;
 import io.cordova.zhqy.utils.BitmapUtils;
 import io.cordova.zhqy.utils.FinishActivity;
+import io.cordova.zhqy.utils.JsonUtil;
+import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
+import io.cordova.zhqy.utils.ToastUtils;
+import io.cordova.zhqy.utils.ViewUtils;
+import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
+import io.cordova.zhqy.widget.finger.CommonTipDialog;
+import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
 
 
 /**
@@ -62,6 +83,14 @@ public class FaceDialogActivity extends BaseActivity3 {
 
     @BindView(R.id.tv_pin)
     TextView tv_pin;
+
+    @BindView(R.id.tv_finger)
+    TextView tv_finger;
+
+    @BindView(R.id.tv_signType)
+    TextView tv_signType;
+
+
 
     @Override
     protected int getResourceId() {
@@ -120,8 +149,17 @@ public class FaceDialogActivity extends BaseActivity3 {
               }
           });
 
-        tv_pin.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
-        tv_pin.setText(Html.fromHtml("<u>"+"使用PIN码验证"+"<u/>"));
+        tv_signType.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
+        tv_signType.setText(Html.fromHtml("<u>"+"切换验证方式"+"<u/>"));
+        tv_signType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FaceDialogActivity.this,CertificateSignTypeActivity.class);
+                intent.putExtra("signType","0");
+                startActivity(intent);
+                FinishActivity.addActivity(FaceDialogActivity.this);
+            }
+        });
         tv_pin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,7 +172,12 @@ public class FaceDialogActivity extends BaseActivity3 {
 
             }
         });
+
+
     }
+
+
+
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
@@ -164,6 +207,10 @@ public class FaceDialogActivity extends BaseActivity3 {
         }
     };
 
+
+    /**
+     * 人脸前置摄像头捕捉人脸头像
+     */
     private class MySensorListener implements SensorEventListener {
 
         @Override
@@ -237,6 +284,10 @@ public class FaceDialogActivity extends BaseActivity3 {
         }
         return result;
     }
+
+
+
+
 
 
 }
