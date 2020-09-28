@@ -397,7 +397,7 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
                             .permissions(PermissionsUtil.Permission.Camera.CAMERA)
                             .request();
                 }else {
-                    ToastUtils.showToast(ManagerCertificateOneActivity.this,"您输入的用户密码错误");
+                    ToastUtils.showToast(ManagerCertificateOneActivity.this,"您输入的用户名密码错误");
                 }
                 dialog.dismiss();
 

@@ -321,7 +321,7 @@ public class JPushReceiver extends BroadcastReceiver {
     @TargetApi(Build.VERSION_CODES.O)
     private void createNotificationChannel(Context context, NotificationManager notificationManager) {
         // 通知渠道
-        NotificationChannel mChannel = new NotificationChannel("message_id", "消息订阅", NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel mChannel = new NotificationChannel("pre213", "消息通知订阅", NotificationManager.IMPORTANCE_HIGH);
         // 开启指示灯，如果设备有的话。
         mChannel.enableLights(true);
         // 开启震动

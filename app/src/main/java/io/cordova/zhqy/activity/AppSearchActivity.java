@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -322,7 +324,59 @@ public class AppSearchActivity extends BaseActivity2 implements PermissionsUtil.
                         long nowTime = System.currentTimeMillis();
                         if (nowTime - mLastClickTime > TIME_INTERVAL) {
                             mLastClickTime = nowTime;
-                            if (!listBean.getAppUrl().isEmpty()){
+
+
+                            if (null != listBean.getAppAndroidSchema() && listBean.getAppAndroidSchema().trim().length() != 0){
+                                if (!isLogin){
+                                    Intent intent = new Intent(AppSearchActivity.this,LoginActivity2.class);
+                                    startActivity(intent);
+                                }else {
+
+                                    String appUrl =  listBean.getAppAndroidSchema()+"";
+                                    String intercept = appUrl.substring(0,appUrl.indexOf(":")+3);
+//                                    hasApplication(appUrl);
+                                    Log.e("TAG", hasApplication(intercept)+"");
+                                    if (hasApplication(intercept)){
+                                        try {
+                                            //直接根据Scheme打开软件  拼接参数
+                                            if (appUrl.contains("{memberid}")){
+                                                String s1=  URLEncoder.encode((String) SPUtils.get(MyApp.getInstance(),"personName",""), "UTF-8");
+                                                appUrl =  appUrl.replace("{memberid}", s1);
+                                            }
+                                            if (appUrl.contains("{memberAesEncrypt}")){
+                                                String memberAesEncrypt = AesEncryptUtile.encrypt((String) SPUtils.get(MyApp.getInstance(),"personName",""), String.valueOf(listBean.getAppSecret()));
+                                                String s2=  URLEncoder.encode(memberAesEncrypt, "UTF-8");
+                                                appUrl =  appUrl.replace("{memberAesEncrypt}", s2);
+                                            }
+                                            if (appUrl.contains("{quicklyTicket}")){
+                                                String s3 =  URLEncoder.encode((String) SPUtils.get(MyApp.getInstance(),"TGC",""), "UTF-8");
+                                                appUrl = appUrl.replace("{quicklyTicket}",s3);
+                                            }
+                                            Log.e("TAG", appUrl+"");
+                                            Uri uri = Uri.parse(appUrl);
+                                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                                            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                                            intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+                                            startActivity(intent);
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }else {
+                                        //获取下载地址 后跳到浏览器下载
+                                        if(null!= listBean.getAppAndroidDownloadLink()){
+                                            String dwon = listBean.getAppAndroidDownloadLink()+"";
+                                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(dwon));
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                }
+
+
+                            }else if (!listBean.getAppUrl().isEmpty()){
                                 if (!isLogin) {
                                     if(listBean.getAppLoginFlag()==0){
                                         Intent intent = new Intent(AppSearchActivity.this,LoginActivity2.class);
@@ -448,6 +502,19 @@ public class AppSearchActivity extends BaseActivity2 implements PermissionsUtil.
         searchResult.setAdapter(searchResultListAdapter);
         //searchResultListAdapter.notifyDataSetChanged();
 
+    }
+
+
+    /**
+     * 判断是否安装了应用
+     * @return true 为已经安装
+     */
+    private boolean hasApplication(String scheme) {
+        PackageManager manager = getPackageManager();
+        Intent action = new Intent(Intent.ACTION_VIEW);
+        action.setData(Uri.parse(scheme));
+        List list = manager.queryIntentActivities(action, PackageManager.GET_RESOLVED_FILTER);
+        return list != null && list.size() > 0;
     }
 
 

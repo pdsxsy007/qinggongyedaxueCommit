@@ -90,7 +90,7 @@ public class FingerManagerActivity extends BaseActivity2 implements FingerprintH
         if (closeFingerprintTipDialog == null) {
             closeFingerprintTipDialog = new CommonTipDialog(this);
         }
-        closeFingerprintTipDialog.setContentText("确定关闭指纹登录?");
+        closeFingerprintTipDialog.setContentText("确定关闭指纹验证?");
         closeFingerprintTipDialog.setSingleButton(false);
         closeFingerprintTipDialog.setOnDialogButtonsClickListener(new CommonTipDialog.OnDialogButtonsClickListener() {
             @Override
@@ -137,7 +137,7 @@ public class FingerManagerActivity extends BaseActivity2 implements FingerprintH
         if(type == 0){
             if (fingerprintVerifyDialog != null && fingerprintVerifyDialog.isShowing()) {
                 fingerprintVerifyDialog.dismiss();
-                Toast.makeText(this, "指纹登录已开启", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "指纹验证已开启", Toast.LENGTH_SHORT).show();
                 isOpen = true;
                 SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, true);
                 setSwitchStatus();
@@ -147,7 +147,7 @@ public class FingerManagerActivity extends BaseActivity2 implements FingerprintH
         }else {
             if (fingerprintVerifyDialog != null && fingerprintVerifyDialog.isShowing()) {
                 fingerprintVerifyDialog.dismiss();
-                Toast.makeText(this, "指纹登录已关闭", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "指纹验证已关闭", Toast.LENGTH_SHORT).show();
                 isOpen = false;
                 SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, false);
                 setSwitchStatus();

@@ -306,7 +306,7 @@ public class AppListBean {
             private int appLinkedWay;
             private Object appIosSchema;
             private Object appIosDownloadLink;
-            private Object appAndroidSchema;
+            private String appAndroidSchema;
             private Object appAndroidDownloadLink;
             private int appIntranet;
             private int appUpordown;
@@ -404,11 +404,11 @@ public class AppListBean {
                 this.appIosDownloadLink = appIosDownloadLink;
             }
 
-            public Object getAppAndroidSchema() {
+            public String getAppAndroidSchema() {
                 return appAndroidSchema;
             }
 
-            public void setAppAndroidSchema(Object appAndroidSchema) {
+            public void setAppAndroidSchema(String appAndroidSchema) {
                 this.appAndroidSchema = appAndroidSchema;
             }
 

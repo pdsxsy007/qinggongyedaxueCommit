@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="252dp"
-    android:layout_height="100dp"
+    android:layout_height="120dp"
     android:background="@drawable/shape_corner"
     android:gravity="center"
     android:orientation="vertical">
@@ -29,18 +29,14 @@
             android:layout_below="@id/tv_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             >
-            <requestFocus />
             <EditText
                 android:id="@+id/et_userPwd"
                 android:background="@null"
-                android:textCursorDrawable="@drawable/my_cursor"
-                android:inputType="textPassword"
                 android:layout_width="match_parent"
-                android:hint="请先输入用户密码"
+                android:hint="请在此输入用户密码"
                 android:padding="10dp"
+                android:inputType="textPassword"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:gravity="center"
