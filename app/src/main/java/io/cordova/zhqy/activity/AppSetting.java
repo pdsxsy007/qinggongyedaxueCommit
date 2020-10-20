@@ -12,14 +12,10 @@ import android.security.keystore.KeyProperties;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,35 +33,23 @@ import io.cordova.zhqy.Main2Activity;
 
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.bean.CurrencyBean;
 import io.cordova.zhqy.bean.UpdateBean;
 import io.cordova.zhqy.fingerprint.FingerprintHelper;
-import io.cordova.zhqy.jpushutil.NotificationsUtils;
 import io.cordova.zhqy.utils.BaseActivity2;
-import io.cordova.zhqy.utils.DensityUtil;
 import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.MyDataCleanManager;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.ScreenSizeUtils;
 import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
-import io.cordova.zhqy.web.BaseWebActivity4;
-import io.cordova.zhqy.web.BaseWebCloseActivity;
 import io.cordova.zhqy.widget.CustomDialog;
-import io.cordova.zhqy.widget.MyDialog;
 import io.cordova.zhqy.widget.finger.CommonTipDialog;
-import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
-import me.samlss.lighter.Lighter;
-import me.samlss.lighter.interfaces.OnLighterListener;
-import me.samlss.lighter.parameter.Direction;
-import me.samlss.lighter.parameter.LighterParameter;
-import me.samlss.lighter.parameter.MarginOffset;
 
 /**
  * Created by Administrator on 2019/2/18 0018.
