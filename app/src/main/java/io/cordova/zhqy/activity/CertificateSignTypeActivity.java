@@ -25,7 +25,7 @@ import cn.org.bjca.signet.coss.interfaces.CossSignPinCallBack;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.bean.BaseBean;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.fingerprint.FingerprintHelper;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity;
