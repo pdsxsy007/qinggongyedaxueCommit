@@ -428,7 +428,9 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
                         T.showShort(MyApp.getInstance(), "退出成功");
                         //closeFingerprintLogin();
                         isOpen = false;
-                        SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, false);
+                        //SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, false);//指纹退出
+                        SPUtils.put(MyApp.getInstance(),"closeFaceFlag","");
+                        SPUtils.put(MyApp.getInstance(),"closeFaceFlag2","");
                         setSwitchStatus();
                         if(helper != null){
                             helper.closeAuthenticate();
