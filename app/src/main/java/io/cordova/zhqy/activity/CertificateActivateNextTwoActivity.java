@@ -253,7 +253,7 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
                 .execute(new StringCallback(){
                     @Override
                     public void onSuccess(Response<String> response) {
-
+                        Log.e("上传服务器",response.body());
 
                     }
 
