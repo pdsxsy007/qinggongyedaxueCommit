@@ -9,8 +9,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
 
-        versionCode 11
-        versionName "2.1.4"
+        versionCode 13
+        versionName "2.1.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -193,6 +193,7 @@ dependencies {
     implementation files('libs/cosssdk_release_V2.0.5R.jar')
     implementation files('libs/msspprovider_signed.jar')
     implementation files('libs/gson-2.2.2.jar')
+
 }
 
 tasks.withType(Javadoc) {//防止编码问题
