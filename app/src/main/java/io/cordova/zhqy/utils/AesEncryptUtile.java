@@ -27,9 +27,10 @@ public class AesEncryptUtile {
 	private static String ivParameter = "0392039203920300";
 
 	//ca涉及到的 appid
-	public static String APP_ID = "APP_0157E810F6894BEEB4DEC70331720557";
+	public static String APP_ID = "APP_37598079F3B148E1ABDA8C7FCF026F15";
 	//ca涉及到的 地址
-	public static String CA_ADDRESS = "https://coss-dev.isignet.cn:18759/coss/";
+//	public static String CA_ADDRESS = "https://coss-dev.isignet.cn:18759/coss/";
+	public static String CA_ADDRESS = "http://oss.zzuli.edu.cn/coss/";
 	private static AesEncryptUtile instance = null;
 
 	/**

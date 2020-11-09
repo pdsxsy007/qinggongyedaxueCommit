@@ -255,7 +255,7 @@ public class BaseLoadActivity extends SupportActivity implements GestureDetector
         }
         String tgc = (String) SPUtils.get(BaseLoadActivity.this, "TGC", "");
         CookieUtils.syncCookie(UrlRes.HOME2_URL,"CASTGC="+tgc,getApplication());
-
+        appServiceUrl = "gilight://url=http%3a%2f%2fiapp.zzuli.edu.cn%2fportal%2fportal-app%2fdownload%2fdownapp.html";
         if(appServiceUrl.contains("gilight://")){
             //gilight://url=weixin://123
             if(!appServiceUrl.contains("http")){
@@ -355,6 +355,7 @@ public class BaseLoadActivity extends SupportActivity implements GestureDetector
 
         registerBoradcastReceiver();
         registerBoradcastReceiver2();
+
 
     }
 

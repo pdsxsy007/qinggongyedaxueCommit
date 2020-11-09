@@ -250,7 +250,10 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
         appName = getIntent().getStringExtra("appName");
         scan = getIntent().getStringExtra("scan");
 
-        mTitleTextView.setText(appName);
+        if(null != appName){
+            mTitleTextView.setText(appName);
+        }
+
         if(appId != null){
             if(appId.equals("226")){
 
@@ -915,11 +918,11 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
                 handler.cancel(); // 接受所有网站的证书
-            }
-
+            }*/
+            handler.proceed();
 
         }
 

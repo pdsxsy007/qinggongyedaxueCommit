@@ -13,7 +13,7 @@ import android.widget.Toast;
 import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.activity.SplashActivity;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.fingerprint.FingerprintHelper;
 import io.cordova.zhqy.fingerprint.LoginPageOperationListener;
 import io.cordova.zhqy.utils.SPUtil;

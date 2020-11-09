@@ -30,7 +30,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--<uses-permission android:name="android.permission.RECORD_AUDIO" />-->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -492,6 +492,9 @@
         <activity android:name=".activity.FingerManagerActivity" />
         <activity android:name=".activity.FaceDialogChooseActivity" />
         <activity android:name=".activity.CertificateSignTypeManagerActivity" />
+        <activity android:name=".activity.SystemInfoDetailsActivity" />
+        <activity android:name=".activity.OaMsgYBActivity" />
+        <activity android:name=".activity.OaMsgActivity2" />
     </application>
 
 </manifest>

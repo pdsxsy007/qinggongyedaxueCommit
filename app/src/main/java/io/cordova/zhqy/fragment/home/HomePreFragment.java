@@ -68,6 +68,7 @@ import io.cordova.zhqy.activity.CAResultActivity;
 import io.cordova.zhqy.activity.LoginActivity2;
 import io.cordova.zhqy.activity.MyShenqingActivity;
 import io.cordova.zhqy.activity.OaMsgActivity;
+import io.cordova.zhqy.activity.OaMsgYBActivity;
 import io.cordova.zhqy.activity.SystemMsgActivity;
 import io.cordova.zhqy.bean.CaBean;
 import io.cordova.zhqy.bean.MyCollectionBean;
@@ -275,6 +276,7 @@ public class HomePreFragment extends BaseFragment implements PermissionsUtil.IPe
      *
      * */
     private void setGoPushMsg() {
+        String messageSign = (String) SPUtils.get(getActivity(), "messageSign", "");
         if (!StringUtils.isEmpty(msgType)){
             Intent intent;
             if (msgType.equals("0")){
@@ -283,27 +285,47 @@ public class HomePreFragment extends BaseFragment implements PermissionsUtil.IPe
                 startActivity(intent);
             }else if (msgType.equals("1")){
                 intent = new Intent(MyApp.getInstance(), OaMsgActivity.class);
-                intent.putExtra("type","db");
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","1");
+                }else {
+                    intent.putExtra("type","db");
+                }
                 intent.putExtra("msgType","待办消息");
                 startActivity(intent);
             }else if (msgType.equals("2")){
                 intent = new Intent(MyApp.getInstance(), OaMsgActivity.class);
-                intent.putExtra("type","dy");
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","2");
+                }else {
+                    intent.putExtra("type","dy");
+                }
                 intent.putExtra("msgType","待阅消息");
                 startActivity(intent);
             }else if (msgType.equals("3")){
-                intent = new Intent(MyApp.getInstance(), OaMsgActivity.class);
-                intent.putExtra("type","yb");
+                intent = new Intent(MyApp.getInstance(), OaMsgYBActivity.class);
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","3");
+                }else {
+                    intent.putExtra("type","yb");
+                }
                 intent.putExtra("msgType","已办消息");
                 startActivity(intent);
             }else if (msgType.equals("4")){
-                intent = new Intent(MyApp.getInstance(), OaMsgActivity.class);
-                intent.putExtra("type","yy");
+                intent = new Intent(MyApp.getInstance(), OaMsgYBActivity.class);
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","4");
+                }else {
+                    intent.putExtra("type","yy");
+                }
                 intent.putExtra("msgType","已阅消息");
                 startActivity(intent);
             }else if (msgType.equals("5")){
-                intent = new Intent(MyApp.getInstance(), MyShenqingActivity.class);
-                intent.putExtra("type","sq");
+                intent = new Intent(MyApp.getInstance(), OaMsgYBActivity.class);
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","5");
+                }else {
+                    intent.putExtra("type","sq");
+                }
                 intent.putExtra("msgType","我的申请");
                 startActivity(intent);
             }else if (msgType.equals("6")){
@@ -420,6 +442,7 @@ public class HomePreFragment extends BaseFragment implements PermissionsUtil.IPe
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
+            Log.e("homeUrl",url);
             if (!url.equals("http://www.zzuli.edu.cn/_t9/main.htm")){
                 String isOpen = (String) SPUtils.get(MyApp.getInstance(), "isOpen", "");
                 if(isOpen.equals("") || isOpen.equals("1")){

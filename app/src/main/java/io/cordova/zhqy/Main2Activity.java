@@ -74,8 +74,7 @@ import com.baidu.location.LocationClientOption;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.tbruyelle.rxpermissions2.Permission;
-import com.tbruyelle.rxpermissions2.RxPermissions;
+
 
 
 import java.io.IOException;
@@ -107,6 +106,7 @@ import io.cordova.zhqy.bean.CountBean;
 import io.cordova.zhqy.bean.CurrencyBean;
 import io.cordova.zhqy.bean.LoginBean;
 import io.cordova.zhqy.bean.NewStudentBean;
+import io.cordova.zhqy.bean.NoticeInfoBean;
 import io.cordova.zhqy.bean.UpdateBean;
 import io.cordova.zhqy.fragment.home.FindPreFragment;
 import io.cordova.zhqy.fragment.home.HomePreFragment;
@@ -148,9 +148,11 @@ import io.reactivex.functions.Consumer;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+
 import static io.cordova.zhqy.UrlRes.HOME2_URL;
 import static io.cordova.zhqy.UrlRes.caQrCodeVerifyUrl;
 import static io.cordova.zhqy.UrlRes.changePwdUrl;
+import static io.cordova.zhqy.UrlRes.findLoginTypeListUrl;
 import static io.cordova.zhqy.UrlRes.insertPortalPositionUrl;
 import static io.cordova.zhqy.activity.SplashActivity.getLocalVersionName;
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
@@ -275,6 +277,10 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
 //        initChannel();
 
 //        jPluginPlatformInterface = new JPluginPlatformInterface(this);
+
+
+
+
 
     }
    /*
@@ -1163,6 +1169,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
     /**
      * 根据UserId 绑定Jpush*/
     private void bindJpush() {
+        String registrationId = (String) SPUtils.get(Main2Activity.this, "registrationId", "");
         OkGo.<String>get(UrlRes.HOME_URL+UrlRes.Registration_Id)
                 .tag("Jpush")
                 .params("equipType","android")
@@ -1502,6 +1509,42 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
         }
     }
 
+    private void getBack() {
+        OkGo.<String>get(UrlRes.HOME_URL +findLoginTypeListUrl)
+                .tag(this)
+                .params("type","backLog")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("result_ma0bing",response.body());
+
+
+                        NoticeInfoBean noticeInfoBean = JsonUtil.parseJson(response.body(),NoticeInfoBean.class);
+
+                        List<NoticeInfoBean.Obj> obj = noticeInfoBean.getObj();
+                        if(obj != null){
+                            String configValue = obj.get(0).getConfigValue();
+                            SPUtils.put(MyApp.getInstance(),"messageSign",configValue+"");
+                            if(configValue.equals("1")){//1 旧 2新
+                                netWorkSystemMsg();
+                            }else{
+                                netWorkSystemMsg2();
+                            }
+                        }else {
+                            netWorkSystemMsg2();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        netWorkSystemMsg2();
+                    }
+                });
+
+
+    }
 
     @Override
     protected void onPause() {
@@ -1548,12 +1591,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                    webView.setWebViewClient(mWebViewClient);
                    webView.loadUrl("http://iapp.zzuli.edu.cn/portal/login/appLogin");
 
-                   if(count.equals("")){
-                       netWorkSystemMsg();
-                   }else {
-
-                       netWorkSystemMsg();
-                   }
+                 getBack();
 
 
 
@@ -1649,7 +1687,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
     }
 
     CountBean countBean1;
-    private void netWorkSystemMsg() {
+    private void netWorkSystemMsg2() {
 
         OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_countUnreadMessagesForCurrentUser)
                 .tag(this)
@@ -1657,10 +1695,10 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.e("s",response.toString());
+                        Log.e("首页系统消息",response.body());
 
                         countBean1 = JSON.parseObject(response.body(), CountBean.class);
-                        netWorkOAToDoMsg();//OA待办
+                        netWorkOAToDoMsg2();//OA待办
 
                     }
                     @Override
@@ -1672,6 +1710,122 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
     }
     CountBean countBean2;
     /**OA消息列表*/
+    private void netWorkOAToDoMsg2() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.countUnreadMessagesForCurrentUserUrl)
+                .tag(this)
+                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("type", "1")//(1:待办,2:待阅,3:已办,4:已阅,5:申请)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("新待办",response.body());
+
+                        countBean2 = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkEmailMsg2();
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+    CountBean countBeanEmail;
+    private void netWorkEmailMsg2() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_emai_count)
+                .tag(this)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("邮件数量首页",response.body());
+                        countBeanEmail = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkDyMsg2();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+
+    CountBean countBean3;
+    private void netWorkDyMsg2() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.countUnreadMessagesForCurrentUserUrl)
+                .tag(this)
+                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("type", "2")//(1:待办,2:待阅,3:已办,4:已阅,5:申请)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("新待阅",response.toString());
+
+                        countBean3 = JSON.parseObject(response.body(), CountBean.class);
+
+                        //tvMyToDoMsgNum.setText(countBean2.getCount()+Integer.parseInt(countBean1.getObj())+countBean3.getCount()+"");
+                        String s = Integer.parseInt(countBean2.getObj()) + Integer.parseInt(countBean1.getObj()) + Integer.parseInt(countBean3.getObj())+countBeanEmail.getCount() + "";
+
+                        if(null == s){
+                            s = "0";
+                        }
+                        SPUtils.put(MyApp.getInstance(),"count",s+"");
+                        String count = (String) SPUtils.get(MyApp.getInstance(), "count", "");
+                       /* if (Build.MANUFACTURER.equalsIgnoreCase("huaWei")) {
+
+                            addHuaWeiCut(count);
+
+                        }else if(Build.MANUFACTURER.equalsIgnoreCase("Xiaomi")){
+                            xiaoMiShortCut(count);
+                        }else if (Build.MANUFACTURER.equalsIgnoreCase("vivo")) {
+                            vivoShortCut(count);
+                        }*/
+
+                        remind();
+                        if(s.equals("0")){
+
+                            badge1.hide();
+                        }else {
+                            badge1.show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+
+    private void netWorkSystemMsg() {
+
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_countUnreadMessagesForCurrentUser)
+                .tag(this)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("s",response.toString());
+
+                        countBean1 = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkOAToDoMsg();//OA寰呭姙
+
+                    }
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+    /**OA娑堟伅鍒楄〃*/
     private void netWorkOAToDoMsg() {
         OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_count)
                 .tag(this)
@@ -1695,7 +1849,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                     }
                 });
     }
-    CountBean countBeanEmail;
+
     private void netWorkEmailMsg() {
         OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_emai_count)
                 .tag(this)
@@ -1703,7 +1857,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.e("邮件数量首页",response.body());
+                        Log.e("邮件",response.body());
                         countBeanEmail = JSON.parseObject(response.body(), CountBean.class);
                         netWorkDyMsg();
                     }
@@ -1717,7 +1871,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
     }
 
 
-    CountBean countBean3;
+
     private void netWorkDyMsg() {
         OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_count)
                 .tag(this)
@@ -1896,6 +2050,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
         super.onDestroy();
         isrRunIng = "0";
         unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(broadcastReceiver2);
         mLocationClient.stop();
         mLocationClient.stopIndoorMode();
     }

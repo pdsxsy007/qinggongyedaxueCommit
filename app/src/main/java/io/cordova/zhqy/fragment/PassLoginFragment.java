@@ -20,13 +20,12 @@ import com.lzy.okgo.model.Response;
 import java.net.URLEncoder;
 import java.util.Calendar;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.activity.FindPwdActivity;
 import io.cordova.zhqy.activity.LoginActivity2;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.bean.GetUserIdBean;
 import io.cordova.zhqy.bean.LoginBean;
 import io.cordova.zhqy.utils.AesEncryptUtile;

@@ -301,4 +301,13 @@ public class UrlRes {
     */
    public static String signFailedUrl = "/portal/mobile/ca/signFailed";
 
+   public static String getBacklogUrl = "/portal/mobile/backlog/getBacklog";
+
+    /**
+     * 统计该用户未读的消息数量
+     */
+   public static String countUnreadMessagesForCurrentUserUrl = "/portal/mobile/backlog/countUnreadMessagesForCurrentUser";
+
+   public static String markBackLogAsReadUrl = "/portal/mobile/backlog/markBackLogAsRead";
+
 }

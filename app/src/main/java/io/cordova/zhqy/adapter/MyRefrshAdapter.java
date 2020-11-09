@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
@@ -20,6 +21,7 @@ import java.util.List;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.activity.InfoDetailsActivity;
+import io.cordova.zhqy.activity.SystemInfoDetailsActivity;
 import io.cordova.zhqy.activity.SystemMsgActivity;
 import io.cordova.zhqy.bean.SysMsgBean;
 import io.cordova.zhqy.utils.CircleCrop;
@@ -50,6 +52,7 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
             holder.setText(R.id.tv_name,"[系统消息]");
         }
         holder.setText(R.id.tv_present,s.getMessageTitle());
+
         ImageView imageView = holder.getConvertView().findViewById(R.id.oa_img);
 
         switch (position%6){
@@ -67,7 +70,7 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
                 break;
             case 2:
                 Glide.with(context)
-                        .load(R.mipmap.message_icon2)
+                        .load(R.mipmap.message_icon3)
                         //.transform(new CircleCrop(mContext))
                         .into(imageView);
                 break;
@@ -92,9 +95,10 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
 
         }
 
-
+        LinearLayout ll_msg = holder.getConvertView().findViewById(R.id.ll_msg);
         Log.d("s", s.getMessageDetailId()+".");
         if(s.getMessageDetailState() == 0){//未读
+
             holder.setTextColor(R.id.tv_name,Color.parseColor("#000000"));
             holder.setTextColor(R.id.tv_present,Color.parseColor("#000000"));
             holder.setVisible(R.id.rl_jiaobiao,true);
@@ -121,6 +125,7 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
                                 intent.putExtra("title2",s.getMessageTitle().toString());
                                 intent.putExtra("time",s.getMessageSendTime()+"");
                                 intent.putExtra("msgsender",s.getMessageSender()+"");
+                                //intent.putExtra("backlogDetailId",s.getBacklogDetailId()+"");
                                 //intent.putExtra("title2",s.getMessageAppName());
                                 //null != s.getMessageUrl() ||
                                 if ("".equals(s.getMessageUrl())){

@@ -2,10 +2,8 @@ package io.cordova.zhqy.fingerprint;
 
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
-import android.os.Build;
 import android.os.CancellationSignal;
 import android.security.keystore.KeyProperties;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -16,7 +14,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.utils.SPUtil;
 
 

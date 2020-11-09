@@ -37,6 +37,7 @@ import io.cordova.zhqy.R;
 import io.cordova.zhqy.activity.DialogActivity;
 import io.cordova.zhqy.activity.MyShenqingActivity;
 import io.cordova.zhqy.activity.OaMsgActivity;
+import io.cordova.zhqy.activity.OaMsgYBActivity;
 import io.cordova.zhqy.activity.OpenClickActivity;
 import io.cordova.zhqy.activity.SplashActivity;
 import io.cordova.zhqy.activity.SystemMsgActivity;
@@ -114,7 +115,10 @@ public class JPushReceiver extends BroadcastReceiver {
                         intent1.putExtra("sendTime",sendTime);
 
                         intent1.putExtra("messageId",messageId);
-                        intent1.putExtra("title",title);
+                        if(null != title){
+                            intent1.putExtra("title",title);
+                        }
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent1);
 
                     }
@@ -221,6 +225,7 @@ public class JPushReceiver extends BroadcastReceiver {
         }
 
 
+        String messageSign = (String) SPUtils.get(context, "messageSign", "");
             /*当前页面后台隐藏*/
         if (!StringUtils.isEmpty(msgType)){
             Intent intent;
@@ -231,31 +236,54 @@ public class JPushReceiver extends BroadcastReceiver {
                 context.startActivity(intent);
             }else if (msgType.equals("1")){
                 intent = new Intent(MyApp.getInstance(), OaMsgActivity.class);
-                intent.putExtra("type","db");
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","1");
+                }else {
+                    intent.putExtra("type","db");
+                }
+
                 intent.putExtra("msgType","待办消息");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }else if (msgType.equals("2")){
                 intent = new Intent(MyApp.getInstance(), OaMsgActivity.class);
-                intent.putExtra("type","dy");
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","2");
+                }else {
+                    intent.putExtra("type","dy");
+                }
+
                 intent.putExtra("msgType","待阅消息");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }else if (msgType.equals("3")){
-                intent = new Intent(MyApp.getInstance(), OaMsgActivity.class);
-                intent.putExtra("type","yb");
+                intent = new Intent(MyApp.getInstance(), OaMsgYBActivity.class);
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","3");
+                }else {
+                    intent.putExtra("type","yb");
+                }
+
                 intent.putExtra("msgType","已办消息");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }else if (msgType.equals("4")){
-                intent = new Intent(MyApp.getInstance(), OaMsgActivity.class);
-                intent.putExtra("type","yy");
+                intent = new Intent(MyApp.getInstance(), OaMsgYBActivity.class);
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","4");
+                }else {
+                    intent.putExtra("type","yy");
+                }
                 intent.putExtra("msgType","已阅消息");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }else if (msgType.equals("5")){
-                intent = new Intent(MyApp.getInstance(), MyShenqingActivity.class);
-                intent.putExtra("type","sq");
+                intent = new Intent(MyApp.getInstance(), OaMsgYBActivity.class);
+                if(messageSign.equals("2")){
+                    intent.putExtra("type","5");
+                }else {
+                    intent.putExtra("type","sq");
+                }
                 intent.putExtra("msgType","我的申请");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -307,10 +335,15 @@ public class JPushReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.
                 getBroadcast(context, requestCode, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "message_id");;
+        //NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "message_id");;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "pre213");;
+        //NotificationCompat.Builder builder = new NotificationCompat.Builder(context);;
         builder.setContentIntent(pendingIntent);
         builder.setSmallIcon(R.drawable.icon_logo);
-        builder.setContentTitle(title);
+        if(null != title){
+            builder.setContentTitle(title);
+        }
+
         builder.setContentText(msg);
         builder.setAutoCancel(true);
         builder.setDefaults(Notification.DEFAULT_ALL);
@@ -321,6 +354,7 @@ public class JPushReceiver extends BroadcastReceiver {
     @TargetApi(Build.VERSION_CODES.O)
     private void createNotificationChannel(Context context, NotificationManager notificationManager) {
         // 通知渠道
+        //NotificationChannel mChannel = new NotificationChannel("message_id", "消息通知订阅", NotificationManager.IMPORTANCE_HIGH);
         NotificationChannel mChannel = new NotificationChannel("pre213", "消息通知订阅", NotificationManager.IMPORTANCE_HIGH);
         // 开启指示灯，如果设备有的话。
         mChannel.enableLights(true);

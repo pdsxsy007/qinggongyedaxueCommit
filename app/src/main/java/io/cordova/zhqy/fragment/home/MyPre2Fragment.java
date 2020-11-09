@@ -34,6 +34,7 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -48,13 +49,16 @@ import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.activity.AppSetting;
 import io.cordova.zhqy.activity.CertificateActivateActivity;
+import io.cordova.zhqy.activity.InfoDetailsActivity;
 import io.cordova.zhqy.activity.LoginActivity2;
 import io.cordova.zhqy.activity.ManagerCertificateOneActivity;
 import io.cordova.zhqy.activity.MyCollectionActivity;
 import io.cordova.zhqy.activity.MyDataActivity;
 import io.cordova.zhqy.activity.MyToDoMsgActivity;
+import io.cordova.zhqy.activity.OaMsgActivity;
 import io.cordova.zhqy.bean.CheckRoleCodeBean;
 import io.cordova.zhqy.bean.CountBean;
+import io.cordova.zhqy.bean.MessageBean;
 import io.cordova.zhqy.bean.MyCollectionBean;
 import io.cordova.zhqy.bean.NoticeInfoBean;
 import io.cordova.zhqy.bean.OAMsgListBean;
@@ -92,6 +96,7 @@ import me.samlss.lighter.shape.CircleShape;
 
 import static io.cordova.zhqy.UrlRes.findLoginTypeListUrl;
 import static io.cordova.zhqy.utils.MyApp.getInstance;
+import static io.cordova.zhqy.utils.TimeUtils.timeStamp2Date;
 
 /**
  * Created by Administrator on 2018/11/22 0022.
@@ -143,9 +148,12 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
     LinearLayout ll_yan_sign;
     @BindView(R.id.tv_name)
     TextView tv_name;
+    @BindView(R.id.tv_more)
+    TextView tv_more;
 
     boolean isLogin = false;
     BadgeView badge1;
+    String count;
     @Override
     public int getLayoutResID() {
         return R.layout.fragment2_my_pre;
@@ -182,6 +190,7 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
         registerBoradcastReceiver3();
         registerBoradcastReceiver4();
         registerBoradcastReceiver5();
+
 
         getCaShowInfo();
 
@@ -261,6 +270,8 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
         rl_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 switch (flag){
                     case 0://进入
                         Intent intent = new Intent(MyApp.getInstance(), ManagerCertificateOneActivity.class);
@@ -513,17 +524,18 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
 
     private void remind() { //BadgeView的具体使用
 
-        int i1 = Integer.parseInt(count);
-        if(i1>99){
-            badge1.setText("99+"); // 需要显示的提醒类容
-        }else {
-            badge1.setText(count); // 需要显示的提醒类容
-        }
-        //badge1.setText(count); // 需要显示的提醒类容
-        if(count == null){
-            count = "0";
-        }
+
        try{
+           int i1 = Integer.parseInt(count);
+           if(i1>99){
+               badge1.setText("99+"); // 需要显示的提醒类容
+           }else {
+               badge1.setText(count); // 需要显示的提醒类容
+           }
+           //badge1.setText(count); // 需要显示的提醒类容
+           if(count == null){
+               count = "0";
+           }
            SPUtils.put(getActivity(),"count",count+"");
        }catch (Exception e){
             e.getMessage();
@@ -545,10 +557,10 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
     /**判断是否登录*/
     private void isLoginState() {
         if (isLogin){
-            netWorkSystemMsg();
+
+            getBack();
             netWorkMyCollection();//我的收藏
 
-            dbDataList();//OA待办消息
 
 
         }else {
@@ -556,20 +568,65 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
         }
     }
 
-    private void dbDataList() {
-        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_workFolwDbList)
+
+    private void getBack() {
+        OkGo.<String>get(UrlRes.HOME_URL +findLoginTypeListUrl)
                 .tag(this)
-                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
-                .params("type","db")
-                .params("size", 15)
-                .params("workType","workdb")
+                .params("type","backLog")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("result_ma0bing",response.body());
+
+
+                        NoticeInfoBean noticeInfoBean = JsonUtil.parseJson(response.body(),NoticeInfoBean.class);
+
+                        List<NoticeInfoBean.Obj> obj = noticeInfoBean.getObj();
+                        if(obj != null){
+                            String configValue = obj.get(0).getConfigValue();
+                            if(configValue.equals("1")){
+                                tv_more.setVisibility(View.GONE);
+                                netWorkSystemMsg();
+                                dbDataList();//OA待办消息
+
+                            }else{
+                                netWorkSystemMsg2();
+                                dbDataList2();//OA待办消息
+
+                            }
+                        }else {
+                            netWorkSystemMsg2();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        netWorkSystemMsg2();
+                    }
+                });
+
+
+    }
+
+    MessageBean messageBean;
+    private void dbDataList2() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.getBacklogUrl)
+                .tag(this)
+                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("pageNum", 1)
+                .params("pageSize", 15)
+                .params("messageType","1")
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Log.e("待办列表",response.body());
-                        oaMsgListBean = JSON.parseObject(response.body(), OAMsgListBean.class);
-                        if (oaMsgListBean.isSuccess()) {
-                            if(oaMsgListBean.getCount() > 0){
+                        //oaMsgListBean = JSON.parseObject(response.body(), OAMsgListBean.class);
+
+                        messageBean = JSON.parseObject(response.body(), MessageBean.class);
+                        if (messageBean.getSuccess()) {
+                            if(messageBean.getCount() > 0){
                                 setRvOAMsgList();
                             }else {
                                 llOa.setVisibility(View.GONE);
@@ -696,62 +753,52 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
         }
     }
 
-    CountBean countBean2;
-    /**OA消息列表*/
     OAMsgListBean oaMsgListBean;
-    private void netWorkOAToDoMsg() {
-        try{
-            OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_count)
-                    .tag(this)
-                    .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
-                    .params("type", "db")
-                    .params("workType", "workdb")
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onSuccess(Response<String> response) {
-                            Log.e("待办",response.body());
-
-                            countBean2 = JSON.parseObject(response.body(), CountBean.class);
-                            netWorkEmailMsg();
-
-                        }
-
-                        @Override
-                        public void onError(Response<String> response) {
-                            super.onError(response);
-
-                        }
-                    });
-        }catch (Exception e){
-
-        }
-
-    }
-
-    CountBean countBeanEmail;
-    private void netWorkEmailMsg() {
-        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_emai_count)
+    private void dbDataList() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_workFolwDbList)
                 .tag(this)
                 .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("type","db")
+                .params("size", 15)
+                .params("workType","workdb")
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.e("邮件数量我的",response.body());
-                        countBeanEmail = JSON.parseObject(response.body(), CountBean.class);
-                        netWorkDyMsg();
-                    }
+                        Log.e("待办列表",response.body());
+                        oaMsgListBean = JSON.parseObject(response.body(), OAMsgListBean.class);
+                        if (oaMsgListBean.isSuccess()) {
+                            if(oaMsgListBean.getCount() > 0){
+                                setRvOAMsgList2();
+                            }else {
+                                llOa.setVisibility(View.GONE);
+                            }
 
+
+                        }else {
+                            llOa.setVisibility(View.GONE);
+                        }
+
+                    }
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
+
 
                     }
                 });
     }
 
 
+//    CountBean countBean2;
+//    /**OA消息列表*/
+//    OAMsgListBean oaMsgListBean;
+
+    CountBean countBeanEmail;
+
+
     /**OA消息列表填充*/
-    CommonAdapter<OAMsgListBean.ObjBean> oaAdapter;
+    CommonAdapter<MessageBean.Obj> oaAdapter;
+    private List<MessageBean.Obj> mlists = new ArrayList<>();
     private void setRvOAMsgList() {
         llOa.setVisibility(View.VISIBLE);
         myOaToDoList.setLayoutManager(new LinearLayoutManager(getContext()){
@@ -760,7 +807,135 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
                 return false;
             }
         });
-        oaAdapter = new CommonAdapter<OAMsgListBean.ObjBean>(getContext(),R.layout.item_to_do_my_msg,oaMsgListBean.getObj()) {
+        List<MessageBean.Obj> obj = messageBean.getObj();
+        mlists.clear();
+        if(obj != null){
+            for (int i = 0; i < obj.size(); i++) {
+                if(i <5){
+                    mlists.add(obj.get(i));
+                }else {
+                    break;
+                }
+
+            }
+        }
+        oaAdapter = new CommonAdapter<MessageBean.Obj>(getContext(),R.layout.item_to_do_my_msg,mlists) {
+            @Override
+            protected void convert(ViewHolder holder, MessageBean.Obj s, int position) {
+                holder.setVisible(R.id.tv_msg_num,false);
+                ImageView iv = holder.getConvertView().findViewById(R.id.oa_img);
+                switch (position%6){
+                    case 0:
+                        Glide.with(mContext)
+                                .load(R.mipmap.message_icon2)
+                                .into(iv);
+                        break;
+                    case 1:
+                        Glide.with(mContext)
+                                .load(R.mipmap.message_icon1)
+                                .into(iv);
+                        break;
+                    case 2:
+                        Glide.with(mContext)
+                                .load(R.mipmap.message_icon2)
+                                .into(iv);
+                        break;
+                    case 3:
+                        Glide.with(mContext)
+                                .load(R.mipmap.message_icon4)
+                                .into(iv);
+                        break;
+                    case 4:
+                        Glide.with(mContext)
+                                .load(R.mipmap.message_icon3)
+                                .into(iv);
+                        break;
+                    case 5:
+                        Glide.with(mContext)
+                                .load(R.mipmap.message_icon5)
+                                .into(iv);
+                        break;
+                }
+                String messageSendTime = s.getMessageSendTime();
+                String date = timeStamp2Date(messageSendTime, "yyyy-MM-dd HH:mm:ss");
+                holder.setText(R.id.tv_name,date);
+                holder.setText(R.id.tv_present,s.getMessageTitle());
+                holder.setText(R.id.tv_name1,s.getMemberNickname());
+
+            }
+        };
+        myOaToDoList.setAdapter(oaAdapter);
+        oaAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+               /* if (!oaMsgListBean.getObj().get(position).getTodourl().isEmpty()){
+                    Log.e("url  ==",oaMsgListBean.getObj().get(position).getTodourl()+ "");
+                    if (null != oaMsgListBean.getObj().get(position).getTodourl()){
+                        Intent intent = null;
+                        String isOpen = (String) SPUtils.get(MyApp.getInstance(), "isOpen", "");
+                        if(isOpen.equals("") || isOpen.equals("1")){
+                            intent = new Intent(MyApp.getInstance(), BaseWebCloseActivity.class);
+                        }else {
+                            intent = new Intent(MyApp.getInstance(), BaseWebActivity4.class);
+                        }
+                        intent.putExtra("appUrl",oaMsgListBean.getObj().get(position).getTodourl());
+                        intent.putExtra("oaMsg","oaMsg");
+                        intent.putExtra("appName",oaMsgListBean.getObj().get(position).getYwlx());
+                        intent.putExtra("scan","scan");
+                        startActivity(intent);
+                    }
+
+                }*/
+                Intent intent = new Intent(MyApp.getInstance(), InfoDetailsActivity.class);
+
+                intent.putExtra("title2",messageBean.getObj().get(position).getMessageTitle());
+                intent.putExtra("time",messageBean.getObj().get(position).getMessageSendTime()+"");
+                intent.putExtra("msgsender",messageBean.getObj().get(position).getSenderName()+"");
+                intent.putExtra("backlogDetailId",messageBean.getObj().get(position).getBacklogDetailId()+"");
+                if ("".equals(messageBean.getObj().get(position).getMessageMobileUrl())){
+                    intent.putExtra("appUrl2",messageBean.getObj().get(position).getMessageContent());
+
+                }else if(null == messageBean.getObj().get(position).getMessageMobileUrl() ){
+                    intent.putExtra("appUrl2",messageBean.getObj().get(position).getMessageContent());
+                }else {
+                    intent.putExtra("appUrl",messageBean.getObj().get(position).getMessageMobileUrl());
+                }
+
+
+                startActivity(intent);
+
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+        oaAdapter.notifyDataSetChanged();
+
+        tv_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), OaMsgActivity.class);
+                intent.putExtra("type","1");
+                intent.putExtra("msgType","待办消息");
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    /**OA消息列表填充*/
+    CommonAdapter<OAMsgListBean.ObjBean> oaAdapter2;
+    private void setRvOAMsgList2() {
+        llOa.setVisibility(View.VISIBLE);
+        myOaToDoList.setLayoutManager(new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        oaAdapter2 = new CommonAdapter<OAMsgListBean.ObjBean>(getContext(),R.layout.item_to_do_my_msg,oaMsgListBean.getObj()) {
             @Override
             protected void convert(ViewHolder holder, OAMsgListBean.ObjBean objBean, int position) {
                 holder.setVisible(R.id.tv_msg_num,false);
@@ -802,8 +977,8 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
 
             }
         };
-        myOaToDoList.setAdapter(oaAdapter);
-        oaAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+        myOaToDoList.setAdapter(oaAdapter2);
+        oaAdapter2.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 if (!oaMsgListBean.getObj().get(position).getTodourl().isEmpty()){
@@ -833,7 +1008,6 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
         });
         oaAdapter.notifyDataSetChanged();
     }
-    
     /**我的收藏列表*/
     MyCollectionBean collectionBean;
     private void netWorkMyCollection() {
@@ -1307,7 +1481,8 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
         super.onResume();
 
         if (netState.isConnect(getActivity())){
-            //initLoadPage();
+            //netWorkSystemMsg();
+            getBack();
         }else {
             ToastUtils.showToast(getActivity(),"网络连接异常");
         }
@@ -1341,90 +1516,256 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
     }
 
     CountBean countBean1;
-    /** 获取消息数量*/
+    private void netWorkSystemMsg2() {
 
-    private void netWorkSystemMsg() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_countUnreadMessagesForCurrentUser)
+                .tag(this)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("首页系统消息",response.body());
 
-        try {
-            String userId = (String) SPUtils.get(MyApp.getInstance(), "userId", "");
-            OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_countUnreadMessagesForCurrentUser)
-                    .tag(this)
-                    .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onSuccess(Response<String> response) {
-                            Log.e("s",response.toString());
+                        countBean1 = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkOAToDoMsg2();//OA待办
 
-                            countBean1 = JSON.parseObject(response.body(), CountBean.class);
-                            netWorkOAToDoMsg();//OA待办
+                    }
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
 
-                        }
-                        @Override
-                        public void onError(Response<String> response) {
-                            super.onError(response);
-
-                        }
-                    });
-        }catch (Exception e){
-
-        }
-
+                    }
+                });
     }
+    CountBean countBean2;
+    /**OA消息列表*/
+    private void netWorkOAToDoMsg2() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.countUnreadMessagesForCurrentUserUrl)
+                .tag(this)
+                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("type", "1")//(1:待办,2:待阅,3:已办,4:已阅,5:申请)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("s",response.toString());
+
+                        countBean2 = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkEmailMsg2();
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+    private void netWorkEmailMsg2() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_emai_count)
+                .tag(this)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("邮件数量首页",response.body());
+                        countBeanEmail = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkDyMsg2();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+
+
+
     CountBean countBean3;
-    String count;
-    private void netWorkDyMsg() {
-        try {
-            OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_count)
-                    .tag(this)
-                    .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
-                    .params("type", "dy")
-                    .params("workType", "workdb")
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onSuccess(Response<String> response) {
-                            Log.e("s",response.toString());
+    private void netWorkDyMsg2() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.countUnreadMessagesForCurrentUserUrl)
+                .tag(this)
+                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("type", "2")//(1:待办,2:待阅,3:已办,4:已阅,5:申请)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("s",response.toString());
 
-                            countBean3 = JSON.parseObject(response.body(), CountBean.class);
+                        countBean3 = JSON.parseObject(response.body(), CountBean.class);
 
-                            int count = countBean2.getCount();
-                            int count1 = countBean3.getCount();
-                            int count2 = 0;
-                            if(countBeanEmail != null){
-                                count2 = countBeanEmail.getCount();
-                            }else {
-                                count2 = 0;
+                        int count = Integer.parseInt(countBean2.getObj());//待办
+                        int count2 = 0;
+                        if(countBeanEmail != null){
+                            count2 = countBeanEmail.getCount();
+                        }else {
+                            count2 = 0;
+                        }
+
+                        int i = Integer.parseInt(countBean1.getObj());//系统消息数量
+                        int count1 = Integer.parseInt(countBean2.getObj());//待办消息数量
+                        int i1 = Integer.parseInt(countBean3.getObj());//待阅消息数量
+                        int count22 = count2;//未读邮件消息数量
+                        MyPre2Fragment.this.count = Integer.parseInt(countBean2.getObj()) + Integer.parseInt(countBean1.getObj()) + Integer.parseInt(countBean3.getObj()) +count2+ "";
+
+                        if(null == MyPre2Fragment.this.count){
+                            MyPre2Fragment.this.count = "0";
+                        }
+
+                        SPUtils.put(MyApp.getInstance(),"count", MyPre2Fragment.this.count +"");
+                        if(!MyPre2Fragment.this.count.equals("") && !"0".equals(MyPre2Fragment.this.count)){
+                            remind();
+                            try{
+                                SPUtils.put(getActivity(),"count",count+"");
+                            }catch (Exception e){
+                                e.getMessage();
                             }
+                        }else {
+                            badge1.hide();
+                        }
 
-                            MyPre2Fragment.this.count = countBean2.getCount() + Integer.parseInt(countBean1.getObj()) + countBean3.getCount() +count2+ "";
-                            if(null == MyPre2Fragment.this.count){
-                                MyPre2Fragment.this.count = "0";
-                            }
 
-                            SPUtils.put(MyApp.getInstance(),"count", MyPre2Fragment.this.count +"");
-                            if(!MyPre2Fragment.this.count.equals("") && !"0".equals(MyPre2Fragment.this.count)){
-                                remind();
-                                try{
-                                    SPUtils.put(getActivity(),"count",count+"");
-                                }catch (Exception e){
-                                    e.getMessage();
-                                }
-                            }else {
-                                badge1.hide();
-                            }
+                        int i2 = Integer.parseInt(MyPre2Fragment.this.count);
+                        if(i2>99){
+                            tvMyToDoMsgNum.setText("99+");
+                        }else {
                             tvMyToDoMsgNum.setText(MyPre2Fragment.this.count);
                         }
 
-                        @Override
-                        public void onError(Response<String> response) {
-                            super.onError(response);
 
-                        }
-                    });
-        }catch (Exception e){
+                    }
 
-        }
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
 
+                    }
+                });
     }
+
+
+    private void netWorkSystemMsg() {
+
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_countUnreadMessagesForCurrentUser)
+                .tag(this)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("s",response.toString());
+
+                        countBean1 = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkOAToDoMsg();//OA寰呭姙
+
+                    }
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+    /**OA娑堟伅鍒楄〃*/
+    private void netWorkOAToDoMsg() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_count)
+                .tag(this)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("type", "db")
+                .params("workType", "workdb")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("s",response.toString());
+
+                        countBean2 = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkEmailMsg();
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+    private void netWorkEmailMsg() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_emai_count)
+                .tag(this)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("邮件",response.body());
+                        countBeanEmail = JSON.parseObject(response.body(), CountBean.class);
+                        netWorkDyMsg();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+
+
+    private void netWorkDyMsg() {
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_count)
+                .tag(this)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("type", "dy")
+                .params("workType", "workdb")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.e("s",response.toString());
+
+                        countBean3 = JSON.parseObject(response.body(), CountBean.class);
+
+                        int count = countBean2.getCount();
+                        int count1 = countBean3.getCount();
+                        int count2 = 0;
+                        if(countBeanEmail != null){
+                            count2 = countBeanEmail.getCount();
+                        }else {
+                            count2 = 0;
+                        }
+
+                        MyPre2Fragment.this.count = countBean2.getCount() + Integer.parseInt(countBean1.getObj()) + countBean3.getCount() +count2+ "";
+                        if(null == MyPre2Fragment.this.count){
+                            MyPre2Fragment.this.count = "0";
+                        }
+
+                        SPUtils.put(MyApp.getInstance(),"count", MyPre2Fragment.this.count +"");
+                        if(!MyPre2Fragment.this.count.equals("") && !"0".equals(MyPre2Fragment.this.count)){
+                            remind();
+                            try{
+                                SPUtils.put(getActivity(),"count",count+"");
+                            }catch (Exception e){
+                                e.getMessage();
+                            }
+                        }else {
+                            badge1.hide();
+                        }
+                        tvMyToDoMsgNum.setText(MyPre2Fragment.this.count);
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+
+                    }
+                });
+    }
+
 
 
     @Override
@@ -1437,13 +1778,18 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
             badge1.hide();
         }else {
             if(!hidden){
-                netWorkSystemMsg();
+                Log.e("我的页面fragment","执行了");
+                //getBack();
                 netInsertPortal("4");
             }
 
+           /* netWorkSystemMsg();
+            netInsertPortal("4");*/
         }
 
     }
+
+
 
     private void netInsertPortal(final String insertPortalAccessLog) {
         String imei = MobileInfoUtils.getIMEI(getActivity());

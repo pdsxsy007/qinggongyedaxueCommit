@@ -967,11 +967,11 @@ public class BaseWebActivity4 extends SupportActivity implements GestureDetector
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
                 handler.cancel(); // 接受所有网站的证书
-            }
-
+            }*/
+            handler.proceed();
 
         }
 
@@ -2049,7 +2049,7 @@ public class BaseWebActivity4 extends SupportActivity implements GestureDetector
                                     intent.putExtra("sendTime",sendTime);
                                     intent.putExtra("title",title);
                                     startActivity(intent);
-                                    FinishActivity.addActivity(BaseWebActivity4.this);
+                                    //FinishActivity.addActivity(BaseWebActivity4.this);
                                     if(closeFlag == true){
                                         FinishActivity.addActivity(BaseWebActivity4.this);
                                     }

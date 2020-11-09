@@ -147,7 +147,7 @@ public abstract class BaseActivity extends SwipeBackActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.e("sdsaas",response.body());
+                        Log.e("记录点击情况",response.body());
 
                     }
 

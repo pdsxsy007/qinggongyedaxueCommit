@@ -11,7 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.utils.SPUtil;
 
 public class FingerprintUtil {
