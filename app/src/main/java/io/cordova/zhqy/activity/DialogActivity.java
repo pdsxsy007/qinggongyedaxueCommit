@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.SystemClock;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -24,25 +23,19 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 
-import java.util.Calendar;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import cn.org.bjca.signet.coss.api.SignetCossApi;
-import cn.org.bjca.signet.coss.bean.CossClearCertResult;
 import cn.org.bjca.signet.coss.bean.CossGetCertResult;
 import cn.org.bjca.signet.coss.bean.CossGetUserListResult;
 import cn.org.bjca.signet.coss.bean.CossSignPinResult;
-import cn.org.bjca.signet.coss.bean.CossSignResult;
 import cn.org.bjca.signet.coss.component.core.enums.CertType;
-import cn.org.bjca.signet.coss.interfaces.CossSignCallBack;
 import cn.org.bjca.signet.coss.interfaces.CossSignPinCallBack;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.AddFaceBean;
 import io.cordova.zhqy.bean.BaseBean;
-import io.cordova.zhqy.bean.Constants;
-import io.cordova.zhqy.bean.FaceBean;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.fingerprint.FingerprintHelper;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity3;
@@ -52,14 +45,12 @@ import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
 import io.cordova.zhqy.widget.finger.CommonTipDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
 
-import static io.cordova.zhqy.UrlRes.HOME2_URL;
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
 
@@ -209,7 +200,12 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                 SPUtils.put(DialogActivity.this,"isloading2","");
 
                 if(imageid == 0){
-                    checkFaceResult(FaceActivity);
+                    String closeFaceFlag = (String) SPUtils.get(DialogActivity.this, "closeFaceFlag", "");
+                    if(!closeFaceFlag.equals("1")){
+                        checkFaceResult(FaceActivity);
+                        SPUtils.put(DialogActivity.this,"closeFaceFlag","");
+                    }
+
                 }
 
             }
@@ -504,6 +500,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
 
                     if((nowTime-beforeTime) > 600*1000){
                         ToastUtils.showToast(DialogActivity.this,"当前签名任务已过期");
+                        FinishActivity.clearActivity();
                         finish();
                     }else {//默认弹出人脸识别页面
                         //0.弹出人脸验证（1.人脸识别 2.切换到PIN码）
@@ -529,25 +526,29 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                                 imageid = 0;
                             }
                         }else if(signType.equals("1")){
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                helper = FingerprintHelper.getInstance();
-                                helper.init(getApplicationContext());
-                                helper.setCallback(this);
-                                if (helper.checkFingerprintAvailable(this) != -1) {
+                            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-                                    //判断指纹功能是否开启
-                                    isOpenFinger = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
-                                    if(isOpenFinger){
+                            }*/
+                            helper = FingerprintHelper.getInstance();
+                            helper.init(getApplicationContext());
+                            helper.setCallback(this);
+                            if (helper.checkFingerprintAvailable(this) != -1) {
 
-                                        openFingerprintLogin();
-                                    }else {
-                                        Intent intent = new Intent(DialogActivity.this,FingerManagerActivity.class);
-                                        startActivity(intent);
-                                    }
+                                //判断指纹功能是否开启
+                                //isOpenFinger = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
+                                String personName = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
+                                isOpenFinger =SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN+"_"+personName, true);
+                                //isOpenFinger = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
+                                if(isOpenFinger){
 
+                                    openFingerprintLogin();
                                 }else {
-                                    ToastUtils.showToast(this,"设备不支持指纹登录");
+                                    Intent intent = new Intent(DialogActivity.this,FingerManagerActivity.class);
+                                    startActivity(intent);
                                 }
+
+                            }else {
+                                ToastUtils.showToast(this,"设备不支持指纹登录");
                             }
 
                         }else {
@@ -611,7 +612,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
             helper.stopAuthenticate();
             fingerprintVerifyDialog = null;
         }
-
+        SPUtils.put(this,"isloading2","");
     }
 
     /**
@@ -676,7 +677,9 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                         }
                     });
                 } else {
-                    ToastUtils.showToast(DialogActivity.this,"签名失败!");
+                    String errMsg = result.getErrMsg();
+                    //ToastUtils.showToast(DialogActivity.this,"签名失败!");
+                    ToastUtils.showToast(DialogActivity.this,errMsg);
 
                     clickSignErrorData(signId,result.getErrMsg());
                     Intent intent2 = new Intent();
@@ -791,6 +794,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
 
     @Override
     public void onPermissionsGranted(int requestCode, String... permission) {
+        Log.e("dialogActivity","dialogActivity");
         isOpen = 1;
 
     }

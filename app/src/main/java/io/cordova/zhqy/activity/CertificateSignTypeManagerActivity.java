@@ -1,47 +1,32 @@
 package io.cordova.zhqy.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.security.keystore.KeyProperties;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
-
 import butterknife.BindView;
 import cn.org.bjca.signet.coss.api.SignetCossApi;
-import cn.org.bjca.signet.coss.bean.CossSignPinResult;
-import cn.org.bjca.signet.coss.component.core.i.G;
-import cn.org.bjca.signet.coss.interfaces.CossSignPinCallBack;
+import cn.org.bjca.signet.coss.bean.CossClearCertResult;
+import cn.org.bjca.signet.coss.component.core.enums.CertType;
 import io.cordova.zhqy.R;
-import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.BaseBean;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.fingerprint.FingerprintHelper;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity;
 import io.cordova.zhqy.utils.FinishActivity;
-import io.cordova.zhqy.utils.JsonUtil;
+import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.ToastUtils;
-import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
 import io.cordova.zhqy.widget.finger.CommonTipDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
-
-import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
 public class CertificateSignTypeManagerActivity extends BaseActivity implements View.OnClickListener, FingerprintHelper.SimpleAuthenticationCallback , PermissionsUtil.IPermissionsCallback{
 
@@ -162,29 +147,27 @@ public class CertificateSignTypeManagerActivity extends BaseActivity implements 
      * 是否支持指纹
      */
     private void checkSupportFingerprint() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            helper = FingerprintHelper.getInstance();
-            helper.init(getApplicationContext());
-            helper.setCallback(this);
-            if (helper.checkFingerprintAvailable(this) != -1) {
+        helper = FingerprintHelper.getInstance();
+        helper.init(getApplicationContext());
+        helper.setCallback(this);
+        if (helper.checkFingerprintAvailable(this) != -1) {
 
-                //判断指纹功能是否开启
-                isOpenFinger = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
-                if(isOpenFinger){
-                    iv_01.setBackgroundResource(R.mipmap.check_box01);
-                    iv_02.setBackgroundResource(R.mipmap.check_box02);
-                    iv_03.setBackgroundResource(R.mipmap.check_box01);
-                    openFingerprintLogin();
-                }else {
-                    Intent intent = new Intent(CertificateSignTypeManagerActivity.this,FingerManagerActivity.class);
-                    startActivity(intent);
-                }
-
+            //判断指纹功能是否开启
+            String personName = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
+            isOpenFinger =SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN+"_"+personName, true);
+            if(isOpenFinger){
+                iv_01.setBackgroundResource(R.mipmap.check_box01);
+                iv_02.setBackgroundResource(R.mipmap.check_box02);
+                iv_03.setBackgroundResource(R.mipmap.check_box01);
+                openFingerprintLogin();
             }else {
-                ToastUtils.showToast(this,"设备不支持指纹登录");
+                Intent intent = new Intent(CertificateSignTypeManagerActivity.this,FingerManagerActivity.class);
+                startActivity(intent);
             }
-        }
 
+        }else {
+            ToastUtils.showToast(this,"设备不支持指纹登录");
+        }
 
     }
 
@@ -223,9 +206,31 @@ public class CertificateSignTypeManagerActivity extends BaseActivity implements 
             SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, true);
             saveLocalFingerprintInfo();
 
-            Intent intent = new Intent(CertificateSignTypeManagerActivity.this,CertificateActivateActivity.class);
+          /*  Intent intent = new Intent(CertificateSignTypeManagerActivity.this,CertificateActivateActivity.class);
             startActivity(intent);
-            FinishActivity.addActivity(this);
+            FinishActivity.addActivity(this);*/
+            String deleteOrSign = (String) SPUtils.get(CertificateSignTypeManagerActivity.this,"deleteOrSign","");
+            if(deleteOrSign.equals("0")) {//删除
+                String msspID = (String) SPUtils.get(CertificateSignTypeManagerActivity.this, "msspID", "");
+                CossClearCertResult result = SignetCossApi.getCossApiInstance(AesEncryptUtile.APP_ID, AesEncryptUtile.CA_ADDRESS).cossClearCert(CertificateSignTypeManagerActivity.this, msspID, CertType.ALL_CERT);
+                if (result.getErrCode().equalsIgnoreCase("0x00000000")) {
+                    ToastUtils.showToast(CertificateSignTypeManagerActivity.this,"删除成功!");
+
+                } else {
+                    ToastUtils.showToast(CertificateSignTypeManagerActivity.this,result.getErrMsg());
+
+                }
+                Intent intent2 = new Intent();
+                intent2.setAction("refreshCAResult");
+                sendBroadcast(intent2);
+                FinishActivity.clearActivity();
+                finish();
+            }else {
+                Intent intent = new Intent(CertificateSignTypeManagerActivity.this,CertificateActivateActivity.class);
+                startActivity(intent);
+                FinishActivity.addActivity(this);
+            }
+
         }
     }
 

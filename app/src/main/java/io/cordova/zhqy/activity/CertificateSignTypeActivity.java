@@ -31,6 +31,7 @@ import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity;
 import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.JsonUtil;
+import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
@@ -124,7 +125,12 @@ public class CertificateSignTypeActivity extends BaseActivity implements View.On
                 SPUtils.put(CertificateSignTypeActivity.this,"isloading2","");
 
                 if(imageid == 0){
-                    checkFaceResult(FaceActivity);
+                    String closeFaceFlag = (String) SPUtils.get(CertificateSignTypeActivity.this, "closeFaceFlag2", "");
+                    if(!closeFaceFlag.equals("1")){
+                        checkFaceResult(FaceActivity);
+                        SPUtils.put(CertificateSignTypeActivity.this,"closeFaceFlag2","");
+                    }
+
                 }
 
             }
@@ -243,9 +249,12 @@ public class CertificateSignTypeActivity extends BaseActivity implements View.On
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SPUtils.put(this,"isloading2","");
 
-
-
+    }
 
     private PermissionsUtil permissionsUtil;
     private int isOpen = 0;
@@ -335,7 +344,8 @@ public class CertificateSignTypeActivity extends BaseActivity implements View.On
                 if (helper.checkFingerprintAvailable(this) != -1) {
 
                     //判断指纹功能是否开启
-                    isOpenFinger = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
+                    String personName = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
+                    isOpenFinger =SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN+"_"+personName, true);
                     if(isOpenFinger){
                         iv_01.setBackgroundResource(R.mipmap.check_box01);
                         iv_02.setBackgroundResource(R.mipmap.check_box02);

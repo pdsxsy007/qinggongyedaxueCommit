@@ -23,7 +23,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.bean.LoginBean;
 import io.cordova.zhqy.bean.VerCodeBean;
 import io.cordova.zhqy.utils.AesEncryptUtile;
