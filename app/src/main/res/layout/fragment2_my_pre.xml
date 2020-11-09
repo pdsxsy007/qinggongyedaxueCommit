@@ -271,6 +271,16 @@
                                 android:layout_marginLeft="@dimen/dp5"
                                 android:textStyle="bold"
                                 />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/black"
+                                android:layout_marginLeft="@dimen/dp10"
+                                android:textStyle="bold"
+                                />
+
                         </LinearLayout>
 
                         <TextView
@@ -489,20 +499,41 @@
 
             <LinearLayout
                 android:id="@+id/ll_oa"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:background="@color/white"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/sp12"
-                    android:text="待办"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="@color/black2"/>
+                    android:background="@color/white"
+                    android:layout_marginTop="10dp"
+                    >
+                    <TextView
+
+                        android:background="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/sp12"
+                        android:text="待办"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="@color/black2"/>
+
+                    <TextView
+                        android:id="@+id/tv_more"
+                        android:background="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/sp12"
+                        android:text="查看更多"
+                        android:layout_alignParentRight="true"
+                        android:textSize="@dimen/sp14"
+                        android:textColor="@color/black2"/>
+
+                </RelativeLayout>
+
 
 
                 <android.support.v7.widget.RecyclerView

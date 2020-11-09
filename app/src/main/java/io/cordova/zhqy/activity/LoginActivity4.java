@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.bean.GetUserIdBean;
 import io.cordova.zhqy.bean.LoginBean;
 import io.cordova.zhqy.utils.AesEncryptUtile;

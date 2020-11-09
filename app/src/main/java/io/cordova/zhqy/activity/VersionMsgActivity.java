@@ -21,6 +21,9 @@ public class VersionMsgActivity extends BaseActivity2 {
     @BindView(R.id.tv_version_number)
     TextView tvVersionNumber;
 
+    @BindView(R.id.tv_version_number2)
+    TextView tvVersionNumber2;
+
     @BindView(R.id.tv_title)
     TextView tv_title;
 
@@ -36,6 +39,7 @@ public class VersionMsgActivity extends BaseActivity2 {
 //        getLocalVersion(this);
         getLocalVersionName(this);
 
+        tvVersionNumber2.setText("2020-11-06(01)");
     }
 
 

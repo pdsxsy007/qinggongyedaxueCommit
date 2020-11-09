@@ -273,11 +273,11 @@ public class InfoDetailsActivity2 extends BaseActivity {
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
                 handler.cancel(); // 接受所有网站的证书
-            }
-
+            }*/
+            handler.proceed();
 
         }
         @Override

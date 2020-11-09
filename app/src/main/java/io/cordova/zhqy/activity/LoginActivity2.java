@@ -9,13 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,8 +22,6 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.WebResourceRequest;
@@ -42,20 +37,16 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
-import com.cxz.swipelibrary.Utils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
-import com.tbruyelle.rxpermissions2.Permission;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
-import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,44 +62,33 @@ import cn.jiguang.verifysdk.api.VerifyListener;
 import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.AddTrustBean;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.bean.FaceBean;
 import io.cordova.zhqy.bean.FaceBean2;
-import io.cordova.zhqy.bean.GetUserIdBean;
 import io.cordova.zhqy.bean.LogInTypeBean;
 import io.cordova.zhqy.bean.LoginBean;
-import io.cordova.zhqy.bean.MemberBean;
 import io.cordova.zhqy.bean.NoticeInfoBean;
-import io.cordova.zhqy.fragment.home.ServicePreFragment;
 import io.cordova.zhqy.utils.AesEncryptUtile;
-import io.cordova.zhqy.utils.BaseActivity;
 import io.cordova.zhqy.utils.CookieUtils;
-import io.cordova.zhqy.utils.DargeFaceUtils;
 import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.LoginBaseActivity;
-import io.cordova.zhqy.utils.MobileInfoUtils;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.SystemInfoUtils;
 import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.utils.fingerUtil.MD5Util;
 import io.cordova.zhqy.widget.InputMethodLayout;
-import io.reactivex.functions.Consumer;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static io.cordova.zhqy.UrlRes.HOME2_URL;
 import static io.cordova.zhqy.UrlRes.HOME_URL;
 import static io.cordova.zhqy.UrlRes.findLoginTypeListUrl;
-import static io.cordova.zhqy.UrlRes.getUserInfoByMemberIdUrl;
-import static io.cordova.zhqy.activity.FaceActivity.bitmapToBase64;
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
 /**
@@ -168,6 +148,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
     @Override
     protected void initSystemBar() {
         super.initSystemBar();
+
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //5.0 全透明实现
             //getWindow.setStatusBarColor(Color.TRANSPARENT)
@@ -236,6 +217,8 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
             }
         });
     }
+
+
 
     private void getNoticeInfo() {
         OkGo.<String>get(UrlRes.HOME_URL +findLoginTypeListUrl)
@@ -402,6 +385,12 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
        ;
         try {
             String imei =  AesEncryptUtile.encrypt((String) SPUtils.get(this, "imei", ""), key);
+            Log.e("address",HOME2_URL +UrlRes.loginUrl);
+            Log.e("openid",AesEncryptUtile.openid);
+            Log.e("username",s1);
+            Log.e("password",s2);
+            Log.e("equipmentId",imei);
+            Log.e("type","1");
             OkGo.<String>get(HOME2_URL +UrlRes.loginUrl)
                     .tag(this)
                     .params("openid",AesEncryptUtile.openid)
@@ -415,6 +404,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                             Log.e("result1",response.body());
 
                             loginBean = JSON.parseObject(response.body(),LoginBean.class);
+
                             if (loginBean.isSuccess() ) {
 
                                 try {

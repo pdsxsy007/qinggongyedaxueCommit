@@ -215,7 +215,7 @@ public class SystemMsgActivity extends BaseActivity2 {
 
                         if (sysMsgBean.isSuccess()) {
                             Log.i("消息列表",response.body());
-                            adapter = new MyRefrshAdapter(SystemMsgActivity.this,R.layout.item_to_do_my_msg,sysMsgBean.getObj());
+                            adapter = new MyRefrshAdapter(SystemMsgActivity.this,R.layout.item_to_do_my_msg2,sysMsgBean.getObj());
                             rvMsgList.setAdapter(adapter);
                             num = 2;
                             refreshlayout.finishRefresh();
@@ -261,7 +261,7 @@ public class SystemMsgActivity extends BaseActivity2 {
                         ViewUtils.cancelLoadingDialog();
                         if (sysMsgBean.isSuccess()) {
                             Log.i("消息列表",response.body());
-                            adapter = new MyRefrshAdapter(SystemMsgActivity.this,R.layout.item_to_do_my_msg,sysMsgBean.getObj());
+                            adapter = new MyRefrshAdapter(SystemMsgActivity.this,R.layout.item_to_do_my_msg2,sysMsgBean.getObj());
                             rvMsgList.setAdapter(adapter);
                             num = 2;
                             mSwipeRefresh.setVisibility(View.VISIBLE);

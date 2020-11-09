@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import io.cordova.zhqy.R;
-import io.cordova.zhqy.bean.Constants;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.fingerprint.FingerprintHelper;
 import io.cordova.zhqy.utils.BaseActivity2;
 import io.cordova.zhqy.utils.MyApp;
@@ -21,7 +21,6 @@ import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
 import io.cordova.zhqy.widget.finger.CommonTipDialog;
-import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
 
 
@@ -52,21 +51,19 @@ public class FingerManagerActivity extends BaseActivity2 implements FingerprintH
     protected void initView() {
         super.initView();
         tv_title.setText("指纹验证管理");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            helper = FingerprintHelper.getInstance();
-            helper.init(getApplicationContext());
-            helper.setCallback(this);
-            if (helper.checkFingerprintAvailable(this) != -1) {
-                //设备支持指纹登录
-                iv_fingerprint_login_switch.setEnabled(true);
-            }else {
-                ToastUtils.showToast(this,"设备不支持指纹登录");
-            }
+        helper = FingerprintHelper.getInstance();
+        helper.init(getApplicationContext());
+        helper.setCallback(this);
+        if (helper.checkFingerprintAvailable(this) != -1) {
+            //设备支持指纹登录
+            iv_fingerprint_login_switch.setEnabled(true);
         }else {
-            ll_msg_off.setVisibility(View.GONE);
+            ToastUtils.showToast(this,"设备不支持指纹登录");
+            finish();
         }
-
-        isOpen = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
+        //isOpen = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
+        String personName = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
+        isOpen =SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN+"_"+personName, true);
         setSwitchStatus();
         iv_fingerprint_login_switch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +136,9 @@ public class FingerManagerActivity extends BaseActivity2 implements FingerprintH
                 fingerprintVerifyDialog.dismiss();
                 Toast.makeText(this, "指纹验证已开启", Toast.LENGTH_SHORT).show();
                 isOpen = true;
-                SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, true);
+                //SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, true);
+                String personName = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
+                SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN+"_"+personName, true);
                 setSwitchStatus();
                 saveLocalFingerprintInfo();
                 type = 1;
@@ -149,7 +148,9 @@ public class FingerManagerActivity extends BaseActivity2 implements FingerprintH
                 fingerprintVerifyDialog.dismiss();
                 Toast.makeText(this, "指纹验证已关闭", Toast.LENGTH_SHORT).show();
                 isOpen = false;
-                SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, false);
+                //SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, false);
+                String personName = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
+                SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN+"_"+personName, false);
                 setSwitchStatus();
                 helper.closeAuthenticate();
                 type = 0;

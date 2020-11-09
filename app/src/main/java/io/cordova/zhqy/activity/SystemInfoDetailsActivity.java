@@ -121,7 +121,6 @@ import io.cordova.zhqy.web.BaseWebCloseActivity;
 import io.cordova.zhqy.web.FileUtil;
 import io.cordova.zhqy.web.WebLayout2;
 import io.cordova.zhqy.web.WebLayout4;
-import io.cordova.zhqy.web.WebLayout5;
 import io.cordova.zhqy.widget.MyDialog;
 import io.cordova.zhqy.zixing.OnQRCodeListener;
 import io.cordova.zhqy.zixing.QRCodeManager;
@@ -140,13 +139,13 @@ import static io.cordova.zhqy.utils.PermissionsUtil.SETTINGS_REQ_CODE;
  * Created by Administrator on 2019/4/16 0016.
  */
 
-public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil.IPermissionsCallback{
+public class SystemInfoDetailsActivity extends BaseActivity implements PermissionsUtil.IPermissionsCallback{
 
     @BindView(R.id.tv_title)
     TextView tv_title;
 
 
-     @BindView(R.id.ll_web)
+    @BindView(R.id.ll_web)
     LinearLayout linearLayout;
     protected AgentWeb mAgentWeb;
 
@@ -157,7 +156,6 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
     String appUrl2;
     String time;
     String msgsender;
-    String backlogDetailId;
     public LocationClient mLocationClient;
     private MyLocationListener myListener = new MyLocationListener();
     private PermissionsUtil permissionsUtil;
@@ -178,7 +176,6 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
         appUrl = getIntent().getStringExtra("appUrl");
         appUrl2 = getIntent().getStringExtra("appUrl2");
         msgsender = getIntent().getStringExtra("msgsender");
-        backlogDetailId = getIntent().getStringExtra("backlogDetailId");
         time = getIntent().getStringExtra("time");
 
         tgc = (String) SPUtils.get(getApplicationContext(), "TGC", "");
@@ -186,10 +183,6 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
             tv_title.setText("系统消息");
         }else {
             tv_title.setText(title);
-        }
-
-        if(null != backlogDetailId){
-            commitResult(backlogDetailId);
         }
 
         String latitude = (String) SPUtils.get(MyApp.getInstance(), "latitude", "");
@@ -206,104 +199,104 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
 
         //appUrl2 = "【轻院通知】您的成绩查询通知已发放，请使用“轻院服务门户”的用户名和密码点击进入<a href=\"http://xytz.zzuli.edu.cn:8080/result/inquiry\">点击查看</a>并在通知文末填写反馈。同时，请点击<a href=\"http://info.zzuli.edu.cn/_t598/2019/0124/c13520a193789/page.htm\">  此处</a>及时完成学生基本信息补录。（信息中心）";
-       if(appUrl!= null){
+        if(appUrl!= null){
 
-           if(appUrl.contains("gilight://")){
+            if(appUrl.contains("gilight://")){
 
-               String endUrl = appUrl.substring(10,appUrl.length());
-               String appServiceUrl2 = UrlRes.huanxingUrl+"?"+endUrl;
-               Uri uri = Uri.parse(appServiceUrl2);
-               Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-               if (intent.resolveActivity(getPackageManager()) != null) {
-                   // 网址正确 跳转成功
-                   startActivity(intent);
-                   finish();
-               } else {
-                   //网址不正确 跳转失败 提示错误
-                   //Toast.makeText(MainActivity.this, "网址输入错误，请重新输入！", Toast.LENGTH_SHORT).show();
+                String endUrl = appUrl.substring(10,appUrl.length());
+                String appServiceUrl2 = UrlRes.huanxingUrl+"?"+endUrl;
+                Uri uri = Uri.parse(appServiceUrl2);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    // 网址正确 跳转成功
+                    startActivity(intent);
+                    finish();
+                } else {
+                    //网址不正确 跳转失败 提示错误
+                    //Toast.makeText(MainActivity.this, "网址输入错误，请重新输入！", Toast.LENGTH_SHORT).show();
 
-               }
-
-
-           }
+                }
 
 
+            }
 
 
-           mAgentWeb = AgentWeb.with(this)//
-                   .setAgentWebParent(linearLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-                   .useDefaultIndicator(getResources().getColor(R.color.colorPrimaryDark), 1)//设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
+
+
+            mAgentWeb = AgentWeb.with(this)//
+                    .setAgentWebParent(linearLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                    .useDefaultIndicator(getResources().getColor(R.color.colorPrimaryDark), 1)//设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
 ////                .setAgentWebParent((LinearLayout) view, -1, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))//传入AgentWeb的父控件。
-//               gl_right .useDefaultIndicator(getResources().getColor(R.color.title_bar_bg),3)//设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
+//                .useDefaultIndicator(getResources().getColor(R.color.title_bar_bg),3)//设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
                     .setAgentWebWebSettings(getSettings())//设置 IAgentWebSettings。
                     .setWebViewClient(mWebViewClient)//WebViewClient ， 与 WebView 使用一致 ，但是请勿获取WebView调用setWebViewClient(xx)方法了,会覆盖AgentWeb DefaultWebClient,同时相应的中间件也会失效。
                     .setWebChromeClient(mWebChromeClient) //WebChromeClient
                     .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.DISALLOW)//打开其他页面时，弹窗质询用户前往其他应用 AgentWeb 3.0.0 加入。
-                   .setWebLayout(new WebLayout5(this))
-                   .interceptUnkownUrl() //拦截找不到相关页面的Url AgentWeb 3.0.0 加入。
-                   .createAgentWeb()//创建AgentWeb。
-                   .ready()//设置 WebSettings。
-                   .go(appUrl);
-           mAgentWeb.getWebCreator().getWebView().setOverScrollMode(WebView.OVER_SCROLL_NEVER);
-           mAgentWeb.getJsInterfaceHolder().addJavaObject("android",new AndroidInterface());
-       }else {
+                    .setWebLayout(new WebLayout4(this))
+                    .interceptUnkownUrl() //拦截找不到相关页面的Url AgentWeb 3.0.0 加入。
+                    .createAgentWeb()//创建AgentWeb。
+                    .ready()//设置 WebSettings。
+                    .go(appUrl);
+            mAgentWeb.getWebCreator().getWebView().setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+            mAgentWeb.getJsInterfaceHolder().addJavaObject("android",new AndroidInterface());
+        }else {
 
 
 
-           appUrl = "\n" +
-                   "<html>\n" +
-                   "\n" +
-                   "<head>\n" +
-                   "    <meta charset=\"utf-8\">\n" + "<title>"+title+"</title>\n" +
-                   "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no\">\n" +
-                   "    <meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n" +
-                   "    <meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black\">\n" +
-                   "    <style type=\"text/css\">\n" +
-                   "        *{\n" +
-                   "            margin: 0;\n" +
-                   "            padding: 0;\n" +
-                   "         }\n" +
-                   "         html,body{\n" +
-                   "            width: 100%;\n" +
-                   "            height: 100%;\n" +
-                   "            font-size: 12px;\n" +
-                   "         }\n" +
-                   "        h2{\n" +
-                   "            text-align: center;\n" +
-                   "            margin-bottom: 1rem;\n" +
-                   "            font-size: 2rem;\n" +
-                   "        }\n" +
-                   "        h5{\n" +
-                   "           text-align: center;\n" +
-                   "            margin-bottom: 1rem; \n" +
-                   "        }\n" +
-                   "         h5 span{\n" +
-                   "            display: inline-block;\n" +
-                   "            color: #666;\n" +
-                   "            font-weight: normal;\n" +
-                   "            margin: 0 1rem;\n" +
-                   "         }\n" +
-                   "        .content{\n" +
-                   "            padding: 1rem;\n" +
-                   "        }\n" +
-                   "        .message_detail_area{\n" +
-                   "            border-top: 1px dotted #ccc;\n" +
-                   "            font-size: 1.2rem;\n" +
-                   "            line-height: 1.6rem;\n" +
-                   "            padding: 1rem 0;\n" +
-                   "        }\n" +
-                   "    </style>\n" +
-                   "<body class=\"combg\">\n" +
-                   "<div class=\"content\">\n" +
-                   "        <div class=\"mui-content-padded\">\n" +
-                   "            <div class=\"message_detail_title\">\n" + "<h2>"+title+"</h2>\n" +
-                   "                <h5><span>发布人："+msgsender+"</span><span>发布时间："+stampToDate(time)+"</span></h5>\n" +
-                   "            </div>\n" +
-                   "            <article class=\"message_detail_area\">"+appUrl2+"</article>\n" +
-                   "        </div>\n" +
-                   "</div>\n" +
-                   "</body>\n" +
-                   "</html>";
+            appUrl = "\n" +
+                    "<html>\n" +
+                    "\n" +
+                    "<head>\n" +
+                    "    <meta charset=\"utf-8\">\n" + "<title>"+title+"</title>\n" +
+                    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no\">\n" +
+                    "    <meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n" +
+                    "    <meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black\">\n" +
+                    "    <style type=\"text/css\">\n" +
+                    "        *{\n" +
+                    "            margin: 0;\n" +
+                    "            padding: 0;\n" +
+                    "         }\n" +
+                    "         html,body{\n" +
+                    "            width: 100%;\n" +
+                    "            height: 100%;\n" +
+                    "            font-size: 12px;\n" +
+                    "         }\n" +
+                    "        h2{\n" +
+                    "            text-align: center;\n" +
+                    "            margin-bottom: 1rem;\n" +
+                    "            font-size: 2rem;\n" +
+                    "        }\n" +
+                    "        h5{\n" +
+                    "           text-align: center;\n" +
+                    "            margin-bottom: 1rem; \n" +
+                    "        }\n" +
+                    "         h5 span{\n" +
+                    "            display: inline-block;\n" +
+                    "            color: #666;\n" +
+                    "            font-weight: normal;\n" +
+                    "            margin: 0 1rem;\n" +
+                    "         }\n" +
+                    "        .content{\n" +
+                    "            padding: 1rem;\n" +
+                    "        }\n" +
+                    "        .message_detail_area{\n" +
+                    "            border-top: 1px dotted #ccc;\n" +
+                    "            font-size: 1.2rem;\n" +
+                    "            line-height: 1.6rem;\n" +
+                    "            padding: 1rem 0;\n" +
+                    "        }\n" +
+                    "    </style>\n" +
+                    "<body class=\"combg\">\n" +
+                    "<div class=\"content\">\n" +
+                    "        <div class=\"mui-content-padded\">\n" +
+                    "            <div class=\"message_detail_title\">\n" + "<h2>"+title+"</h2>\n" +
+                    "                <h5><span>发布人："+msgsender+"</span><span>发布时间："+stampToDate(time)+"</span></h5>\n" +
+                    "            </div>\n" +
+                    "            <article class=\"message_detail_area\">"+appUrl2+"</article>\n" +
+                    "        </div>\n" +
+                    "</div>\n" +
+                    "</body>\n" +
+                    "</html>";
 
            /*String standard = "<html> \n" +
                    "<head> \n" +
@@ -325,53 +318,28 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                    appUrl2
                    + "</body>" +
                    "</html>";*/
-           mAgentWeb = AgentWeb.with(this)//
-                   .setAgentWebParent(linearLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-                   .useDefaultIndicator(getResources().getColor(R.color.colorPrimaryDark), 1)//设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
+            mAgentWeb = AgentWeb.with(this)//
+                    .setAgentWebParent(linearLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                    .useDefaultIndicator(getResources().getColor(R.color.colorPrimaryDark), 1)//设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
 ////                .setAgentWebParent((LinearLayout) view, -1, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))//传入AgentWeb的父控件。
 //                .useDefaultIndicator(getResources().getColor(R.color.title_bar_bg),3)//设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
-                .setAgentWebWebSettings(getSettings())//设置 IAgentWebSettings。
-                .setWebViewClient(mWebViewClient)//WebViewClient ， 与 WebView 使用一致 ，但是请勿获取WebView调用setWebViewClient(xx)方法了,会覆盖AgentWeb DefaultWebClient,同时相应的中间件也会失效。
-                .setWebChromeClient(mWebChromeClient) //WebChromeClient
-                   .setWebLayout(new WebLayout5(this))
+                    .setAgentWebWebSettings(getSettings())//设置 IAgentWebSettings。
+                    .setWebViewClient(mWebViewClient)//WebViewClient ， 与 WebView 使用一致 ，但是请勿获取WebView调用setWebViewClient(xx)方法了,会覆盖AgentWeb DefaultWebClient,同时相应的中间件也会失效。
+                    .setWebChromeClient(mWebChromeClient) //WebChromeClient
+                    .setWebLayout(new WebLayout4(this))
 //                .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.DISALLOW)//打开其他页面时，弹窗质询用户前往其他应用 AgentWeb 3.0.0 加入。
-                   .interceptUnkownUrl() //拦截找不到相关页面的Url AgentWeb 3.0.0 加入。
-                   .createAgentWeb()//创建AgentWeb。
-                   .ready()//设置 WebSettings。
-                   .go(appUrl);
-           mAgentWeb.getUrlLoader().loadDataWithBaseURL(null,appUrl,"text/html","UTF-8",null);
-           mAgentWeb.getWebCreator().getWebView().setOverScrollMode(WebView.OVER_SCROLL_NEVER);
-           mAgentWeb.getJsInterfaceHolder().addJavaObject("android",new AndroidInterface());
-       }
+                    .interceptUnkownUrl() //拦截找不到相关页面的Url AgentWeb 3.0.0 加入。
+                    .createAgentWeb()//创建AgentWeb。
+                    .ready()//设置 WebSettings。
+                    .go(appUrl);
+            mAgentWeb.getUrlLoader().loadDataWithBaseURL(null,appUrl,"text/html","UTF-8",null);
+            mAgentWeb.getWebCreator().getWebView().setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+            mAgentWeb.getJsInterfaceHolder().addJavaObject("android",new AndroidInterface());
+        }
 
         registerBoradcastReceiver();
         registerBoradcastReceiver2();
     }
-
-    private void commitResult(String backlogDetailId) {
-        Log.e("backlogDetailId",backlogDetailId);
-        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.markBackLogAsReadUrl)
-                .tag(this)
-                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
-                .params("backlogDetailId", backlogDetailId)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Log.e("提交阅读状态",response.body());
-
-                        Intent intent = new Intent();
-                        intent.setAction("refreshMeFragment");
-                        sendBroadcast(intent);
-                    }
-                    @Override
-                    public void onError(Response<String> response) {
-                        super.onError(response);
-
-                    }
-                });
-
-    }
-
 
     private void registerBoradcastReceiver2() {
         IntentFilter myIntentFilter = new IntentFilter();
@@ -430,7 +398,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
         } else {
 
             //EasyPermissions.requestPermissions(this, "获取定位权限", RC_CAMERA_PERM2, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE);
-            TestShowDig.AskForPermission(InfoDetailsActivity.this,"定位");
+            TestShowDig.AskForPermission(SystemInfoDetailsActivity.this,"定位");
         }
     }
 
@@ -441,7 +409,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
             @Override
             public void onClick(View view) {
                 if (!mAgentWeb.back()){
-                    InfoDetailsActivity.this.finish();
+                    SystemInfoDetailsActivity.this.finish();
                 }
             }
         });
@@ -479,52 +447,52 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
             String street = address.street;
             String streetNumber = address.streetNumber;
             if(addressLine != null){
-                SPUtils.put(InfoDetailsActivity.this,"addressLine",addressLine);
+                SPUtils.put(SystemInfoDetailsActivity.this,"addressLine",addressLine);
             }
             if(country != null){
-                SPUtils.put(InfoDetailsActivity.this,"country",country);
+                SPUtils.put(SystemInfoDetailsActivity.this,"country",country);
             }
 
             if(countryCode != null){
-                SPUtils.put(InfoDetailsActivity.this,"countryCode",countryCode);
+                SPUtils.put(SystemInfoDetailsActivity.this,"countryCode",countryCode);
             }
 
             if(province != null){
-                SPUtils.put(InfoDetailsActivity.this,"province",province);
+                SPUtils.put(SystemInfoDetailsActivity.this,"province",province);
             }
 
             if(city != null){
-                SPUtils.put(InfoDetailsActivity.this,"city",city);
+                SPUtils.put(SystemInfoDetailsActivity.this,"city",city);
             }
 
             if(cityCode != null){
-                SPUtils.put(InfoDetailsActivity.this,"cityCode",cityCode);
+                SPUtils.put(SystemInfoDetailsActivity.this,"cityCode",cityCode);
             }
 
             if(district != null){
-                SPUtils.put(InfoDetailsActivity.this,"district",district);
+                SPUtils.put(SystemInfoDetailsActivity.this,"district",district);
             }
 
             if(adcode != null){
-                SPUtils.put(InfoDetailsActivity.this,"adcode",adcode);
+                SPUtils.put(SystemInfoDetailsActivity.this,"adcode",adcode);
             }
 
             if(street != null){
-                SPUtils.put(InfoDetailsActivity.this,"street",street);
+                SPUtils.put(SystemInfoDetailsActivity.this,"street",street);
             }
 
             if(streetNumber != null){
-                SPUtils.put(InfoDetailsActivity.this,"streetNumber",streetNumber);
+                SPUtils.put(SystemInfoDetailsActivity.this,"streetNumber",streetNumber);
             }
             if(town != null){
-                SPUtils.put(InfoDetailsActivity.this,"town",town);
+                SPUtils.put(SystemInfoDetailsActivity.this,"town",town);
             }
-            SPUtils.put(InfoDetailsActivity.this,"latitude",latitude+"");
-            SPUtils.put(InfoDetailsActivity.this,"longitude",longitude+"");
-            SPUtils.put(InfoDetailsActivity.this,"altitude",altitude+"");
-            SPUtils.put(InfoDetailsActivity.this,"speed",speed+"");
-            SPUtils.put(InfoDetailsActivity.this,"direction",direction+"");
-            SPUtils.put(InfoDetailsActivity.this,"locationWhere",locationWhere+"");
+            SPUtils.put(SystemInfoDetailsActivity.this,"latitude",latitude+"");
+            SPUtils.put(SystemInfoDetailsActivity.this,"longitude",longitude+"");
+            SPUtils.put(SystemInfoDetailsActivity.this,"altitude",altitude+"");
+            SPUtils.put(SystemInfoDetailsActivity.this,"speed",speed+"");
+            SPUtils.put(SystemInfoDetailsActivity.this,"direction",direction+"");
+            SPUtils.put(SystemInfoDetailsActivity.this,"locationWhere",locationWhere+"");
         }
     }
 
@@ -543,12 +511,12 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
              *  Webview在安卓5.0之前默认允许其加载混合网络协议内容
              *  在安卓5.0之后，默认不允许加载http与https混合内容，需要设置webview允许其加载混合网络协议内容
              */
-            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
                 handler.cancel(); // 接受所有网站的证书
-            }*/
+            }
 
-            handler.proceed();
+
         }
 
         @Override
@@ -559,8 +527,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                 cookieManager.setAcceptThirdPartyCookies(view, true);
             }
 
-            appUrl = url;
-            Log.e("url1",url);
+
 
         }
         /**网址拦截*/
@@ -570,7 +537,6 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 url = request.getUrl().toString();
             }
-            appUrl = url;
             Log.e("url",url);
             //String isapp = url.substring(url.indexOf("/") + 2, 11);
 
@@ -615,11 +581,11 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 startActivity(intent);
             }*/
-           if(url.contains("chaoxingshareback")){
-               Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-               startActivity(intent);
-           }
+            if(url.contains("chaoxingshareback")){
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                startActivity(intent);
+            }
 
 
             return super.shouldOverrideUrlLoading(view, request);
@@ -629,7 +595,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
         /**网址拦截*/
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            String downLoadType = (String) SPUtils.get(InfoDetailsActivity.this, "downLoadType", "");
+            String downLoadType = (String) SPUtils.get(SystemInfoDetailsActivity.this, "downLoadType", "");
             DownLoadBean downLoadBean = JsonUtil.parseJson(downLoadType,DownLoadBean.class);
             List<String> downLoadTypeList = downLoadBean.getString();
             for (int i = 0; i < downLoadTypeList.size(); i++) {
@@ -763,7 +729,6 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
         @Override
         public boolean onStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength, AgentWebDownloader.Extra extra) {
             Log.i("下载链接", "onStart:" + url);
-            finish();
             extra.setOpenBreakPointDownload(true) // 是否开启断点续传
                     .setIcon(R.drawable.ic_file_download_black_24dp) //下载通知的icon
                     .setConnectTimeOut(6000) // 连接最大时长
@@ -826,14 +791,14 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
          */
         @Override
         public boolean onResult(String path, String url, Throwable throwable) {
-            /*if (null == throwable) { //下载成功
+            if (null == throwable) { //下载成功
                 //do you work
                 Log.e("下载失败",path);
                 Log.e("下载失败",url);
 
-                Uri shareFileUrl = FileUtil.getFileUri(InfoDetailsActivity.this,null,new File(path));
+                Uri shareFileUrl = FileUtil.getFileUri(SystemInfoDetailsActivity.this,null,new File(path));
                 Log.e("path2", String.valueOf(shareFileUrl));
-                new Share2.Builder(InfoDetailsActivity.this)
+                new Share2.Builder(SystemInfoDetailsActivity.this)
                         .setContentType(ShareContentType.FILE)
                         .setShareFileUri(shareFileUrl)
                         .setTitle("Share File")
@@ -844,9 +809,9 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
             } else {//下载成功
                 Log.e("path",path);
 
-                Uri shareFileUrl = FileUtil.getFileUri(InfoDetailsActivity.this,null,new File(path));
+                Uri shareFileUrl = FileUtil.getFileUri(SystemInfoDetailsActivity.this,null,new File(path));
                 Log.e("path2", String.valueOf(shareFileUrl));
-                new Share2.Builder(InfoDetailsActivity.this)
+                new Share2.Builder(SystemInfoDetailsActivity.this)
                         .setContentType(ShareContentType.FILE)
                         .setShareFileUri(shareFileUrl)
                         .setTitle("Share File")
@@ -854,7 +819,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                         .build()
                         .shareBySystem();
 
-            }*/
+            }
             return false; // true  不会发出下载完成的通知 , 或者打开文件
         }
     };
@@ -884,7 +849,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(KeyEvent.KEYCODE_BACK == keyCode){
             if (!mAgentWeb.back()){
-                InfoDetailsActivity.this.finish();
+                SystemInfoDetailsActivity.this.finish();
                 return true;
 
             }
@@ -895,8 +860,8 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
     }
 
     /*
- * 将时间戳转换为时间
- */
+     * 将时间戳转换为时间
+     */
     public static String stampToDate(String s){
         String res;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -939,7 +904,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
             //关闭铃声
             SoundPoolUtils.stopRing();
             //关闭震动
-            SoundPoolUtils.virateCancle(InfoDetailsActivity.this);
+            SoundPoolUtils.virateCancle(SystemInfoDetailsActivity.this);
 
         }
     }
@@ -1003,12 +968,12 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
         @JavascriptInterface
         public void nativeGetPicture(final String ratio,final String invocationLogAppId,final String invocationLogFunction) {
-            if (EasyPermissions.hasPermissions(InfoDetailsActivity.this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (EasyPermissions.hasPermissions(SystemInfoDetailsActivity.this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 //ceshiFaceData(invocationLogAppId,invocationLogFunction,"nativeVerifyUserAndFace");
                 ceshiDataNativeGetPicture(invocationLogAppId,invocationLogFunction, "nativeGetPicture",ratio);
             } else {
                 permissionsUtil = PermissionsUtil
-                        .with(InfoDetailsActivity.this)
+                        .with(SystemInfoDetailsActivity.this)
                         .requestCode(0)
                         .isDebug(true)
                         .permissions(PermissionsUtil.Permission.Camera.CAMERA,PermissionsUtil.Permission.Storage.WRITE_EXTERNAL_STORAGE)
@@ -1020,12 +985,12 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
         @JavascriptInterface
         public void nativeGetPicture(final String invocationLogAppId,final String invocationLogFunction) {
-            if (EasyPermissions.hasPermissions(InfoDetailsActivity.this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (EasyPermissions.hasPermissions(SystemInfoDetailsActivity.this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                 ceshiDataNativeGetPicture(invocationLogAppId,invocationLogFunction, "nativeGetPicture",0.8+"");
             } else {
                 permissionsUtil = PermissionsUtil
-                        .with(InfoDetailsActivity.this)
+                        .with(SystemInfoDetailsActivity.this)
                         .requestCode(0)
                         .isDebug(true)
                         .permissions(PermissionsUtil.Permission.Camera.CAMERA,PermissionsUtil.Permission.Storage.WRITE_EXTERNAL_STORAGE)
@@ -1039,14 +1004,14 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
         @JavascriptInterface
         public void nativeGetLocation(final String invocationLogAppId,final String invocationLogFunction) {
             Log.e("nativeGetLocation","执行了");
-            if (EasyPermissions.hasPermissions(InfoDetailsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (EasyPermissions.hasPermissions(SystemInfoDetailsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ceshiData(invocationLogAppId,invocationLogFunction, "nativeGetLocation");
 
             } else {//没有相应权限，获取相机权限
 
                 //TestShowDig.AskForPermission(BaseWebActivity4.this,"定位");
                 permissionsUtil = PermissionsUtil
-                        .with(InfoDetailsActivity.this)
+                        .with(SystemInfoDetailsActivity.this)
                         .requestCode(0)
                         .isDebug(true)
                         .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION)
@@ -1056,11 +1021,11 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
         @JavascriptInterface
         public void nativeVerifyUserAndFace(final String invocationLogAppId,final String invocationLogFunction) {
-            if (EasyPermissions.hasPermissions(InfoDetailsActivity.this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (EasyPermissions.hasPermissions(SystemInfoDetailsActivity.this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 ceshiFaceData(invocationLogAppId,invocationLogFunction,"nativeVerifyUserAndFace");
             } else {
                 permissionsUtil = PermissionsUtil
-                        .with(InfoDetailsActivity.this)
+                        .with(SystemInfoDetailsActivity.this)
                         .requestCode(0)
                         .isDebug(true)
                         .permissions(PermissionsUtil.Permission.Camera.CAMERA,PermissionsUtil.Permission.Storage.WRITE_EXTERNAL_STORAGE)
@@ -1072,14 +1037,14 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
         @JavascriptInterface
         public void nativeGetLocation(final String invocationLogAppId,final String invocationLogFunction,final String needExtraInfo) {
-            if (EasyPermissions.hasPermissions(InfoDetailsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (EasyPermissions.hasPermissions(SystemInfoDetailsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ceshiData2(invocationLogAppId,invocationLogFunction, "nativeGetLocation",needExtraInfo);
 
             } else {//没有相应权限，获取相机权限
 
                 //TestShowDig.AskForPermission(BaseWebActivity4.this,"定位");
                 permissionsUtil = PermissionsUtil
-                        .with(InfoDetailsActivity.this)
+                        .with(SystemInfoDetailsActivity.this)
                         .requestCode(0)
                         .isDebug(true)
                         .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION)
@@ -1102,14 +1067,14 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
         /**获取设备imei*/
         @JavascriptInterface
         public void nativeGetEquipmentId(final String invocationLogAppId,final String invocationLogFunction) {
-            if (EasyPermissions.hasPermissions(InfoDetailsActivity.this, Manifest.permission.READ_PHONE_STATE)) {
+            if (EasyPermissions.hasPermissions(SystemInfoDetailsActivity.this, Manifest.permission.READ_PHONE_STATE)) {
                 imeiTask(invocationLogAppId,invocationLogFunction);
 
             } else {//没有相应权限，获取相机权限
 
                 //TestShowDig.AskForPermission(BaseWebActivity4.this,"定位");
                 permissionsUtil = PermissionsUtil
-                        .with(InfoDetailsActivity.this)
+                        .with(SystemInfoDetailsActivity.this)
                         .requestCode(2)
                         .isDebug(true)
                         .permissions(PermissionsUtil.Permission.Phone.READ_PHONE_STATE)
@@ -1201,7 +1166,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                                     }
                                 });
                             }else {
-                                ToastUtils.showToast(InfoDetailsActivity.this,"没有使用该功能的权限!");
+                                ToastUtils.showToast(SystemInfoDetailsActivity.this,"没有使用该功能的权限!");
                                 /*deliver.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -1281,7 +1246,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
     @AfterPermissionGranted(RC_CAMERA_PERM)
     public void photoTask() {
-        if (EasyPermissions.hasPermissions(InfoDetailsActivity.this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (EasyPermissions.hasPermissions(SystemInfoDetailsActivity.this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             // Have permission, do the thing
 
             testTakePhoto();
@@ -1318,7 +1283,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if(Build.VERSION.SDK_INT>=24){
-            fileUri1= FileProvider.getUriForFile(InfoDetailsActivity.this,"io.cordova.zhqy.provider",mPhotoFile);
+            fileUri1= FileProvider.getUriForFile(SystemInfoDetailsActivity.this,"io.cordova.zhqy.provider",mPhotoFile);
             Log.e("获取到的url为",fileUri1.toString());
         }else {
             fileUri1 = Uri.fromFile(mPhotoFile);
@@ -1498,7 +1463,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
                                 }
                             }else {
-                                ToastUtils.showToast(InfoDetailsActivity.this,"没有使用该功能的权限!");
+                                ToastUtils.showToast(SystemInfoDetailsActivity.this,"没有使用该功能的权限!");
                                 /*deliver.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -1592,7 +1557,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
                                 }
                             }else {
-                                ToastUtils.showToast(InfoDetailsActivity.this,"没有使用该功能的权限!");
+                                ToastUtils.showToast(SystemInfoDetailsActivity.this,"没有使用该功能的权限!");
                                 /*deliver.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -1711,12 +1676,12 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                     }
 
                     *//**
-                     * 当点击手动添加时回调
-                     *
-                     * @param requestCode
-                     * @param resultCode
-                     * @param data
-                     *//*
+         * 当点击手动添加时回调
+         *
+         * @param requestCode
+         * @param resultCode
+         * @param data
+         *//*
                     @Override
                     public void onManual(int requestCode, int resultCode, Intent data) {
                         Log.e("QRCodeManager","点击了手动添加了");
@@ -1755,7 +1720,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
         locationBean.setSuccess(true);
         locationBean.setMessage("成功");
         locationBean.setIsBaidu("1");
-        locationBean.setSignRecordEquipmentId(MobileInfoUtils.getIMEI(InfoDetailsActivity.this));
+        locationBean.setSignRecordEquipmentId(MobileInfoUtils.getIMEI(SystemInfoDetailsActivity.this));
         locationBean.setLatitude(latitude+"");
         locationBean.setLongitude(longitude+"");
         locationBean.setAddress((String) SPUtils.get(MyApp.getInstance(), "addressLine", ""));
@@ -1824,7 +1789,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
             locationBean.setChina(false);
         }
         locationBean.setSpeed(speed);
-        locationBean.setSignRecordEquipmentId(MobileInfoUtils.getIMEI(InfoDetailsActivity.this));
+        locationBean.setSignRecordEquipmentId(MobileInfoUtils.getIMEI(SystemInfoDetailsActivity.this));
         //locationBean.setLatitude(location.getLatitude()+"");
         locationBean.setLatitude(latitude+"");
         //locationBean.setLongitude(location.getLongitude()+"");
@@ -1884,10 +1849,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if(permissionsUtil != null){
-            permissionsUtil.onActivityResult(requestCode, resultCode, intent);
-        }
-
+        permissionsUtil.onActivityResult(requestCode, resultCode, intent);
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == REQUEST_CODE_CHOOSE) {
@@ -2050,8 +2012,8 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                                         deliver.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                SPUtils.put(InfoDetailsActivity.this,"bitmap","");
-                                                Intent intent = new Intent(InfoDetailsActivity.this,FaceYiQingActivity.class);
+                                                SPUtils.put(SystemInfoDetailsActivity.this,"bitmap","");
+                                                Intent intent = new Intent(SystemInfoDetailsActivity.this,FaceYiQingActivity.class);
                                                 startActivityForResult(intent,99);
                                                 imageid = 0;
                                             }
@@ -2060,7 +2022,7 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
 
                                 }
                             }else {
-                                ToastUtils.showToast(InfoDetailsActivity.this,"没有使用该功能的权限!");
+                                ToastUtils.showToast(SystemInfoDetailsActivity.this,"没有使用该功能的权限!");
                                 /*deliver.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -2095,14 +2057,14 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                     if(FaceActivity != null){
                         imageid = 1;
 
-                        String s = (String)SPUtils.get(InfoDetailsActivity.this, "bitmap", "");
-                        String imei = (String) SPUtils.get(InfoDetailsActivity.this, "imei", "");
-                        String username = (String) SPUtils.get(InfoDetailsActivity.this, "phone", "");
+                        String s = (String)SPUtils.get(SystemInfoDetailsActivity.this, "bitmap", "");
+                        String imei = (String) SPUtils.get(SystemInfoDetailsActivity.this, "imei", "");
+                        String username = (String) SPUtils.get(SystemInfoDetailsActivity.this, "phone", "");
 
                         try {
                             //String secret  = AesEncryptUtile.encrypt(Calendar.getInstance().getTimeInMillis()+ "_"+"123456",key);
                             String secret = AesEncryptUtile.encrypt(username,key);
-                            OkGo.<String>post(UrlRes.HOME2_URL+UrlRes.distinguishFaceUrl)
+                            OkGo.<String>post(UrlRes.HOME2_URL+"/authentication/api/face/distinguishFace")
                                     .params( "openId",AesEncryptUtile.openid)
                                     .params( "memberId",secret)
                                     .params( "img",s )
@@ -2209,13 +2171,13 @@ public class InfoDetailsActivity extends BaseActivity implements PermissionsUtil
                 m_Dialog.dismiss();
 
                 tag = 1;
-                mAgentWeb = AgentWeb.with(InfoDetailsActivity.this)
+                mAgentWeb = AgentWeb.with(SystemInfoDetailsActivity.this)
                         .setAgentWebParent(mLinearLayout, new LinearLayout.LayoutParams(-1, -1))
                         .useDefaultIndicator(-1, 3)//设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
                         .setWebChromeClient(mWebChromeClient)
                         .setWebViewClient(mWebViewClient2)
                         .setSecurityType(AgentWeb.SecurityType.STRICT_CHECK)
-                        .setWebLayout(new WebLayout4(InfoDetailsActivity.this))
+                        .setWebLayout(new WebLayout4(SystemInfoDetailsActivity.this))
                         .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
                         .interceptUnkownUrl() //拦截找不到相关页面的Scheme
                         .setAgentWebWebSettings( getSettings2())//设置 IAgentWebSettings。

@@ -4,20 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -26,9 +21,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhy.adapter.recyclerview.CommonAdapter;
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
-import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.util.List;
 
@@ -36,14 +28,12 @@ import butterknife.BindView;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.adapter.MessageAdapter;
-import io.cordova.zhqy.adapter.MyAdapter;
+import io.cordova.zhqy.adapter.MessageYBAdapter;
 import io.cordova.zhqy.bean.MessageBean;
 import io.cordova.zhqy.bean.OAMsgListBean;
 import io.cordova.zhqy.utils.BaseActivity2;
-import io.cordova.zhqy.utils.CircleCrop;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 
@@ -51,7 +41,7 @@ import io.cordova.zhqy.utils.ViewUtils;
  * Created by Administrator on 2019/2/22 0022.
  */
 
-public class OaMsgActivity extends BaseActivity2  {
+public class OaMsgYBActivity extends BaseActivity2  {
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.rv_msg_list)
@@ -64,7 +54,7 @@ public class OaMsgActivity extends BaseActivity2  {
     @BindView(R.id.rl_empty)
     RelativeLayout rl_empty;
 
-    private MessageAdapter adapter;
+    private MessageYBAdapter adapter;
     private LinearLayoutManager mLinearLayoutManager;
 
     String type,msgType;
@@ -189,7 +179,7 @@ public class OaMsgActivity extends BaseActivity2  {
                                 num += 1;
                                 refreshlayout.finishLoadmore();
                             }else {
-                                ToastUtils.showToast(OaMsgActivity.this,"暂无更多数据!");
+                                ToastUtils.showToast(OaMsgYBActivity.this,"暂无更多数据!");
                                 refreshlayout.finishLoadmore();
                             }
 
@@ -221,7 +211,7 @@ public class OaMsgActivity extends BaseActivity2  {
                         Log.e("刷新数据",response.body());
                         messageBean = JSON.parseObject(response.body(), MessageBean.class);
                         if (messageBean.getSuccess()) {
-                            adapter = new MessageAdapter(OaMsgActivity.this,R.layout.item_to_do_my_msg,messageBean.getObj());
+                            adapter = new MessageYBAdapter(OaMsgYBActivity.this,R.layout.item_to_do_my_msg,messageBean.getObj());
                             rvMsgList.setAdapter(adapter);
                             num = 2;
                             mSwipeLayout.setVisibility(View.VISIBLE);
@@ -242,6 +232,8 @@ public class OaMsgActivity extends BaseActivity2  {
     }
 
 
+    OAMsgListBean oaMsgListBean;
+    OAMsgListBean oaMsgListBean2 = new OAMsgListBean();
     MessageBean messageBean;
     private void netWorkOaMsgList() {
         OkGo.<String>post(UrlRes.HOME_URL + UrlRes.getBacklogUrl)
@@ -258,7 +250,7 @@ public class OaMsgActivity extends BaseActivity2  {
                         messageBean = JSON.parseObject(response.body(), MessageBean.class);
                         if (messageBean.getSuccess()) {
                             if(messageBean.getObj().size() > 0){
-                                adapter = new MessageAdapter(OaMsgActivity.this,R.layout.item_to_do_my_msg,messageBean.getObj());
+                                adapter = new MessageYBAdapter(OaMsgYBActivity.this,R.layout.item_to_do_my_msg,messageBean.getObj());
                                 rvMsgList.setAdapter(adapter);
                                 num = 2;
                                 mSwipeLayout.setVisibility(View.VISIBLE);
@@ -288,4 +280,7 @@ public class OaMsgActivity extends BaseActivity2  {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
     }
+
+
+
 }

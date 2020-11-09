@@ -9,10 +9,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.security.keystore.KeyProperties;
 import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
@@ -21,39 +19,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import butterknife.BindView;
-import cn.org.bjca.signet.coss.api.SignetCossApi;
-import cn.org.bjca.signet.coss.bean.CossSignPinResult;
-import cn.org.bjca.signet.coss.interfaces.CossSignPinCallBack;
 import io.cordova.zhqy.R;
-import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.BaseBean;
-import io.cordova.zhqy.bean.Constants;
 import io.cordova.zhqy.face.view.RefreshProgress;
 import io.cordova.zhqy.face2.FaceView;
-import io.cordova.zhqy.fingerprint.FingerprintHelper;
-import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity3;
 import io.cordova.zhqy.utils.BitmapUtils;
 import io.cordova.zhqy.utils.FinishActivity;
-import io.cordova.zhqy.utils.JsonUtil;
-import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.ToastUtils;
-import io.cordova.zhqy.utils.ViewUtils;
-import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
-import io.cordova.zhqy.widget.finger.CommonTipDialog;
-import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
 
 
 /**
@@ -158,6 +134,7 @@ public class FaceDialogActivity extends BaseActivity3 {
                 intent.putExtra("signType","0");
                 startActivity(intent);
                 FinishActivity.addActivity(FaceDialogActivity.this);
+                SPUtils.put(FaceDialogActivity.this,"closeFaceFlag","1");
             }
         });
         tv_pin.setOnClickListener(new View.OnClickListener() {
@@ -169,14 +146,18 @@ public class FaceDialogActivity extends BaseActivity3 {
                 intent.putExtra("type","1");
                 startActivity(intent);
                 FinishActivity.addActivity(FaceDialogActivity.this);
-
+                SPUtils.put(FaceDialogActivity.this,"closeFaceFlag","1");
             }
         });
 
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SPUtils.put(FaceDialogActivity.this,"closeFaceFlag","");
+    }
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){

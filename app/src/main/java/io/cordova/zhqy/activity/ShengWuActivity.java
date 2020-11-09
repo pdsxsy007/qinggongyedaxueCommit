@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -19,7 +18,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -37,7 +35,6 @@ import android.widget.Toast;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -45,21 +42,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
 
 import butterknife.BindView;
-import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.bean.AddFaceBean;
-import io.cordova.zhqy.bean.Constants;
-import io.cordova.zhqy.bean.FaceBean;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.fingerprint.FingerprintHelper;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity2;
-import io.cordova.zhqy.utils.BaseActivity3;
 import io.cordova.zhqy.utils.BitmapHelper;
-import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.LQRPhotoSelectUtils;
 import io.cordova.zhqy.utils.MyApp;
@@ -73,12 +65,9 @@ import io.cordova.zhqy.widget.finger.CommonTipDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog;
 import io.reactivex.functions.Consumer;
 import kr.co.namee.permissiongen.PermissionFail;
-import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-
-import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
 /**
  * Created by Administrator on 2019/6/19 0019.

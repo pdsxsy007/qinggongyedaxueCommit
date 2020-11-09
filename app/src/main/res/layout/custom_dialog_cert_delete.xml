@@ -32,6 +32,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@id/tv_top"
             android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/black"
             />
 
     </RelativeLayout>

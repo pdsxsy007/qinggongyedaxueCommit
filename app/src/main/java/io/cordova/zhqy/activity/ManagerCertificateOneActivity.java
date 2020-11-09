@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.ValueCallback;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,6 +61,7 @@ import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.widget.CustomDialog;
+import io.cordova.zhqy.widget.CustomDialog2;
 import io.cordova.zhqy.widget.MyDialog;
 import io.cordova.zhqy.zixing.QRCodeManager;
 
@@ -86,6 +88,7 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
     LinearLayout ll_finger_sign;
 
     private int flag = 0;
+
     @Override
     protected int getResourceId() {
         return R.layout.activity_zhengshu_one;
@@ -104,6 +107,7 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
         registerBoradcastReceiver1();
         registerBoradcastReceiver2();
         registerBoradcastReceiver3();
+
     }
 
     private void registerBoradcastReceiver1() {
@@ -373,11 +377,15 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
     }
 
     private void showUserDialog() {
-        final CustomDialog dialog = new CustomDialog(ManagerCertificateOneActivity.this,R.layout.custom_dialog_cert_sign);
+        final CustomDialog2 dialog = new CustomDialog2(ManagerCertificateOneActivity.this,R.layout.custom_dialog_cert_sign);
         RelativeLayout rl_sure = dialog.findViewById(R.id.rl_sure);
         RelativeLayout rl_sure1 = dialog.findViewById(R.id.rl_sure1);
         final EditText et_userPwd = dialog.findViewById(R.id.et_userPwd);
+        et_userPwd.setFocusable(true);
+        et_userPwd.setFocusableInTouchMode(true);
+        et_userPwd.requestFocus();
 
+        //showSoftInputFromWindow(et_userPwd);
 
         rl_sure.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -415,6 +423,16 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
         dialog.show();
 
     }
+
+    public void showSoftInputFromWindow(EditText editText){
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        InputMethodManager inputManager =
+                (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.showSoftInput(editText, 0);
+    }
+
 
     private void getCerInfo(String certContent) {
         ViewUtils.createLoadingDialog(this);
@@ -529,6 +547,7 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
                         SPUtils.put(ManagerCertificateOneActivity.this,"bitmap","");
                         Intent intent = new Intent(ManagerCertificateOneActivity.this,FaceDialogManagerActivity.class);
                         startActivityForResult(intent,99);
+                        FinishActivity.addActivity(ManagerCertificateOneActivity.this);
                         imageid = 0;
                     }
 

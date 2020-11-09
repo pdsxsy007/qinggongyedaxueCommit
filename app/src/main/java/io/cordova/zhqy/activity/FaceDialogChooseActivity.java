@@ -134,6 +134,7 @@ public class FaceDialogChooseActivity extends BaseActivity3 {
                 intent.putExtra("signType","0");
                 startActivity(intent);
                 FinishActivity.addActivity(FaceDialogChooseActivity.this);
+                SPUtils.put(FaceDialogChooseActivity.this,"closeFaceFlag2","1");
             }
         });
         tv_pin.setOnClickListener(new View.OnClickListener() {
@@ -145,11 +146,17 @@ public class FaceDialogChooseActivity extends BaseActivity3 {
                 intent.putExtra("type","1");
                 startActivity(intent);
                 FinishActivity.addActivity(FaceDialogChooseActivity.this);
-
+                SPUtils.put(FaceDialogChooseActivity.this,"closeFaceFlag2","1");
             }
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SPUtils.put(FaceDialogChooseActivity.this,"closeFaceFlag2","");
     }
 
 

@@ -1,59 +1,26 @@
 package io.cordova.zhqy.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.security.keystore.KeyProperties;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
 
-import java.net.URLEncoder;
-import java.util.Calendar;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
-import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.Constants;
-import io.cordova.zhqy.bean.GetUserIdBean;
-import io.cordova.zhqy.bean.LoginBean;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.fingerprint.FingerprintHelper;
 import io.cordova.zhqy.fingerprint.LoginPageOperationListener;
-import io.cordova.zhqy.fragment.FingerprintLoginFragment;
-import io.cordova.zhqy.fragment.PassLoginFragment;
-import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity;
-import io.cordova.zhqy.utils.CookieUtils;
-import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.SystemBarTintUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
-import io.cordova.zhqy.utils.fingerUtil.MD5Util;
 import io.cordova.zhqy.widget.XCRoundImageView;
 import io.cordova.zhqy.widget.finger.CommonTipDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog;
@@ -62,7 +29,6 @@ import io.cordova.zhqy.widget.finger.PromptButtonListener;
 import io.cordova.zhqy.widget.finger.PromptDialog;
 
 import static io.cordova.zhqy.activity.SplashActivity.PASSWORD_LOGIN_FLAG;
-import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
 /**
  * Created by Administrator on 2018/11/15 0015.

@@ -1,9 +1,5 @@
 package io.cordova.zhqy.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,9 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.adapter.MessageAdapter;
 import io.cordova.zhqy.adapter.MyAdapter;
-import io.cordova.zhqy.bean.MessageBean;
 import io.cordova.zhqy.bean.OAMsgListBean;
 import io.cordova.zhqy.utils.BaseActivity2;
 import io.cordova.zhqy.utils.CircleCrop;
@@ -51,7 +45,7 @@ import io.cordova.zhqy.utils.ViewUtils;
  * Created by Administrator on 2019/2/22 0022.
  */
 
-public class OaMsgActivity extends BaseActivity2  {
+public class OaMsgActivity2 extends BaseActivity2  {
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.rv_msg_list)
@@ -64,7 +58,7 @@ public class OaMsgActivity extends BaseActivity2  {
     @BindView(R.id.rl_empty)
     RelativeLayout rl_empty;
 
-    private MessageAdapter adapter;
+    private MyAdapter adapter;
     private LinearLayoutManager mLinearLayoutManager;
 
     String type,msgType;
@@ -91,39 +85,8 @@ public class OaMsgActivity extends BaseActivity2  {
         netWorkOaMsgList();
 
         header.setEnableLastTime(false);
-        registerBoradcastReceiver();
     }
 
-    public void registerBoradcastReceiver() {
-        IntentFilter myIntentFilter = new IntentFilter();
-        myIntentFilter.addAction("refreshMsg");
-        //注册广播
-        registerReceiver(broadcastReceiver, myIntentFilter);
-    }
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if(action.equals("refreshOaMessage")){
-                String state = intent.getStringExtra("state");
-                if(state.equals("0")){
-                    num = 1;
-                    netWorkOaMsgList();
-                }else {
-                    mLinearLayoutManager.scrollToPositionWithOffset(firstItemPosition, 0);
-                }
-               /* num = 1;
-                netWorkSysMsgList();*/
-                //adapter.notifyDataSetChanged();
-
-            }
-        }
-    };
-
-
-    int lastItemPosition;
-    int firstItemPosition;
 
     @Override
     protected void initListener() {
@@ -143,94 +106,82 @@ public class OaMsgActivity extends BaseActivity2  {
 
             }
         });
-
-        rvMsgList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-                if (layoutManager instanceof LinearLayoutManager) {
-                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
-                    //获取最后一个可见view的位置
-
-                    lastItemPosition = linearManager.findLastVisibleItemPosition();
-                    //获取第一个可见view的位置
-
-                    firstItemPosition = linearManager.findFirstVisibleItemPosition();
-                    Log.e("lastItemPosition------",lastItemPosition+"");
-                    Log.e("firstItemPosition------",firstItemPosition+"");
-                }
-            }
-        });
-
     }
 
     private void netWorkSysMsgListOnLoadMore(final RefreshLayout refreshlayout) {
-        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.getBacklogUrl)
-                .tag(this)
-                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
-                .params("pageNum", num)
-                .params("pageSize", 15)
-                .params("messageType",type)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Log.e("num",num+"");
-                        Log.e("详情列表查看更多",response.body());
-                        MessageBean messageBeanAll = JSON.parseObject(response.body(), MessageBean.class);
-
-                        if (messageBeanAll.getSuccess()) {
-                            List<MessageBean.Obj> objMore = messageBeanAll.getObj();
-                            if(objMore.size() > 0){
-                                messageBean.getObj().addAll(objMore);
-                                //adapter = new MessageAdapter(OaMsgActivity.this,R.layout.item_to_do_my_msg,messageBean.getObj());
-                                //rvMsgList.setAdapter(adapter);
+        if(lastSize == size ){
+            ToastUtils.showToast(this,"没有更多数据了!");
+            refreshlayout.finishLoadmore();
+        }else {
+            OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_workFolwDbList)
+                    .tag(this)
+                    .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                    .params("size", 15*num)
+                    .params("type",type)
+                    .params("workType","workdb")
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Log.e("s",response.toString());
+                            oaMsgListBean = JSON.parseObject(response.body(), OAMsgListBean.class);
+                            oaMsgListBean2.getObj().clear();
+                            oaMsgListBean2.getObj().addAll(oaMsgListBean.getObj());
+                            lastSize = size;
+                            size = oaMsgListBean2.getObj().size();
+                            if(size % 15 > 0){
+                                lastSize = size;
+                            }
+                            if (oaMsgListBean.isSuccess()) {
+                                Log.i("消息列表",response.body());
+                                adapter = new MyAdapter(OaMsgActivity2.this,R.layout.item_to_do_my_msg,oaMsgListBean.getObj());
+                                rvMsgList.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                                 num += 1;
                                 refreshlayout.finishLoadmore();
                             }else {
-                                ToastUtils.showToast(OaMsgActivity.this,"暂无更多数据!");
                                 refreshlayout.finishLoadmore();
                             }
-
-                        }else {
-                            refreshlayout.finishLoadmore();
                         }
-                    }
-                    @Override
-                    public void onError(Response<String> response) {
-                        super.onError(response);
-                        refreshlayout.finishLoadmore();
+                        @Override
+                        public void onError(Response<String> response) {
+                            super.onError(response);
+                            refreshlayout.finishLoadmore();
 
-                    }
-                });
+                        }
+                    });
+        }
+
 
     }
 
     private void netWorkSysMsgListOnRefresh(final RefreshLayout refreshlayout) {
         num = 1;
-        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.getBacklogUrl)
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_workFolwDbList)
                 .tag(this)
-                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
-                .params("pageNum", num)
-                .params("pageSize", 15)
-                .params("messageType",type)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("size", 15)
+                .params("type",type)
+                .params("workType","workdb")
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.e("刷新数据",response.body());
-                        messageBean = JSON.parseObject(response.body(), MessageBean.class);
-                        if (messageBean.getSuccess()) {
-                            adapter = new MessageAdapter(OaMsgActivity.this,R.layout.item_to_do_my_msg,messageBean.getObj());
+                        Log.e("s",response.toString());
+                        oaMsgListBean2 = JSON.parseObject(response.body(), OAMsgListBean.class);
+                        if (oaMsgListBean2.isSuccess()) {
+                            Log.i("消息列表",response.body());
+                            //setRvOAMsgList();
+                            adapter = new MyAdapter(OaMsgActivity2.this,R.layout.item_to_do_my_msg,oaMsgListBean2.getObj());
+
                             rvMsgList.setAdapter(adapter);
+                            refreshlayout.finishRefresh();
                             num = 2;
                             mSwipeLayout.setVisibility(View.VISIBLE);
                             rl_empty.setVisibility(View.GONE);
                         }else {
+                            refreshlayout.finishRefresh();
                             mSwipeLayout.setVisibility(View.GONE);
                             rl_empty.setVisibility(View.VISIBLE);
                         }
-                        refreshlayout.finishRefresh();
                     }
                     @Override
                     public void onError(Response<String> response) {
@@ -242,27 +193,36 @@ public class OaMsgActivity extends BaseActivity2  {
     }
 
 
-    MessageBean messageBean;
+    OAMsgListBean oaMsgListBean;
+    OAMsgListBean oaMsgListBean2 = new OAMsgListBean();
     private void netWorkOaMsgList() {
-        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.getBacklogUrl)
+        OkGo.<String>post(UrlRes.HOME_URL + UrlRes.Query_workFolwDbList)
                 .tag(this)
-                .params("userName",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
-                .params("pageNum", num)
-                .params("pageSize", 15)
-                .params("messageType",type)
+                .params("userId",(String) SPUtils.get(MyApp.getInstance(),"userId",""))
+                .params("size", 15)
+                .params("type",type)
+                .params("workType","workdb")
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.e("详情列表",response.body());
+                        Log.e("老版待阅",response.body());
                         ViewUtils.cancelLoadingDialog();
-                        messageBean = JSON.parseObject(response.body(), MessageBean.class);
-                        if (messageBean.getSuccess()) {
-                            if(messageBean.getObj().size() > 0){
-                                adapter = new MessageAdapter(OaMsgActivity.this,R.layout.item_to_do_my_msg,messageBean.getObj());
-                                rvMsgList.setAdapter(adapter);
-                                num = 2;
-                                mSwipeLayout.setVisibility(View.VISIBLE);
-                                rl_empty.setVisibility(View.GONE);
+                        oaMsgListBean2 = JSON.parseObject(response.body(), OAMsgListBean.class);
+                        if (oaMsgListBean2.isSuccess()) {
+                            Log.i("消息列表",response.body());
+                            //setRvOAMsgList();
+                            List<OAMsgListBean.ObjBean> obj = oaMsgListBean2.getObj();
+                            if(null != obj){
+                                if(obj.size() > 0){
+                                    adapter = new MyAdapter(OaMsgActivity2.this,R.layout.item_to_do_my_msg,oaMsgListBean2.getObj());
+                                    rvMsgList.setAdapter(adapter);
+                                    num = 2;
+                                    mSwipeLayout.setVisibility(View.VISIBLE);
+                                    rl_empty.setVisibility(View.GONE);
+                                }else {
+                                    mSwipeLayout.setVisibility(View.GONE);
+                                    rl_empty.setVisibility(View.VISIBLE);
+                                }
                             }else {
                                 mSwipeLayout.setVisibility(View.GONE);
                                 rl_empty.setVisibility(View.VISIBLE);
@@ -283,9 +243,8 @@ public class OaMsgActivity extends BaseActivity2  {
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
-    }
+
+
+
+
 }

@@ -1,13 +1,10 @@
 package io.cordova.zhqy.activity;
 
-import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,47 +12,44 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.CookieManager;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import com.alibaba.fastjson.JSON;
-import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.tbruyelle.rxpermissions2.Permission;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.net.URLEncoder;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
+import cn.jiguang.verifysdk.api.JVerificationInterface;
 import cn.jpush.android.api.JPushInterface;
+import io.cordova.zhqy.AppException;
+import io.cordova.zhqy.Constants;
 import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.Constants;
 import io.cordova.zhqy.bean.LoginBean;
 import io.cordova.zhqy.utils.AesEncryptUtile;
-import io.cordova.zhqy.utils.CookieUtils;
+import io.cordova.zhqy.utils.MobileInfoUtils;
 import io.cordova.zhqy.utils.MyApp;
+import io.cordova.zhqy.utils.MyIntentService;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
 import io.cordova.zhqy.utils.T;
-import io.cordova.zhqy.utils.ToastUtils;
-import io.cordova.zhqy.utils.fingerUtil.MD5Util;
 
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
@@ -89,6 +83,7 @@ public class SplashActivity extends AppCompatActivity {
         getLocalVersionName(getApplicationContext());
 
         String infoType = (String) SPUtils.get(MyApp.getInstance(), "InfoType", "");
+        Log.e("infoType",infoType+"--------");
         if(infoType.equals("1")){
             getMsg();
             SPUtils.put(MyApp.getInstance(),"InfoType","");
@@ -264,8 +259,52 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     protected void initView() {
+        initThirdConfig();
         handler.sendEmptyMessageDelayed(0, 2000);
+
     }
+
+    private void initThirdConfig() {
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                JPushInterface.setDebugMode(true);
+                JPushInterface.init(SplashActivity.this);
+                MyIntentService.start(SplashActivity.this);
+
+                SPUtil.init(SplashActivity.this, Constants.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
+                String localVersionName = getLocalVersionName(SplashActivity.this);
+                String imei = MobileInfoUtils.getIMEI(SplashActivity.this);
+
+                SPUtils.put(SplashActivity.this,"versionName",localVersionName);
+                SPUtils.put(SplashActivity.this,"imei",imei);
+                AppException appException = AppException.getInstance();
+                appException.init(SplashActivity.this);
+
+                UMShareAPI.get(SplashActivity.this);
+
+                UMConfigure.init(SplashActivity.this,Constants.umeng_init_data,Constants.umeng_init_name,UMConfigure.DEVICE_TYPE_PHONE,"");
+                UMConfigure.setLogEnabled(true);
+                UMConfigure.isDebugLog();
+                MobclickAgent.setScenarioType(SplashActivity.this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+                UMShareConfig config = new UMShareConfig();
+                config.isNeedAuthOnGetUserInfo(true);
+                UMShareAPI.get(SplashActivity.this).setShareConfig(config);
+                PlatformConfig.setWeixin(Constants.umeng_init_data_weixin, Constants.umeng_init_data_weixin_value);
+                PlatformConfig.setSinaWeibo(Constants.umeng_init_data_weibo, Constants.umeng_init_data_weibo_value, Constants.umeng_init_data_weibo_address);
+                PlatformConfig.setQQZone(Constants.umeng_init_data_qq, Constants.umeng_init_data_qq_value);
+
+                //本机号码一键登录
+                JVerificationInterface.setDebugMode(true);
+                JVerificationInterface.init(SplashActivity.this);
+            }
+        }.start();
+
+    }
+
+
     /**
      * 暂时闪屏界面不需要执行什么操作，所以先发个2秒的延时空消息,其实可以把软件所需的申请权限放和检查版本更新放这
      *
@@ -407,7 +446,7 @@ public class SplashActivity extends AppCompatActivity {
      * 方式启动，只需要在onCreat中调用此方法进行处理
      */
     private void handleOpenClick() {
-        Log.d(TAG, "用户点击打开了通知");
+        Log.e(TAG, "用户点击打开了通知");
         String data = null;
         //获取华为平台附带的jpush信息
         if (getIntent().getData() != null) {
@@ -419,7 +458,7 @@ public class SplashActivity extends AppCompatActivity {
             data = getIntent().getExtras().getString("JMessageExtra");
         }
 
-        Log.w(TAG, " -消息体- " + String.valueOf(data));
+        Log.e(TAG, " -消息体- " + String.valueOf(data));
         if (TextUtils.isEmpty(data)) return;
         try {
             JSONObject jsonObject = new JSONObject(data);
@@ -430,6 +469,7 @@ public class SplashActivity extends AppCompatActivity {
             String content = jsonObject.optString(KEY_CONTENT);
             String extras = jsonObject.optString(KEY_EXTRAS);
 
+            Log.e("extras-splash",extras);
             try {
                 JSONObject extraJson = new JSONObject(extras);
                 if (extraJson.length() > 0) {

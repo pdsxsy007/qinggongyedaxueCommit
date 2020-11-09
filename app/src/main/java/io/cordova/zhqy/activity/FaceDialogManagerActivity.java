@@ -128,6 +128,7 @@ public class FaceDialogManagerActivity extends BaseActivity3 {
             public void onClick(View view) {
 
                 Intent intent = new Intent(FaceDialogManagerActivity.this,CertificateSignTypeManagerActivity.class);
+
                 startActivity(intent);
                 FinishActivity.addActivity(FaceDialogManagerActivity.this);
 
