@@ -277,6 +277,8 @@ public class HomePreFragment extends BaseFragment implements PermissionsUtil.IPe
      * */
     private void setGoPushMsg() {
         String messageSign = (String) SPUtils.get(getActivity(), "messageSign", "");
+        Log.e("homeFt-messageSign",messageSign);
+        Log.e("homeFt-msgType",msgType);
         if (!StringUtils.isEmpty(msgType)){
             Intent intent;
             if (msgType.equals("0")){

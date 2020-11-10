@@ -675,7 +675,7 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
                 if (isLogin){
                     intent = new Intent(MyApp.getInstance(), AppSetting.class);
                     startActivity(intent);
-                    FinishActivity.addActivity(getActivity());
+                    //FinishActivity.addActivity(getActivity());
                 }
                 break;
 
@@ -1755,7 +1755,12 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
                         }else {
                             badge1.hide();
                         }
-                        tvMyToDoMsgNum.setText(MyPre2Fragment.this.count);
+                        if(Integer.parseInt(MyPre2Fragment.this.count)>99){
+                            tvMyToDoMsgNum.setText("99+");
+                        }else {
+                            tvMyToDoMsgNum.setText(MyPre2Fragment.this.count);
+                        }
+                        //tvMyToDoMsgNum.setText(MyPre2Fragment.this.count);
                     }
 
                     @Override

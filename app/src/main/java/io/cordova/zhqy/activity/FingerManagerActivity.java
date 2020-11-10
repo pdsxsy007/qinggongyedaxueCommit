@@ -73,6 +73,7 @@ public class FingerManagerActivity extends BaseActivity2 implements FingerprintH
         });
     }
 
+
     private void dealOnOff(boolean isOpen) {
         if (isOpen) {
             type = 0;
@@ -157,6 +158,15 @@ public class FingerManagerActivity extends BaseActivity2 implements FingerprintH
             }
         }
 
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String personName = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
+        isOpen =SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN+"_"+personName, true);
+        setSwitchStatus();
     }
 
     @Override

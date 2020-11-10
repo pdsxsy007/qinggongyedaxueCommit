@@ -129,8 +129,13 @@ public class MyToDoMsgActivity extends BaseActivity2 {
                     break;
                 case R.id.ll_my_msg://我的消息
                     //intent = new Intent(MyApp.getInstance(), MyShenqingActivity.class);
-                    intent = new Intent(MyApp.getInstance(), OaMsgYBActivity.class);
+                 /*   intent = new Intent(MyApp.getInstance(), OaMsgYBActivity.class);
                     intent.putExtra("type","5");
+                    intent.putExtra("msgType","我的申请");
+                    startActivity(intent);*/
+
+                    intent = new Intent(MyApp.getInstance(), MyShenqingActivity.class);
+                    intent.putExtra("type","sq");
                     intent.putExtra("msgType","我的申请");
                     startActivity(intent);
                     break;
@@ -524,14 +529,14 @@ public class MyToDoMsgActivity extends BaseActivity2 {
                                 netWorkDyMsg();
                                 netWorkYbMsg();
                                 netWorkYyMsg();
-                                netWorkSqMsg();
+                                netWorkSqMsg2();
                             }
                         }else {
                             netWorkDbMsg();
                             netWorkDyMsg();
                             netWorkYbMsg();
                             netWorkYyMsg();
-                            netWorkSqMsg();
+                            netWorkSqMsg2();
                         }
 
                     }
@@ -543,7 +548,7 @@ public class MyToDoMsgActivity extends BaseActivity2 {
                         netWorkDyMsg();
                         netWorkYbMsg();
                         netWorkYyMsg();
-                        netWorkSqMsg();
+                        netWorkSqMsg2();
                     }
                 });
 

@@ -96,7 +96,7 @@ public class OaMsgActivity extends BaseActivity2  {
 
     public void registerBoradcastReceiver() {
         IntentFilter myIntentFilter = new IntentFilter();
-        myIntentFilter.addAction("refreshMsg");
+        myIntentFilter.addAction("refreshOaMessage");
         //注册广播
         registerReceiver(broadcastReceiver, myIntentFilter);
     }

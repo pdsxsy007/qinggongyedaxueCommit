@@ -197,7 +197,7 @@ public class MyShenqingActivity extends BaseActivity2  {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.e("s",response.toString());
+                        Log.e("s",response.body());
                         ViewUtils.cancelLoadingDialog();
                         oaMsgListBean2 = JSON.parseObject(response.body(), OAMsgListBean.class);
                         if (oaMsgListBean2.isSuccess()) {

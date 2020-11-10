@@ -115,32 +115,37 @@ public class OpenClickActivity extends Activity  {
             String title = jsonObject.optString(KEY_TITLE);
             String content = jsonObject.optString(KEY_CONTENT);
             String extras = jsonObject.optString(KEY_EXTRAS);
+            SPUtils.put(MyApp.getInstance(),"msgId",msgId);
+            SPUtils.put(MyApp.getInstance(),"msgType",msgType);
             if (StringUtils.isEmpty(title)){
                 title = "i 轻工大";
             }
             try {
-                JSONObject extraJson = new JSONObject(extras);
-                if (extraJson.length() > 0) {
-                    Log.e("extras", extras);
-                    Log.e("extraJson", extraJson.getString("messageId"));
-                    msgId =  extraJson.getString("messageId");
-                    msgType =  extraJson.getString("messageType");
-                    SPUtils.put(MyApp.getInstance(),"msgId",msgId);
-                    SPUtils.put(MyApp.getInstance(),"msgType",msgType);
+                if(extras != null){
+                    JSONObject extraJson = new JSONObject(extras);
+                    if (extraJson.length() > 0 && extraJson.toString().contains("messageId") ) {
+                        Log.e("extras", extras);
+                        msgId =  extraJson.getString("messageId");
+                        msgType =  extraJson.getString("messageType");
+                        if(msgId != null){
+                            SPUtils.put(MyApp.getInstance(),"msgId",msgId);
+                        }
+
+                        if(msgType != null){
+                            SPUtils.put(MyApp.getInstance(),"msgType",msgType);
+                        }
+
+                    }
                 }
 
-//                if (Main2Activity.isForeground){
-//                    setGoPushMsg(msgType);
-//                }else {
-//                    Intent i = new Intent(MyApp.getInstance(), SplashActivity.class);
-//                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(i);
-//                }
 
+
+                Log.e("isrRunIng",isrRunIng);
                 if (isrRunIng.equals("1")){
                     setGoPushMsg(msgType);
                     SPUtils.put(MyApp.getInstance(),"InfoType","0");
                 } else if (isrRunIng.equals("0")) {
+
                     Intent i = new Intent(MyApp.getInstance(), SplashActivity.class);
                     startActivity(i);
                     finish();

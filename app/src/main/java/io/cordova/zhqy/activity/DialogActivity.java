@@ -666,7 +666,7 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
             @Override
             public void onCossSignPin(final CossSignPinResult result) {
                 if (result.getErrCode().equalsIgnoreCase(successCode)) {
-//                    ToastUtils.showToast(DialogActivity.this,"签名成功!");
+                    //ToastUtils.showToast(DialogActivity.this,"签名成功!");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

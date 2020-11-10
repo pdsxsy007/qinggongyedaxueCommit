@@ -215,15 +215,16 @@
                         android:textColor="@color/title_bar_bg"
                         android:textStyle="bold"
                         />
+
                     <TextView
                         android:id="@+id/te_my_to_do_msg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:textSize="@dimen/sp16"
+                        android:layout_centerHorizontal="true"
+                        android:text="我的消息"
                         android:textColor="@color/black"
-                        android:text="我的消息" />
+                        android:textSize="@dimen/sp16" />
 
                 </RelativeLayout>
 

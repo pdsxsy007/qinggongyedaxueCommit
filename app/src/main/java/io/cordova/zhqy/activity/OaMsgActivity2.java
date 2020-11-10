@@ -133,8 +133,8 @@ public class OaMsgActivity2 extends BaseActivity2  {
                             }
                             if (oaMsgListBean.isSuccess()) {
                                 Log.i("消息列表",response.body());
-                                adapter = new MyAdapter(OaMsgActivity2.this,R.layout.item_to_do_my_msg,oaMsgListBean.getObj());
-                                rvMsgList.setAdapter(adapter);
+                                //adapter = new MyAdapter(OaMsgActivity2.this,R.layout.item_to_do_my_msg,oaMsgListBean.getObj());
+                                //rvMsgList.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                                 num += 1;
                                 refreshlayout.finishLoadmore();
