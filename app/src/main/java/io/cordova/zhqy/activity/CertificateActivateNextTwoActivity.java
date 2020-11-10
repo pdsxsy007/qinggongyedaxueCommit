@@ -280,7 +280,7 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
             @Override
             public void onCossSignPin(final CossSignPinResult result) {
                 if (result.getErrCode().equalsIgnoreCase(successCode)) {
-//                    ToastUtils.showToast(CertificateActivateNextTwoActivity.this,"签名成功!");
+                    //ToastUtils.showToast(CertificateActivateNextTwoActivity.this,"签名成功!");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
