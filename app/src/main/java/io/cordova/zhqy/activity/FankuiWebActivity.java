@@ -102,7 +102,6 @@ import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.ScreenSizeUtils;
 import io.cordova.zhqy.utils.SoundPoolUtils;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.TestShowDig;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
@@ -332,28 +331,6 @@ public class FankuiWebActivity extends AppCompatActivity implements GestureDetec
         }
     }
 
-    List<String> permission = new ArrayList<>();
-    private void setListener() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            permission.add(  Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
-        {
-            permission.add(Manifest.permission.READ_PHONE_STATE);
-        }
-
-        if (!permission.isEmpty())
-        {
-            String[] permissions = permission.toArray(new String[permission.size()]);//将集合转化成数组
-            //@onRequestPermissionsResult会接受次函数传的数据
-            ActivityCompat.requestPermissions(this, permissions, 1);
-        }else {
-            getMyLocation();
-        }
-    }
 
 
     @Override
@@ -559,7 +536,7 @@ public class FankuiWebActivity extends AppCompatActivity implements GestureDetec
                         if (baseBean.isSuccess()){
                             rbSc.setBackgroundResource(R.mipmap.sc_hover_icon);
                             flag = 1;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                             Intent intent = new Intent();
                             intent.putExtra("refreshService","dongtai");
                             intent.setAction("refresh2");
@@ -567,7 +544,7 @@ public class FankuiWebActivity extends AppCompatActivity implements GestureDetec
                         }else {
                             rbSc.setBackgroundResource(R.mipmap.sc_icon);
                             flag = 0;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                         }
                     }
 
@@ -593,7 +570,7 @@ public class FankuiWebActivity extends AppCompatActivity implements GestureDetec
                         if (baseBean.isSuccess()){
                             rbSc.setBackgroundResource(R.mipmap.sc_icon);
                             flag = 0;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                             Intent intent = new Intent();
                             intent.putExtra("refreshService","dongtai");
                             intent.setAction("refresh2");
@@ -601,7 +578,7 @@ public class FankuiWebActivity extends AppCompatActivity implements GestureDetec
                         }else {
                             rbSc.setBackgroundResource(R.mipmap.sc_hover_icon);
                             flag = 1;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                         }
                     }
 
