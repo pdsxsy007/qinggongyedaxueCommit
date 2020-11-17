@@ -43,7 +43,6 @@ import io.cordova.zhqy.activity.SplashActivity;
 import io.cordova.zhqy.activity.SystemMsgActivity;
 import io.cordova.zhqy.bean.NoticeCaBean;
 import io.cordova.zhqy.utils.ActivityUtils;
-import io.cordova.zhqy.utils.ExampleUtil;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;

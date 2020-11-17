@@ -56,7 +56,7 @@ import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
 import io.cordova.zhqy.utils.ToastUtils;
-import io.cordova.zhqy.utils.netState;
+import io.cordova.zhqy.utils.NetState;
 import io.cordova.zhqy.web.BaseWebActivity4;
 
 import io.cordova.zhqy.web.BaseWebCloseActivity;
@@ -279,7 +279,7 @@ public class FindPreFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                if (!netState.isConnect(getActivity()) ){
+                if (!NetState.isConnect(getActivity()) ){
                     ToastUtils.showToast(getActivity(),"网络连接异常!");
                     refreshlayout.finishRefresh();
                 }else {

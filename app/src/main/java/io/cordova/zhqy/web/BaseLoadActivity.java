@@ -141,7 +141,6 @@ import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.ScreenSizeUtils;
 import io.cordova.zhqy.utils.SoundPoolUtils;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.widget.MyDialog;
@@ -813,7 +812,7 @@ public class BaseLoadActivity extends SupportActivity implements GestureDetector
                         if (baseBean.isSuccess()){
                             rbSc.setBackgroundResource(R.mipmap.sc_hover_icon);
                             flag = 1;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                             Intent intent = new Intent();
                             intent.putExtra("refreshService","dongtai");
                             intent.setAction("refresh2");
@@ -821,7 +820,7 @@ public class BaseLoadActivity extends SupportActivity implements GestureDetector
                         }else {
                             rbSc.setBackgroundResource(R.mipmap.sc_icon);
                             flag = 0;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                         }
                     }
 
@@ -847,7 +846,7 @@ public class BaseLoadActivity extends SupportActivity implements GestureDetector
                         if (baseBean.isSuccess()){
                             rbSc.setBackgroundResource(R.mipmap.sc_icon);
                             flag = 0;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                             Intent intent = new Intent();
                             intent.putExtra("refreshService","dongtai");
                             intent.setAction("refresh2");
@@ -855,7 +854,7 @@ public class BaseLoadActivity extends SupportActivity implements GestureDetector
                         }else {
                             rbSc.setBackgroundResource(R.mipmap.sc_hover_icon);
                             flag = 1;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                         }
                     }
 

@@ -55,17 +55,10 @@ import io.cordova.zhqy.utils.MobileInfoUtils;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.ScreenSizeUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
-import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.widget.CustomDialog;
 import io.cordova.zhqy.widget.CustomDialog2;
-import io.cordova.zhqy.widget.MyDialog;
-import io.cordova.zhqy.zixing.QRCodeManager;
-
-import static io.cordova.zhqy.UrlRes.HOME2_URL;
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
 public class ManagerCertificateOneActivity extends BaseActivity implements View.OnClickListener, PermissionsUtil.IPermissionsCallback {
@@ -282,7 +275,7 @@ public class ManagerCertificateOneActivity extends BaseActivity implements View.
                     public void onError(Response<String> response) {
                         super.onError(response);
                         ViewUtils.cancelLoadingDialog();
-                        T.showShort(getApplicationContext(),"找不到服务器了，请稍后再试");
+                        ToastUtils.showToast(getApplicationContext(),"找不到服务器了，请稍后再试");
                         imageid = 0;
                     }
                 });

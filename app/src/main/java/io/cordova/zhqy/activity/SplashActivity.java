@@ -1,5 +1,6 @@
 package io.cordova.zhqy.activity;
 
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +17,13 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import com.alibaba.fastjson.JSON;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheEntity;
+import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.cookie.CookieJarImpl;
+import com.lzy.okgo.cookie.store.DBCookieStore;
+import com.lzy.okgo.cookie.store.SPCookieStore;
+import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.Response;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
@@ -32,6 +39,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import butterknife.BindView;
 import cn.jiguang.verifysdk.api.JVerificationInterface;
@@ -49,7 +58,8 @@ import io.cordova.zhqy.utils.MyIntentService;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.T;
+import io.cordova.zhqy.utils.ToastUtils;
+import okhttp3.OkHttpClient;
 
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
 
@@ -276,7 +286,8 @@ public class SplashActivity extends AppCompatActivity {
                 super.run();
                 JPushInterface.setDebugMode(true);
                 JPushInterface.init(SplashActivity.this);
-                MyIntentService.start(SplashActivity.this);
+                //MyIntentService.start(SplashActivity.this);
+                initOkGo();
 
                 SPUtil.init(SplashActivity.this, Constants.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
                 String localVersionName = getLocalVersionName(SplashActivity.this);
@@ -308,6 +319,38 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * 初始化ok
+     */
+    private void initOkGo() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("feng");
+        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
+        loggingInterceptor.setColorLevel(Level.INFO);
+        builder.addInterceptor(loggingInterceptor);
+        builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)));
+        builder.readTimeout(30000, TimeUnit.MILLISECONDS);
+        builder.writeTimeout(30000, TimeUnit.MILLISECONDS);
+        builder.connectTimeout(3000, TimeUnit.MILLISECONDS);
+        builder.cookieJar(new CookieJarImpl(new DBCookieStore(this)));
+
+//
+//        try {
+//            HttpsUtils.SSLParams sslParams3 = HttpsUtils.getSslSocketFactory(getAssets().open("a.cer"));
+//            builder.sslSocketFactory(sslParams3.sSLSocketFactory, sslParams3.trustManager);
+//            builder.hostnameVerifier(new SafeHostnameVerifier());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        OkGo.getInstance().init((Application) MyApp.getInstance())
+                .setOkHttpClient(builder.build())
+                .setCacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)
+                .setRetryCount(3);
+
+    }
 
     /**
      * 暂时闪屏界面不需要执行什么操作，所以先发个2秒的延时空消息,其实可以把软件所需的申请权限放和检查版本更新放这
@@ -393,7 +436,7 @@ public class SplashActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }else {
-                                T.showShort(MyApp.getInstance(),loginBean.getMsg());
+                                ToastUtils.showToast(MyApp.getInstance(),loginBean.getMsg());
 
                                 SPUtils.put(MyApp.getInstance(),"userId","");
 //                                SPUtils.put(MyApp.getInstance(),"tgt",tgt);

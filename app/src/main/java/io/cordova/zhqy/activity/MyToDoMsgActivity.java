@@ -24,8 +24,6 @@ import io.cordova.zhqy.utils.BaseActivity2;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
-import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
 

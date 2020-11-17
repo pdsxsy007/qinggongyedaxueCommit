@@ -12,7 +12,7 @@ import java.io.IOException;
  *这是一个判断当前网络状态的工具类
  *
  */
-public class netState {
+public class NetState {
     /**
      *
      * @return 是否有活动的网络连接
@@ -29,6 +29,7 @@ public class netState {
     }
     /**
      * @return 返回boolean ,是否为wifi网络
+     *
      *
      */
     public static final boolean hasWifiConnection(Context context)

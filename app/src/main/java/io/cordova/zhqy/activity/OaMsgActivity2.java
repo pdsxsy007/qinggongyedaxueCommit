@@ -34,10 +34,8 @@ import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.adapter.MyAdapter;
 import io.cordova.zhqy.bean.OAMsgListBean;
 import io.cordova.zhqy.utils.BaseActivity2;
-import io.cordova.zhqy.utils.CircleCrop;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 

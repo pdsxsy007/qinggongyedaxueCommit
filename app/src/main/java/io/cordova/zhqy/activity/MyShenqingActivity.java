@@ -26,7 +26,6 @@ import io.cordova.zhqy.bean.OAMsgListBean;
 import io.cordova.zhqy.utils.BaseActivity2;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 
@@ -214,7 +213,7 @@ public class MyShenqingActivity extends BaseActivity2  {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        T.showShort(MyApp.getInstance(), "没有数据");
+                        ToastUtils.showToast(MyApp.getInstance(), "没有数据");
                         ViewUtils.cancelLoadingDialog();
                     }
                 });

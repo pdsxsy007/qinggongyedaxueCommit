@@ -37,20 +37,15 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import butterknife.BindView;
-import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
-import io.cordova.zhqy.bean.ServiceAppListBean;
-import io.cordova.zhqy.fragment.home.MyPre2Fragment;
-import io.cordova.zhqy.fragment.home.ServicePreFragment;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity2;
 import io.cordova.zhqy.utils.DargeFaceByMefgUtils;
 import io.cordova.zhqy.utils.DargeFaceSearchUtils;
-import io.cordova.zhqy.utils.DargeFaceUtils;
 import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.T;
+import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.web.BaseWebActivity4;
 
@@ -204,7 +199,7 @@ public class AppSearchActivity extends BaseActivity2 implements PermissionsUtil.
                     Log.e("tvSearch --- ",StringUtils.getEditTextData(tvSearch));
                     Log.e("isEmpty --- ",StringUtils.getEditTextData(tvSearch).isEmpty() +"");
                    /* if (StringUtils.getEditTextData(tvSearch).isEmpty()){
-                        T.showShort(MyApp.getInstance(),"请输入搜索关键字");
+                        ToastUtils.showToast(MyApp.getInstance(),"请输入搜索关键字");
                     }else {
                         ViewUtils.saveSearchHistory(StringUtils.getEditTextData(tvSearch));
                         netWorkSearchApp();
@@ -230,7 +225,7 @@ public class AppSearchActivity extends BaseActivity2 implements PermissionsUtil.
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
                    /* if (StringUtils.getEditTextData(tvSearch).isEmpty()){
-                        T.showShort(MyApp.getInstance(),"请输入搜索关键字");
+                        ToastUtils.showToast(MyApp.getInstance(),"请输入搜索关键字");
                     }else {
                         ViewUtils.saveSearchHistory(StringUtils.getEditTextData(tvSearch));
                         netWorkSearchApp();
@@ -278,7 +273,7 @@ public class AppSearchActivity extends BaseActivity2 implements PermissionsUtil.
                             searchResult.setVisibility(View.GONE);
                             tvSearchCache.setVisibility(View.GONE);
                             flSearchCache.setVisibility(View.GONE);
-                            T.showShort(MyApp.getInstance(),allAppListBean.getMsg() );
+                            ToastUtils.showToast(MyApp.getInstance(),allAppListBean.getMsg());
                         }
                     }
 
@@ -287,7 +282,7 @@ public class AppSearchActivity extends BaseActivity2 implements PermissionsUtil.
                         super.onError(response);
                         tvResult.setVisibility(View.GONE);
                         ViewUtils.cancelLoadingDialog();
-                        T.showShort(MyApp.getInstance(),"网络异常" );
+                        ToastUtils.showToast(MyApp.getInstance(),"网络异常");
                     }
                 });
     }

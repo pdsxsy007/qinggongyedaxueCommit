@@ -1,6 +1,5 @@
 package io.cordova.zhqy.fragment.home;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
@@ -35,7 +34,6 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 
-import com.bumptech.glide.signature.StringSignature;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -45,7 +43,6 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -55,7 +52,6 @@ import io.cordova.zhqy.activity.AppSearchActivity;
 import io.cordova.zhqy.activity.LoginActivity2;
 import io.cordova.zhqy.bean.MyCollectionBean;
 import io.cordova.zhqy.bean.ServiceAppListBean;
-import io.cordova.zhqy.bean.TestBean;
 import io.cordova.zhqy.bean.UserMsgBean;
 import io.cordova.zhqy.db.MyDatabaseHelper;
 import io.cordova.zhqy.utils.AesEncryptUtile;
@@ -70,7 +66,7 @@ import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
-import io.cordova.zhqy.utils.netState;
+import io.cordova.zhqy.utils.NetState;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
 import me.samlss.lighter.Lighter;
@@ -182,7 +178,7 @@ public class ServicePreFragment extends BaseFragment implements PermissionsUtil.
 
     @TargetApi(Build.VERSION_CODES.M)
     private void checkNetState() {
-        if (!netState.isConnect(getActivity()) ){
+        if (!NetState.isConnect(getActivity()) ){
             ToastUtils.showToast(getActivity(),"网络连接异常!");
             SQLiteDatabase db = databaseHelper.getReadableDatabase();
             String personName = (String) SPUtils.get(MyApp.getInstance(), "personName", "");
@@ -696,7 +692,7 @@ public class ServicePreFragment extends BaseFragment implements PermissionsUtil.
                                                     if(isOpen.equals("") || isOpen.equals("1")){
                                                         Intent intent = new Intent(MyApp.getInstance(), BaseWebCloseActivity.class);
 
-                                                        if (netState.isConnect(getActivity())) {
+                                                        if (NetState.isConnect(getActivity())) {
                                                             netWorkAppClick(appsBean.getAppId());
                                                         }
                                                         Log.e("url  ==",appsBean.getAppUrl() + "");
@@ -707,7 +703,7 @@ public class ServicePreFragment extends BaseFragment implements PermissionsUtil.
                                                     }else {
                                                         Intent intent = new Intent(MyApp.getInstance(), BaseWebActivity4.class);
 
-                                                        if (netState.isConnect(getActivity())) {
+                                                        if (NetState.isConnect(getActivity())) {
                                                             netWorkAppClick(appsBean.getAppId());
                                                         }
                                                         Log.e("url  ==",appsBean.getAppUrl() + "");

@@ -36,7 +36,7 @@ import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
 import io.cordova.zhqy.utils.SystemBarTintUtils;
-import io.cordova.zhqy.utils.T;
+import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.fingerUtil.MD5Util;
 
 import static io.cordova.zhqy.utils.AesEncryptUtile.key;
@@ -96,16 +96,16 @@ public class PassLoginFragment extends BaseFragment {
             case R.id.btn_login:
 
                 if (StringUtils.getEditTextData(etPhoneNum).isEmpty() && StringUtils.getEditTextData(etPassword).isEmpty()){
-                    T.showShort(MyApp.getInstance(),"请输入用户名或密码");
+                    ToastUtils.showToast(MyApp.getInstance(),"请输入用户名或密码");
                     return;
                 }
                 if(StringUtils.getEditTextData(etPhoneNum).isEmpty()){
-                    T.showShort(MyApp.getInstance(),"请输入用户名");
+                    ToastUtils.showToast(MyApp.getInstance(),"请输入用户名");
                     return;
                 }
 
                 if(StringUtils.getEditTextData(etPassword).isEmpty()){
-                    T.showShort(MyApp.getInstance(),"请输入密码");
+                    ToastUtils.showToast(MyApp.getInstance(),"请输入密码");
                     return;
                 }
 
@@ -182,7 +182,7 @@ public class PassLoginFragment extends BaseFragment {
                                 e.printStackTrace();
                             }
                         }else {
-                            T.showShort(MyApp.getInstance(),loginBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),loginBean.getMsg());
                         }
                     }
                 });

@@ -44,7 +44,7 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
 
 
     @Override
-    protected void convert(ViewHolder holder, final SysMsgBean.ObjBean s, int position) {
+    protected void convert(final ViewHolder holder, final SysMsgBean.ObjBean s, int position) {
         String str= s.getMessageAppName();
         if(str != null){
             holder.setText(R.id.tv_name,"["+str+"]");
@@ -153,7 +153,9 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
                                 intent2.setAction("refreshMsg");
                                 intent2.putExtra("state",s.getMessageDetailState()+"");
                                 context.sendBroadcast(intent2);
-
+                               /* holder.setTextColor(R.id.tv_name,Color.parseColor("#707070"));
+                                holder.setTextColor(R.id.tv_present,Color.parseColor("#707070"));
+                                holder.setVisible(R.id.rl_jiaobiao,false);*/
                             }
                             @Override
                             public void onError(Response<String> response) {

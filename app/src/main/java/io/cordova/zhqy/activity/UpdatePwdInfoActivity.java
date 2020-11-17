@@ -28,7 +28,6 @@ import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 
 import static io.cordova.zhqy.UrlRes.updatePasswordUrl;
@@ -122,10 +121,10 @@ public class UpdatePwdInfoActivity extends BaseActivity implements View.OnClickL
                                     BaseBean baseBean= JsonUtil.parseJson(response.body(),BaseBean.class);
                                     boolean success = baseBean.isSuccess();
                                     if(success == true){
-                                        T.showShort(MyApp.getInstance(), "修改密码成功");
+                                        ToastUtils.showToast(getApplicationContext(),"修改密码成功");
                                         netExit();
                                     }else {
-                                        T.showShort(MyApp.getInstance(), baseBean.getMsg());
+                                        ToastUtils.showToast(MyApp.getInstance(), baseBean.getMsg());
                                     }
 
 

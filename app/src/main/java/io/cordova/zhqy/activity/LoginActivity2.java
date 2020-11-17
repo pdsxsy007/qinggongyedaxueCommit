@@ -78,7 +78,6 @@ import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.utils.fingerUtil.MD5Util;
@@ -325,16 +324,16 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
             case R.id.btn_login:
 
                 if (StringUtils.getEditTextData(etPhoneNum).isEmpty() && StringUtils.getEditTextData(etPassword).isEmpty()){
-                    T.showShort(MyApp.getInstance(),"请输入用户名或密码");
+                    ToastUtils.showToast(MyApp.getInstance(),"请输入用户名或密码");
                     return;
                 }
                 if(StringUtils.getEditTextData(etPhoneNum).isEmpty()){
-                    T.showShort(MyApp.getInstance(),"请输入用户名");
+                    ToastUtils.showToast(MyApp.getInstance(),"请输入用户名");
                     return;
                 }
 
                 if(StringUtils.getEditTextData(etPassword).isEmpty()){
-                    T.showShort(MyApp.getInstance(),"请输入密码");
+                    ToastUtils.showToast(MyApp.getInstance(),"请输入密码");
                     return;
                 }
                 String uname = StringUtils.getEditTextData(etPhoneNum);
@@ -459,7 +458,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                                     e.printStackTrace();
                                 }
                             }else {
-                                T.showShort(MyApp.getInstance(),loginBean.getMsg());
+                                ToastUtils.showToast(MyApp.getInstance(),loginBean.getMsg());
                             }
                         }
                     });
@@ -710,7 +709,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                                     e.printStackTrace();
                                 }
                             }else {
-                                T.showShort(MyApp.getInstance(),loginBean.getMsg());
+                                ToastUtils.showToast(MyApp.getInstance(),loginBean.getMsg());
                             }
                         }
 
@@ -990,7 +989,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        T.showShort(getApplicationContext(),"找不到服务器了，请稍后再试");
+                        ToastUtils.showToast(getApplicationContext(),"找不到服务器了，请稍后再试");
                         ViewUtils.cancelLoadingDialog();
                     }
                 });
@@ -1164,7 +1163,7 @@ public class LoginActivity2 extends LoginBaseActivity implements GestureDetector
                                             super.onError(response);
                                             Log.e("人脸失败",response.body());
                                             SPUtils.put(getApplicationContext(),"isloading2","");
-                                            T.showShort(getApplicationContext(),"找不到服务器了，请稍后再试");
+                                            ToastUtils.showToast(getApplicationContext(),"找不到服务器了，请稍后再试");
                                             ViewUtils.cancelLoadingDialog();
                                             imageid = 0;
                                         }

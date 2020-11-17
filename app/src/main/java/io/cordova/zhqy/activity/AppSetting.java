@@ -43,7 +43,6 @@ import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.MyDataCleanManager;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
@@ -86,6 +85,9 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
 
     @BindView(R.id.ll_fankui)
     LinearLayout ll_fankui;
+
+    @BindView(R.id.ll_file)
+    LinearLayout ll_file;
 
     String dataSize = null;
     String localVersionName;
@@ -141,6 +143,14 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
             public void onClick(View view) {
                 Intent intent = new Intent(AppSetting.this, FankuiWebActivity.class);
                 intent.putExtra("appUrl",UrlRes.fankuiUrl);
+                startActivity(intent);
+            }
+        });
+
+        ll_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AppSetting.this, FileManagerActivity.class);
                 startActivity(intent);
             }
         });
@@ -425,7 +435,7 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
                         if(home06.equals("1")){
                             SPUtils.put(MyApp.getInstance(),"home06","1");
                         }
-                        T.showShort(MyApp.getInstance(), "退出成功");
+                        ToastUtils.showToast(MyApp.getInstance(), "退出成功");
                         //closeFingerprintLogin();
                         isOpen = false;
                         //SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, false);//指纹退出

@@ -81,7 +81,7 @@ public class MyApp extends Application {
 
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
-        MyIntentService.start(this);
+        //MyIntentService.start(this);
 
         SPUtil.init(this, Constants.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
         String localVersionName = getLocalVersionName(instance);

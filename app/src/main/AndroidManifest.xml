@@ -279,7 +279,7 @@
         <activity android:name=".activity.InfoDetailsActivity2"
             android:screenOrientation="portrait"
             />
-        <service android:name="io.cordova.zhqy.utils.MyIntentService" />
+        <!--<service android:name="io.cordova.zhqy.utils.MyIntentService" />-->
 
 
         <receiver
@@ -495,6 +495,7 @@
         <activity android:name=".activity.SystemInfoDetailsActivity" />
         <activity android:name=".activity.OaMsgYBActivity" />
         <activity android:name=".activity.OaMsgActivity2" />
+        <activity android:name=".activity.FileManagerActivity" />
     </application>
 
 </manifest>

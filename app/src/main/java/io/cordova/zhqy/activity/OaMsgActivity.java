@@ -40,10 +40,8 @@ import io.cordova.zhqy.adapter.MyAdapter;
 import io.cordova.zhqy.bean.MessageBean;
 import io.cordova.zhqy.bean.OAMsgListBean;
 import io.cordova.zhqy.utils.BaseActivity2;
-import io.cordova.zhqy.utils.CircleCrop;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 
@@ -107,9 +105,14 @@ public class OaMsgActivity extends BaseActivity2  {
             String action = intent.getAction();
             if(action.equals("refreshOaMessage")){
                 String state = intent.getStringExtra("state");
+                int positon = intent.getIntExtra("positon", 0);
                 if(state.equals("0")){
-                    num = 1;
-                    netWorkOaMsgList();
+                    //num = 1;
+                    //netWorkOaMsgList();messageBean.getObj()
+
+                    adapter.notifyItemChanged(positon);
+                    //mLinearLayoutManager.scrollToPositionWithOffset(firstItemPosition, 0);
+
                 }else {
                     mLinearLayoutManager.scrollToPositionWithOffset(firstItemPosition, 0);
                 }

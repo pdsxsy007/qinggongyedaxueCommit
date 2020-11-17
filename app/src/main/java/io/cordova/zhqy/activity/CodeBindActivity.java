@@ -35,7 +35,6 @@ import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.fingerUtil.MD5Util;
 
@@ -221,7 +220,7 @@ public class CodeBindActivity extends BaseActivity2 implements View.OnClickListe
                                     e.printStackTrace();
                                 }
                             }else {
-                                T.showShort(MyApp.getInstance(),loginBean.getMsg());
+                                ToastUtils.showToast(MyApp.getInstance(),loginBean.getMsg());
                             }
                         }
                     });

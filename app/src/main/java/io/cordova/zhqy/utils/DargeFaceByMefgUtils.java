@@ -1,7 +1,5 @@
 package io.cordova.zhqy.utils;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -17,14 +15,11 @@ import java.util.Calendar;
 
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.activity.FaceMeActivity;
-import io.cordova.zhqy.activity.FaceYiQingActivity;
 import io.cordova.zhqy.bean.BaseBean;
-import io.cordova.zhqy.bean.MyCollectionBean;
 import io.cordova.zhqy.bean.ServiceAppListBean;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
 import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 
 public class DargeFaceByMefgUtils {
     static int num =0;
@@ -81,7 +76,7 @@ public class DargeFaceByMefgUtils {
                     SPUtils.put(context, "appName",appsBean.getAppName());
                     showFaceActivity(context);
                 }else {
-                    if (netState.isConnect(context)) {
+                    if (NetState.isConnect(context)) {
                         netWorkAppClick(appsBean.getAppId());
                     }
                     Intent intent = null;
@@ -132,7 +127,7 @@ public class DargeFaceByMefgUtils {
                 }
             }else {
 
-                if (netState.isConnect(context)) {
+                if (NetState.isConnect(context)) {
                     netWorkAppClick(appsBean.getAppId());
                 }
                 Intent intent = null;
@@ -182,7 +177,7 @@ public class DargeFaceByMefgUtils {
             }
 
         }else {
-            if (netState.isConnect(context)) {
+            if (NetState.isConnect(context)) {
                 netWorkAppClick(appsBean.getAppId());
             }
             Intent intent = null;
@@ -314,7 +309,7 @@ public class DargeFaceByMefgUtils {
                                 SPUtils.put(context, "_3","");
 
                                 Intent intent = new Intent(MyApp.getInstance(), BaseWebActivity4.class);
-                                if (netState.isConnect(context)) {
+                                if (NetState.isConnect(context)) {
                                     String appUrl = (String) SPUtils.get(context, "appUrl", "");
                                     netWorkAppClick(Integer.parseInt((String) SPUtils.get(context, "appId", "")));
                                 }

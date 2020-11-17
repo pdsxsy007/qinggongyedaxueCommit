@@ -16,29 +16,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.os.StatFs;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -47,9 +38,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -63,7 +52,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.baidu.location.BDAbstractLocationListener;
@@ -76,27 +64,19 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 
-
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 import butterknife.BindView;
-import cn.jpush.android.api.BasicPushNotificationBuilder;
-import cn.jpush.android.api.JPluginPlatformInterface;
 import cn.jpush.android.api.JPushInterface;
 
 import io.cordova.zhqy.activity.DialogActivity;
 import io.cordova.zhqy.activity.FaceNewActivity;
-import io.cordova.zhqy.activity.InfoDetailsActivity;
-import io.cordova.zhqy.activity.InfoDetailsActivity2;
 import io.cordova.zhqy.activity.LoginActivity2;
 
 import io.cordova.zhqy.bean.AddFaceBean;
@@ -124,18 +104,14 @@ import io.cordova.zhqy.utils.DensityUtil;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.MobileInfoUtils;
 import io.cordova.zhqy.utils.MyApp;
-import io.cordova.zhqy.utils.MyBaseActivity;
 import io.cordova.zhqy.utils.PermissionsUtil;
-import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.ScreenSizeUtils;
 import io.cordova.zhqy.utils.StringUtils;
 import io.cordova.zhqy.utils.SystemInfoUtils;
-import io.cordova.zhqy.utils.T;
-import io.cordova.zhqy.utils.TestShowDig;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
-import io.cordova.zhqy.utils.netState;
+import io.cordova.zhqy.utils.NetState;
 
 import io.cordova.zhqy.web.BaseLoadActivity;
 import io.cordova.zhqy.web.BaseWebActivity4;
@@ -144,13 +120,11 @@ import io.cordova.zhqy.web.ChangeUpdatePwdWebActivity;
 import io.cordova.zhqy.widget.MyDialog;
 import io.cordova.zhqy.zixing.OnQRCodeListener;
 import io.cordova.zhqy.zixing.QRCodeManager;
-import io.reactivex.functions.Consumer;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
 import static io.cordova.zhqy.UrlRes.HOME2_URL;
-import static io.cordova.zhqy.UrlRes.caQrCodeVerifyUrl;
 import static io.cordova.zhqy.UrlRes.changePwdUrl;
 import static io.cordova.zhqy.UrlRes.findLoginTypeListUrl;
 import static io.cordova.zhqy.UrlRes.insertPortalPositionUrl;
@@ -930,7 +904,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                         super.onError(response);
                         imageid = 0;
                         ViewUtils.cancelLoadingDialog();
-                        T.showShort(getApplicationContext(),"找不到服务器了，请稍后再试");
+                        ToastUtils.showToast(getApplicationContext(),"找不到服务器了，请稍后再试");
                     }
                 });
     }
@@ -1086,7 +1060,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
 
                 break;
             case 3:
-                if (!netState.isConnect(Main2Activity.this) ){
+                if (!NetState.isConnect(Main2Activity.this) ){
                     if(myPre2Fragment != null){
                         ft.show(myPre2Fragment);
                     }else {
@@ -1321,7 +1295,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
 
             long currentTime = System.currentTimeMillis();
             if ((currentTime - touchTime) >= waitTime) {
-                T.showShort(Main2Activity.this, "再按一次退出");
+                ToastUtils.showToast(this,"再按一次退出");
                 touchTime = currentTime;
             } else {
                 ActivityUtils.getActivityManager().finishAllActivity();
@@ -1351,6 +1325,46 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
 
                     }
                 });
+        String userId = (String) SPUtils.get(getInstance(), "userId", "");
+       /* if(userId.equals("")){
+            OkGo.<String>get(UrlRes.HOME_URL+UrlRes.getNewVersionInfo)
+                    .params("system","android")
+                    .params("currentVersion",getLocalVersionName(this))
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Log.e("更新",response.body());
+
+                            UpdateBean updateBean = JSON.parseObject(response.body(),UpdateBean.class);
+                            String portalVersionNumber = updateBean.getObj().getPortalVersionNumber();
+                            int portalVersionUpdate = updateBean.getObj().getPortalVersionUpdate();
+
+                            portalVersionDownloadAdress = updateBean.getObj().getPortalVersionDownloadAdress();
+                            logShow(portalVersionUpdate,portalVersionDownloadAdress,portalVersionNumber);
+
+                        }
+                    });
+        }else {
+            OkGo.<String>get(UrlRes.HOME_URL+UrlRes.getNewVersionInfo)
+                    .params("system","android")
+                    .params("currentVersion",getLocalVersionName(this))
+                    .params("memberName",userId)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Log.e("更新",response.body());
+
+                            UpdateBean updateBean = JSON.parseObject(response.body(),UpdateBean.class);
+                            String portalVersionNumber = updateBean.getObj().getPortalVersionNumber();
+                            int portalVersionUpdate = updateBean.getObj().getPortalVersionUpdate();
+
+                            portalVersionDownloadAdress = updateBean.getObj().getPortalVersionDownloadAdress();
+                            logShow(portalVersionUpdate,portalVersionDownloadAdress,portalVersionNumber);
+
+                        }
+                    });
+        }
+*/
 
     }
     String localVersionName;

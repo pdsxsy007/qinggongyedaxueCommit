@@ -57,7 +57,6 @@ import io.cordova.zhqy.utils.LQRPhotoSelectUtils;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtil;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.utils.fingerUtil.FingerprintUtil;
@@ -662,7 +661,7 @@ public class ShengWuActivity extends BaseActivity2 implements View.OnClickListen
                     public void onError(Response<String> response) {
                         super.onError(response);
                         ViewUtils.cancelLoadingDialog();
-                        T.showShort(getApplicationContext(),"找不到服务器了，请稍后再试");
+                        ToastUtils.showToast(getApplicationContext(),"找不到服务器了，请稍后再试");
                         imageid = 0;
                     }
                 });

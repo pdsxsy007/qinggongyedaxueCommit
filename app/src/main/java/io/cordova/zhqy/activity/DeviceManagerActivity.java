@@ -41,8 +41,6 @@ import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.ScreenSizeUtils;
 import io.cordova.zhqy.utils.SystemInfoUtils;
-import io.cordova.zhqy.utils.T;
-import io.cordova.zhqy.utils.TimeUtils;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.widget.MyDialog;
@@ -314,7 +312,7 @@ public class DeviceManagerActivity extends BaseActivity {
                     public void onError(Response<String> response) {
                         super.onError(response);
                         ViewUtils.cancelLoadingDialog();
-                        T.showShort(MyApp.getInstance(), "没有数据哦，请稍后再试");
+                        ToastUtils.showToast(MyApp.getInstance(), "没有数据哦，请稍后再试");
                     }
                 });
     }

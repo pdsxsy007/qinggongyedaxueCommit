@@ -27,7 +27,6 @@ import com.bumptech.glide.signature.StringSignature;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.umeng.socialize.UMShareAPI;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
@@ -44,7 +43,6 @@ import butterknife.OnClick;
 import cn.org.bjca.signet.coss.api.SignetCossApi;
 import cn.org.bjca.signet.coss.bean.CossGetCertResult;
 import cn.org.bjca.signet.coss.component.core.enums.CertType;
-import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.activity.AppSetting;
@@ -69,8 +67,6 @@ import io.cordova.zhqy.utils.BadgeView;
 import io.cordova.zhqy.utils.BaseFragment;
 import io.cordova.zhqy.utils.DargeFaceByMefColletUtils;
 import io.cordova.zhqy.utils.DargeFaceByMefgUtils;
-import io.cordova.zhqy.utils.DargeFaceUtils;
-import io.cordova.zhqy.utils.FinishActivity;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.LighterHelper;
 import io.cordova.zhqy.utils.MobileInfoUtils;
@@ -80,7 +76,7 @@ import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.StringUtils;
 import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
-import io.cordova.zhqy.utils.netState;
+import io.cordova.zhqy.utils.NetState;
 
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
@@ -590,12 +586,15 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
                                 dbDataList();//OA待办消息
 
                             }else{
+                                tv_more.setVisibility(View.VISIBLE);
                                 netWorkSystemMsg2();
                                 dbDataList2();//OA待办消息
 
                             }
                         }else {
+                            tv_more.setVisibility(View.VISIBLE);
                             netWorkSystemMsg2();
+                            dbDataList2();//OA待办消息
                         }
 
                     }
@@ -603,7 +602,9 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
+                        tv_more.setVisibility(View.VISIBLE);
                         netWorkSystemMsg2();
+                        dbDataList2();//OA待办消息
                     }
                 });
 
@@ -1172,7 +1173,7 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
                                 }else {
                                     intent = new Intent(MyApp.getInstance(), BaseWebActivity4.class);
                                 }
-                                if (netState.isConnect(getActivity())) {
+                                if (NetState.isConnect(getActivity())) {
                                     netWorkAppClick(appsBean.getAppId());
                                 }
                                 Log.e("url  ==",appsBean.getAppUrl() + "");
@@ -1389,7 +1390,7 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
                                         }else {
                                             intent = new Intent(MyApp.getInstance(), BaseWebActivity4.class);
                                         }
-                                        if (netState.isConnect(getActivity())) {
+                                        if (NetState.isConnect(getActivity())) {
                                             netWorkAppClick(appsBean.getAppId());
                                         }
                                         Log.e("url  ==",appsBean.getAppUrl() + "");
@@ -1480,7 +1481,7 @@ public class MyPre2Fragment extends BaseFragment implements PermissionsUtil.IPer
     public void onResume() {
         super.onResume();
 
-        if (netState.isConnect(getActivity())){
+        if (NetState.isConnect(getActivity())){
             //netWorkSystemMsg();
             getBack();
         }else {

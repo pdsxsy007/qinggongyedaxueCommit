@@ -43,7 +43,7 @@ import io.cordova.zhqy.utils.DargeFaceSearchUtils;
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.T;
+import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
@@ -185,7 +185,7 @@ public class MyCollectionActivity extends BaseActivity2 implements PermissionsUt
 
                         } else {
 
-                            T.showShort(MyApp.getInstance(), collectionBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(), collectionBean.getMsg());
                         }
                     }
 
@@ -342,14 +342,14 @@ public class MyCollectionActivity extends BaseActivity2 implements PermissionsUt
                         baseBean = JSON.parseObject(response.body(), BaseBean.class);
                         if (baseBean.isSuccess()){
                             netWorkMyCollection();
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                             Intent intent = new Intent();
                             intent.putExtra("refreshService","dongtai");
                             intent.setAction("refresh2");
                             sendBroadcast(intent);
                         }else {
 
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                         }
                     }
 

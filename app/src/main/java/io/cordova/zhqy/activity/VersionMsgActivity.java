@@ -39,7 +39,7 @@ public class VersionMsgActivity extends BaseActivity2 {
 //        getLocalVersion(this);
         getLocalVersionName(this);
 
-        tvVersionNumber2.setText("2020-11-10(01)");
+        tvVersionNumber2.setText("2020-11-12(01)");
     }
 
 

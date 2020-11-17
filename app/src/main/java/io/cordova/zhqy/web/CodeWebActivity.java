@@ -75,7 +75,7 @@ import io.cordova.zhqy.utils.SPUtils;
 import io.cordova.zhqy.utils.ScreenSizeUtils;
 import io.cordova.zhqy.utils.SoundPoolUtils;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.T;
+import io.cordova.zhqy.utils.ToastUtils;
 import io.cordova.zhqy.widget.MyDialog;
 import me.samlss.lighter.Lighter;
 import me.samlss.lighter.interfaces.OnLighterListener;
@@ -369,7 +369,7 @@ public class CodeWebActivity extends SwipeBackActivity {
                         if (baseBean.isSuccess()){
                             rbSc.setBackgroundResource(R.mipmap.sc_hover_icon);
                             flag = 1;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                             Intent intent = new Intent();
                             intent.putExtra("refreshService","dongtai");
                             intent.setAction("refresh2");
@@ -377,7 +377,7 @@ public class CodeWebActivity extends SwipeBackActivity {
                         }else {
                             rbSc.setBackgroundResource(R.mipmap.sc_icon);
                             flag = 0;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                         }
                     }
 
@@ -404,7 +404,7 @@ public class CodeWebActivity extends SwipeBackActivity {
                         if (baseBean.isSuccess()){
                             rbSc.setBackgroundResource(R.mipmap.sc_icon);
                             flag = 0;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                             Intent intent = new Intent();
                             intent.putExtra("refreshService","dongtai");
                             intent.setAction("refresh2");
@@ -412,7 +412,7 @@ public class CodeWebActivity extends SwipeBackActivity {
                         }else {
                             rbSc.setBackgroundResource(R.mipmap.sc_hover_icon);
                             flag = 1;
-                            T.showShort(MyApp.getInstance(),baseBean.getMsg());
+                            ToastUtils.showToast(MyApp.getInstance(),baseBean.getMsg());
                         }
                     }
 

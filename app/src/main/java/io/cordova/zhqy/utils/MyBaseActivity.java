@@ -45,7 +45,7 @@ public abstract class MyBaseActivity extends AppCompatActivity {
         initListener();
         initSystemBar();
         ActivityUtils.getActivityManager().addActivity(this);
-        if (!netState.isConnect(MyBaseActivity.this) ){
+        if (!NetState.isConnect(MyBaseActivity.this) ){
             ToastUtils.showToast(MyBaseActivity.this,"网络连接异常!");
             //netStateType = 1;
         }

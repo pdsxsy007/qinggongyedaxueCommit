@@ -1,7 +1,5 @@
 package io.cordova.zhqy.utils;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -23,7 +21,6 @@ import io.cordova.zhqy.bean.ServiceAppListBean;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
 import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 
 public class DargeFaceMeColletUtils {
 
@@ -83,7 +80,7 @@ public class DargeFaceMeColletUtils {
                     showFaceActivity(context);
 
                 }else {
-                    if (netState.isConnect(context)) {
+                    if (NetState.isConnect(context)) {
                         netWorkAppClick(appsBean.getAppId());
                     }
                     Intent intent = null;
@@ -134,7 +131,7 @@ public class DargeFaceMeColletUtils {
                 }
             }else {
 
-                if (netState.isConnect(context)) {
+                if (NetState.isConnect(context)) {
                     netWorkAppClick(appsBean.getAppId());
                 }
                 Intent intent = null;
@@ -184,7 +181,7 @@ public class DargeFaceMeColletUtils {
             }
 
         }else {
-            if (netState.isConnect(context)) {
+            if (NetState.isConnect(context)) {
                 netWorkAppClick(appsBean.getAppId());
             }
             Intent intent = null;
@@ -316,7 +313,7 @@ public class DargeFaceMeColletUtils {
                                 SPUtils.put(context, "_3","");
 
                                 Intent intent = new Intent(MyApp.getInstance(), BaseWebActivity4.class);
-                                if (netState.isConnect(context)) {
+                                if (NetState.isConnect(context)) {
                                     String appUrl = (String) SPUtils.get(context, "appUrl", "");
                                     netWorkAppClick(Integer.parseInt((String) SPUtils.get(context, "appId", "")));
                                 }

@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.cxz.swipelibrary.SwipeBackActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -39,7 +38,7 @@ public abstract class LoginBaseActivity extends AppCompatActivity {
         initListener();
         initSystemBar();
         ActivityUtils.getActivityManager().addActivity(this);
-        if (!netState.isConnect(LoginBaseActivity.this) ){
+        if (!NetState.isConnect(LoginBaseActivity.this) ){
             ToastUtils.showToast(LoginBaseActivity.this,"网络连接异常!");
             //netStateType = 1;
         }

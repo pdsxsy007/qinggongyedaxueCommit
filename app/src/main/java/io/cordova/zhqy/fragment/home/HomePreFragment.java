@@ -1,20 +1,16 @@
 package io.cordova.zhqy.fragment.home;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.just.agentweb.AbsAgentWebSettings;
@@ -52,38 +47,28 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import gdut.bsx.share2.Share2;
 import gdut.bsx.share2.ShareContentType;
 
-import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.UrlRes;
 import io.cordova.zhqy.activity.CAResultActivity;
 import io.cordova.zhqy.activity.LoginActivity2;
-import io.cordova.zhqy.activity.MyShenqingActivity;
 import io.cordova.zhqy.activity.OaMsgActivity;
 import io.cordova.zhqy.activity.OaMsgYBActivity;
 import io.cordova.zhqy.activity.SystemMsgActivity;
 import io.cordova.zhqy.bean.CaBean;
-import io.cordova.zhqy.bean.MyCollectionBean;
 import io.cordova.zhqy.utils.JsonUtil;
 import io.cordova.zhqy.utils.LighterHelper;
 import io.cordova.zhqy.utils.MobileInfoUtils;
-import io.cordova.zhqy.utils.MyBaseFragment;
 import io.cordova.zhqy.utils.PermissionsUtil;
 import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.TestShowDig;
 import io.cordova.zhqy.utils.ToastUtils;
-import io.cordova.zhqy.utils.netState;
+import io.cordova.zhqy.utils.NetState;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
-import io.cordova.zhqy.web.WebLayout2;
 import io.cordova.zhqy.R;
 import io.cordova.zhqy.utils.BaseFragment;
 import io.cordova.zhqy.utils.MyApp;
@@ -261,7 +246,7 @@ public class HomePreFragment extends BaseFragment implements PermissionsUtil.IPe
     }
 
     private void checkNetState() {
-        if (!netState.isConnect(getActivity()) ){
+        if (!NetState.isConnect(getActivity()) ){
             ToastUtils.showToast(getActivity(),"网络连接异常!");
 
         }else {
@@ -353,7 +338,7 @@ public class HomePreFragment extends BaseFragment implements PermissionsUtil.IPe
         mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                if (!netState.isConnect(getActivity()) ){
+                if (!NetState.isConnect(getActivity()) ){
                     ToastUtils.showToast(getActivity(),"网络连接异常!");
                     refreshlayout.finishRefresh();
                 }else {
@@ -623,7 +608,7 @@ public class HomePreFragment extends BaseFragment implements PermissionsUtil.IPe
 
     @Override
     public void onResume() {
-        if (!netState.isConnect(getActivity())) {
+        if (!NetState.isConnect(getActivity())) {
             ToastUtils.showToast(getActivity(),"网络连接异常!");
         }
         if(mAgentWeb != null){

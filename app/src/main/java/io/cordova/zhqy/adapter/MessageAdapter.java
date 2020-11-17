@@ -44,7 +44,7 @@ public class MessageAdapter extends CommonAdapter<MessageBean.Obj> {
     }
 
     @Override
-    protected void convert(ViewHolder holder, final MessageBean.Obj s, int position) {
+    protected void convert(final ViewHolder holder, final MessageBean.Obj s, final int position) {
 
         //holder.setText(R.id.tv_name,s.getMessageTitle());
         holder.setText(R.id.tv_name1,s.getMemberNickname());
@@ -153,8 +153,11 @@ public class MessageAdapter extends CommonAdapter<MessageBean.Obj> {
                 Intent intent2 = new Intent();
                 intent2.setAction("refreshOaMessage");
                 intent2.putExtra("state",s.getBacklogDetailState()+"");
+                intent2.putExtra("position",position);
                 mContext.sendBroadcast(intent2);
-
+                holder.setTextColor(R.id.tv_name,Color.parseColor("#707070"));
+                holder.setTextColor(R.id.tv_present,Color.parseColor("#707070"));
+                holder.setVisible(R.id.rl_jiaobiao,false);
 
             }
         });

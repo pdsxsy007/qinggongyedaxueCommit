@@ -46,8 +46,6 @@ import io.cordova.zhqy.utils.CircleCrop;
 
 import io.cordova.zhqy.utils.MyApp;
 import io.cordova.zhqy.utils.SPUtils;
-import io.cordova.zhqy.utils.StringUtils;
-import io.cordova.zhqy.utils.T;
 import io.cordova.zhqy.utils.ViewUtils;
 
 
@@ -197,7 +195,7 @@ public class MyDataActivity extends BaseActivity2 {
                     public void onError(Response<String> response) {
                         super.onError(response);
                         ViewUtils.cancelLoadingDialog();
-                        T.showShort(MyApp.getInstance(), "没有数据哦，请稍后再试");
+                        ToastUtils.showToast(MyApp.getInstance(), "没有数据哦，请稍后再试");
                     }
                 });
 
@@ -287,7 +285,7 @@ public class MyDataActivity extends BaseActivity2 {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        T.showShort(getApplicationContext(),"找不到服务器了，请稍后再试");
+                        ToastUtils.showToast(getApplicationContext(),"找不到服务器了，请稍后再试");
                     }
                 });
     }
@@ -318,7 +316,7 @@ public class MyDataActivity extends BaseActivity2 {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        T.showShort(getApplicationContext(),"找不到服务器了，请稍后再试");
+                        ToastUtils.showToast(getApplicationContext(),"找不到服务器了，请稍后再试");
                     }
                 });
     }

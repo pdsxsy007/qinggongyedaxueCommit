@@ -2,7 +2,6 @@ package io.cordova.zhqy.utils;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -13,7 +12,6 @@ import com.lzy.okgo.model.Response;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
-import io.cordova.zhqy.Main2Activity;
 import io.cordova.zhqy.UrlRes;
 
 import static io.cordova.zhqy.utils.MyApp.getInstance;
@@ -40,7 +38,7 @@ public abstract class BaseActivity extends SwipeBackActivity {
         initListener();
         initSystemBar();
         ActivityUtils.getActivityManager().addActivity(this);
-        if (!netState.isConnect(BaseActivity.this) ){
+        if (!NetState.isConnect(BaseActivity.this) ){
             ToastUtils.showToast(BaseActivity.this,"网络连接异常!");
             //netStateType = 1;
         }

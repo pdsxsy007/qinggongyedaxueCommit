@@ -119,7 +119,6 @@ import io.cordova.zhqy.utils.ViewUtils;
 import io.cordova.zhqy.web.BaseWebActivity4;
 import io.cordova.zhqy.web.BaseWebCloseActivity;
 import io.cordova.zhqy.web.FileUtil;
-import io.cordova.zhqy.web.WebLayout2;
 import io.cordova.zhqy.web.WebLayout4;
 import io.cordova.zhqy.widget.MyDialog;
 import io.cordova.zhqy.zixing.OnQRCodeListener;
