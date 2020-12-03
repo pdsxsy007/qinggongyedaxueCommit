@@ -140,6 +140,7 @@ import io.cordova.zhqy.bean.SignCAResultBean;
 import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BitmapUtils;
 import io.cordova.zhqy.utils.ChangeBrightnessUtils;
+import io.cordova.zhqy.utils.CheckLocationEnableUtils;
 import io.cordova.zhqy.utils.CookieUtils;
 import io.cordova.zhqy.utils.DensityUtil;
 import io.cordova.zhqy.utils.FinishActivity;
@@ -585,6 +586,21 @@ public class BaseWebActivity4 extends SupportActivity implements GestureDetector
             SPUtils.put(BaseWebActivity4.this,"speed",speed+"");
             SPUtils.put(BaseWebActivity4.this,"direction",direction+"");
             SPUtils.put(BaseWebActivity4.this,"locationWhere",locationWhere+"");
+
+            if(locationFlag == 1){//第一种定位无extraInfo
+                if(CheckLocationEnableUtils.isLocationEnabled(BaseWebActivity4.this)){
+                    ceshiData(invocationLogAppIdLocation,invocationLogFunctionLocation, "nativeGetLocation");
+                }else {
+                    ToastUtils.showToast(BaseWebActivity4.this,"请开启位置信息功能!");
+                }
+
+            }else if(locationFlag == 2){//第二种定位有extraInfo
+                if(CheckLocationEnableUtils.isLocationEnabled(BaseWebActivity4.this)){
+                    ceshiData2(invocationLogAppIdLocation,invocationLogFunctionLocation, "nativeGetLocation",needExtraInfoLocation);
+                }else {
+                    ToastUtils.showToast(BaseWebActivity4.this,"请开启位置信息功能!");
+                }
+            }
         }
     }
 
@@ -1719,6 +1735,9 @@ public class BaseWebActivity4 extends SupportActivity implements GestureDetector
 
     private static final int QR_CODE = 55846;
     private Handler deliver = new Handler(Looper.getMainLooper());
+    private String invocationLogAppIdLocation= "";
+    private String invocationLogFunctionLocation= "";
+    private String needExtraInfoLocation= "";
     public class AndroidInterface {
 
 
@@ -1783,19 +1802,29 @@ public class BaseWebActivity4 extends SupportActivity implements GestureDetector
         @JavascriptInterface
         public void nativeGetLocation(final String invocationLogAppId,final String invocationLogFunction,final String needExtraInfo) {
 
-                if (EasyPermissions.hasPermissions(BaseWebActivity4.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            invocationLogAppIdLocation = invocationLogAppId;
+            invocationLogFunctionLocation = invocationLogFunction;
+            needExtraInfoLocation = needExtraInfo;
+               /* if (EasyPermissions.hasPermissions(BaseWebCloseActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     ceshiData2(invocationLogAppId,invocationLogFunction, "nativeGetLocation",needExtraInfo);
 
                 } else {//没有相应权限，获取相机权限
 
                     //TestShowDig.AskForPermission(BaseWebActivity4.this,"定位");
                     permissionsUtil = PermissionsUtil
-                            .with(BaseWebActivity4.this)
+                            .with(BaseWebCloseActivity.this)
                             .requestCode(0)
                             .isDebug(true)
                             .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION)
                             .request();
-                }
+                }*/
+
+            permissionsUtil = PermissionsUtil
+                    .with(BaseWebActivity4.this)
+                    .requestCode(11)
+                    .isDebug(true)
+                    .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION,PermissionsUtil.Permission.Phone.READ_PHONE_STATE)
+                    .request();
 
 
 
@@ -1837,16 +1866,25 @@ public class BaseWebActivity4 extends SupportActivity implements GestureDetector
 
         @JavascriptInterface
         public void nativeGetLocation(final String invocationLogAppId,final String invocationLogFunction) {
-            if (EasyPermissions.hasPermissions(BaseWebActivity4.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            invocationLogAppIdLocation = invocationLogAppId;
+            invocationLogFunctionLocation = invocationLogFunction;
+            /*if (EasyPermissions.hasPermissions(BaseWebCloseActivity.this, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_PHONE_STATE)) {
                 ceshiData(invocationLogAppId,invocationLogFunction, "nativeGetLocation");
             } else {
                 permissionsUtil = PermissionsUtil
-                        .with(BaseWebActivity4.this)
+                        .with(BaseWebCloseActivity.this)
                         .requestCode(0)
                         .isDebug(true)
-                        .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION)
+                        .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION,PermissionsUtil.Permission.Phone.READ_PHONE_STATE)
                         .request();
-            }
+            }*/
+
+            permissionsUtil = PermissionsUtil
+                    .with(BaseWebActivity4.this)
+                    .requestCode(10)
+                    .isDebug(true)
+                    .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION,PermissionsUtil.Permission.Phone.READ_PHONE_STATE)
+                    .request();
 
         }
 
@@ -3378,13 +3416,27 @@ public class BaseWebActivity4 extends SupportActivity implements GestureDetector
 
     }
 
+    private int locationFlag = 0;
     @Override
     public void onPermissionsDenied(int requestCode, String... permission) {
         Log.e("权限被拒绝回调","onPermissionsDenied");
         mLocationClient.stop();
+       /* if(requestCode == 0){
+            getMyLocation();
+        }*/
+
         if(requestCode == 0){
             getMyLocation();
+        }else if(requestCode == 1){
+            onScanQR();
+        }else if(requestCode == 10){
+            locationFlag = 1;
+            getMyLocation();
+        }else if(requestCode == 11){
+            locationFlag = 2;
+            getMyLocation();
         }
+
     }
 
     @Override

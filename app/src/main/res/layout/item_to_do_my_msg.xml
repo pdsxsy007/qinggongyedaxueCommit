@@ -54,13 +54,13 @@
             android:id="@+id/tv_present"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/sp5"
             android:layout_marginTop="@dimen/dp5"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:maxLines="2"
             android:ellipsize="end"
-            android:text="1111"/>
+            android:maxLines="2"
+            android:paddingLeft="@dimen/sp5"
+            android:text="1111"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"

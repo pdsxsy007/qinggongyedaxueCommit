@@ -223,6 +223,7 @@ public class CodeWebActivity extends SwipeBackActivity {
 
         }
 
+        Log.e("appServiceUrl",appServiceUrl);
         String tgc = (String) SPUtils.get(CodeWebActivity.this, "TGC", "");
         CookieUtils.syncCookie(UrlRes.HOME2_URL,"CASTGC="+tgc,getApplication());
         mAgentWeb = AgentWeb.with(this)

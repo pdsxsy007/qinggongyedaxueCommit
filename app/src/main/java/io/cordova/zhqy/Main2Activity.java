@@ -54,6 +54,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -62,6 +63,7 @@ import com.baidu.location.LocationClientOption;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+
 
 
 import java.lang.reflect.Field;
@@ -254,9 +256,11 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
 
 
 
-
-
     }
+
+
+
+
    /*
    //此方法是华为EMUI服务版本过低的情况下，提示更新服务，更新完成之后可正常接收到厂商通知信息
 
@@ -426,7 +430,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
             int locationWhere = location.getLocationWhere();
 
             //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
-            Log.e("errorCode",errorCode+"");
+            Log.e("首页errorCode",errorCode+"");
             Log.e("latitude",latitude+"");
             Log.e("longitude",longitude+"");
             Log.e("altitude主页",altitude+"");
@@ -450,12 +454,18 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
             String adcode = address.adcode;
             String street = address.street;
             String streetNumber = address.streetNumber;
+
+            Log.e("addressLine",addressLine+"");
+            Log.e("district",district+"");
+            Log.e("street",street+"");
+
             SPUtils.put(Main2Activity.this,"latitude",latitude+"");
             SPUtils.put(Main2Activity.this,"longitude",longitude+"");
             SPUtils.put(Main2Activity.this,"altitude",altitude+"");
             SPUtils.put(Main2Activity.this,"speed",speed+"");
             SPUtils.put(Main2Activity.this,"direction",direction+"");
             SPUtils.put(Main2Activity.this,"locationWhere",locationWhere+"");
+            SPUtils.put(Main2Activity.this,"errorCode",errorCode+"");
             if(addressLine != null){
                 SPUtils.put(Main2Activity.this,"addressLine",addressLine);
             }
@@ -1309,7 +1319,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
     String portalVersionDownloadAdress;
     private void getUpdateInfo() {
 
-        OkGo.<String>get(UrlRes.HOME_URL+UrlRes.getNewVersionInfo)
+        /*OkGo.<String>get(UrlRes.HOME_URL+UrlRes.getNewVersionInfo)
                 .params("system","android")
                 .execute(new StringCallback() {
                     @Override
@@ -1324,9 +1334,9 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                         logShow(portalVersionUpdate,portalVersionDownloadAdress,portalVersionNumber);
 
                     }
-                });
+                });*/
         String userId = (String) SPUtils.get(getInstance(), "userId", "");
-       /* if(userId.equals("")){
+        if(userId.equals("")){
             OkGo.<String>get(UrlRes.HOME_URL+UrlRes.getNewVersionInfo)
                     .params("system","android")
                     .params("currentVersion",getLocalVersionName(this))
@@ -1364,7 +1374,6 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                         }
                     });
         }
-*/
 
     }
     String localVersionName;
@@ -1828,7 +1837,7 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
                         Log.e("s",response.toString());
 
                         countBean1 = JSON.parseObject(response.body(), CountBean.class);
-                        netWorkOAToDoMsg();//OA寰呭姙
+                        netWorkOAToDoMsg();
 
                     }
                     @Override
@@ -2202,6 +2211,9 @@ public class Main2Activity extends BaseActivity3 implements PermissionsUtil.IPer
             }
             intent.putExtra("title2","下载地址");
             startActivity(intent);
+            //Log.e("portalVersionDown",portalVersionDownloadAdress);
+
+
             if(isUpdate == 1){
                 finish();
             }

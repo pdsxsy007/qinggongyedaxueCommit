@@ -141,6 +141,7 @@ import io.cordova.zhqy.utils.AesEncryptUtile;
 import io.cordova.zhqy.utils.BaseActivity2;
 import io.cordova.zhqy.utils.BitmapUtils;
 import io.cordova.zhqy.utils.ChangeBrightnessUtils;
+import io.cordova.zhqy.utils.CheckLocationEnableUtils;
 import io.cordova.zhqy.utils.CookieUtils;
 import io.cordova.zhqy.utils.DensityUtil;
 import io.cordova.zhqy.utils.FinishActivity;
@@ -523,6 +524,7 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
             int locationWhere = location.getLocationWhere();
 
             Log.e("errorCode",errorCode+"");
+            //ToastUtils.showToast(BaseWebCloseActivity.this,"百度定位状态码:"+errorCode+"");
             Log.e("latitude",latitude+"");
             Log.e("longitude",longitude+"");
             Log.e("altitude——base",altitude+"");
@@ -590,6 +592,22 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
             SPUtils.put(BaseWebCloseActivity.this,"speed",speed+"");
             SPUtils.put(BaseWebCloseActivity.this,"direction",direction+"");
             SPUtils.put(BaseWebCloseActivity.this,"locationWhere",locationWhere+"");
+            SPUtils.put(BaseWebCloseActivity.this,"errorCode",errorCode+"");
+
+            if(locationFlag == 1){//第一种定位无extraInfo
+                if(CheckLocationEnableUtils.isLocationEnabled(BaseWebCloseActivity.this)){
+                    ceshiData(invocationLogAppIdLocation,invocationLogFunctionLocation, "nativeGetLocation");
+                }else {
+                    ToastUtils.showToast(BaseWebCloseActivity.this,"请开启位置信息功能!");
+                }
+
+            }else if(locationFlag == 2){//第二种定位有extraInfo
+                if(CheckLocationEnableUtils.isLocationEnabled(BaseWebCloseActivity.this)){
+                    ceshiData2(invocationLogAppIdLocation,invocationLogFunctionLocation, "nativeGetLocation",needExtraInfoLocation);
+                }else {
+                    ToastUtils.showToast(BaseWebCloseActivity.this,"请开启位置信息功能!");
+                }
+            }
         }
     }
 
@@ -1665,6 +1683,9 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
 
     private static final int QR_CODE = 55846;
     private Handler deliver = new Handler(Looper.getMainLooper());
+    private String invocationLogAppIdLocation= "";
+    private String invocationLogFunctionLocation= "";
+    private String needExtraInfoLocation= "";
     public class AndroidInterface {
 
 
@@ -1729,7 +1750,10 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
         @JavascriptInterface
         public void nativeGetLocation(final String invocationLogAppId,final String invocationLogFunction,final String needExtraInfo) {
 
-                if (EasyPermissions.hasPermissions(BaseWebCloseActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            invocationLogAppIdLocation = invocationLogAppId;
+            invocationLogFunctionLocation = invocationLogFunction;
+            needExtraInfoLocation = needExtraInfo;
+               /* if (EasyPermissions.hasPermissions(BaseWebCloseActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     ceshiData2(invocationLogAppId,invocationLogFunction, "nativeGetLocation",needExtraInfo);
 
                 } else {//没有相应权限，获取相机权限
@@ -1741,9 +1765,14 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
                             .isDebug(true)
                             .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION)
                             .request();
-                }
+                }*/
 
-
+            permissionsUtil = PermissionsUtil
+                    .with(BaseWebCloseActivity.this)
+                    .requestCode(11)
+                    .isDebug(true)
+                    .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION,PermissionsUtil.Permission.Phone.READ_PHONE_STATE)
+                    .request();
 
 
 
@@ -1752,16 +1781,25 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
 
         @JavascriptInterface
         public void nativeGetLocation(final String invocationLogAppId,final String invocationLogFunction) {
-            if (EasyPermissions.hasPermissions(BaseWebCloseActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            invocationLogAppIdLocation = invocationLogAppId;
+            invocationLogFunctionLocation = invocationLogFunction;
+            /*if (EasyPermissions.hasPermissions(BaseWebCloseActivity.this, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_PHONE_STATE)) {
                 ceshiData(invocationLogAppId,invocationLogFunction, "nativeGetLocation");
             } else {
                 permissionsUtil = PermissionsUtil
                         .with(BaseWebCloseActivity.this)
                         .requestCode(0)
                         .isDebug(true)
-                        .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION)
+                        .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION,PermissionsUtil.Permission.Phone.READ_PHONE_STATE)
                         .request();
-            }
+            }*/
+
+            permissionsUtil = PermissionsUtil
+                    .with(BaseWebCloseActivity.this)
+                    .requestCode(10)
+                    .isDebug(true)
+                    .permissions(PermissionsUtil.Permission.Location.ACCESS_FINE_LOCATION,PermissionsUtil.Permission.Phone.READ_PHONE_STATE)
+                    .request();
 
         }
 
@@ -3209,6 +3247,7 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
         return extension;
     }
 
+    private int locationFlag = 0;
     @Override
     public void onPermissionsGranted(int requestCode, String... permission) {
         Log.e("权限获取回调222","onPermissionsGranted");
@@ -3218,6 +3257,12 @@ public class BaseWebCloseActivity extends BaseActivity2 implements PermissionsUt
             getMyLocation();
         }else if(requestCode == 1){
             onScanQR();
+        }else if(requestCode == 10){
+            locationFlag = 1;
+            getMyLocation();
+        }else if(requestCode == 11){
+            locationFlag = 2;
+            getMyLocation();
         }
 
     }

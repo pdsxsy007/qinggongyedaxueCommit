@@ -3,10 +3,15 @@ package io.cordova.zhqy.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
@@ -16,6 +21,8 @@ import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import io.cordova.zhqy.R;
@@ -46,12 +53,27 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
     @Override
     protected void convert(final ViewHolder holder, final SysMsgBean.ObjBean s, int position) {
         String str= s.getMessageAppName();
+        String messageTitle = s.getMessageTitle();
+
+        TextView tv_name = holder.getConvertView().findViewById(R.id.tv_name);
         if(str != null){
-            holder.setText(R.id.tv_name,"["+str+"]");
+            SpannableString string = new SpannableString("["+str+"]"+"    "+messageTitle);
+            StyleSpan span = new StyleSpan(Typeface.BOLD);
+            string.setSpan(span,0,str.length()+2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //holder.setText(R.id.tv_name,"["+str+"]"+"    "+messageTitle);
+            tv_name.setText(string);
         }else {
-            holder.setText(R.id.tv_name,"[系统消息]");
+            //holder.setText(R.id.tv_name,"[系统消息]"+"    "+messageTitle);
+            SpannableString string = new SpannableString("[系统消息]"+"    "+messageTitle);
+            StyleSpan span = new StyleSpan(Typeface.BOLD);
+            string.setSpan(span,0,6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //holder.setText(R.id.tv_name,"["+str+"]"+"    "+messageTitle);
+            tv_name.setText(string);
         }
-        holder.setText(R.id.tv_present,s.getMessageTitle());
+        holder.setText(R.id.tv_name1,s.getMessageSender());
+        String messageSendTime = s.getMessageSendTime()+"";
+        String date = timeStamp2Date(messageSendTime, "yyyy-MM-dd HH:mm:ss");
+        holder.setText(R.id.tv_present,date);
 
         ImageView imageView = holder.getConvertView().findViewById(R.id.oa_img);
 
@@ -105,6 +127,7 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
         }else {//已读
             holder.setTextColor(R.id.tv_name,Color.parseColor("#707070"));
             holder.setTextColor(R.id.tv_present,Color.parseColor("#707070"));
+            holder.setTextColor(R.id.tv_name1,Color.parseColor("#707070"));
             holder.setVisible(R.id.rl_jiaobiao,false);
         }
 
@@ -166,5 +189,16 @@ public class MyRefrshAdapter extends CommonAdapter<SysMsgBean.ObjBean> {
 
             }
         });
+    }
+
+    public static String timeStamp2Date(String seconds,String format) {
+        if(seconds == null || seconds.isEmpty() || seconds.equals("null")){
+            return "";
+        }
+        if(format == null || format.isEmpty()){
+            format = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(new Date(Long.valueOf(seconds)));
     }
 }
