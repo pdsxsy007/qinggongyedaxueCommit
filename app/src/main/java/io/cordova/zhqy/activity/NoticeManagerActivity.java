@@ -37,8 +37,10 @@ public class NoticeManagerActivity extends BaseActivity2 {
         String isOpen = (String) SPUtils.get(MyApp.getInstance(), "isOpen", "");
         if(isOpen.equals("") || isOpen.equals("1")){
             msgNotice.setImageResource(R.mipmap.switch_open_icon);
+            flag = "1";
         }else {
             msgNotice.setImageResource(R.mipmap.switch_close_icon);
+            flag = "0";
         }
         msgNotice.setOnClickListener(new View.OnClickListener() {
             @Override

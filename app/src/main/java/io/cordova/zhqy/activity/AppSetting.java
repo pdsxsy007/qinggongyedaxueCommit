@@ -50,6 +50,9 @@ import io.cordova.zhqy.widget.CustomDialog;
 import io.cordova.zhqy.widget.finger.CommonTipDialog;
 import io.cordova.zhqy.widget.finger.FingerprintVerifyDialog2;
 
+import static io.cordova.zhqy.activity.SplashActivity.getLocalVersionName;
+import static io.cordova.zhqy.utils.MyApp.getInstance;
+
 /**
  * Created by Administrator on 2019/2/18 0018.
  */
@@ -106,7 +109,7 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
     @Override
     protected void initView() {
         super.initView();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             helper = FingerprintHelper.getInstance();
             helper.init(getApplicationContext());
             helper.setCallback(this);
@@ -118,8 +121,8 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
             }
         }else {
             ll_finger.setVisibility(View.GONE);
-        }
-
+        }*/
+        ll_finger.setVisibility(View.GONE);
 
         tvTitle.setText("设置");
         //startNoticeON();
@@ -128,8 +131,8 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
 
         localVersionName = getLocalVersionName(this);
         tv_version.setText(localVersionName);
-        isOpen = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
-        setSwitchStatus();
+        //isOpen = SPUtil.getInstance().getBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN);
+        //setSwitchStatus();
 
         ll_shengwu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,77 +292,155 @@ public class AppSetting extends BaseActivity2 implements FingerprintHelper.Simpl
     }
     String portalVersionNumber;
     private void checkVersion() {
+        String userId = (String) SPUtils.get(getInstance(), "userId", "");
         ViewUtils.createLoadingDialog(this);
-        OkGo.<String>get(UrlRes.HOME_URL+UrlRes.getNewVersionInfo)
-                .params("system","android")
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Log.e("ss",response.body());
-                        UpdateBean updateBean = JSON.parseObject(response.body(),UpdateBean.class);
+        if(userId.equals("")){
+            OkGo.<String>get(UrlRes.HOME_URL+UrlRes.getNewVersionInfo)
+                    .params("system","android")
+                    .params("currentVersion",getLocalVersionName(this))
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Log.e("ss",response.body());
+                            UpdateBean updateBean = JSON.parseObject(response.body(),UpdateBean.class);
 
-                        portalVersionNumber = updateBean.getObj().getPortalVersionNumber();
-                        String portalVersionDownloadAdress = updateBean.getObj().getPortalVersionDownloadAdress();
-                        if(localVersionName.equals(portalVersionNumber)){
-                            ToastUtils.showToast(AppSetting.this,"当前已是最新版本!");
-                        }else {
+                            portalVersionNumber = updateBean.getObj().getPortalVersionNumber();
+                            String portalVersionDownloadAdress = updateBean.getObj().getPortalVersionDownloadAdress();
+                            if(localVersionName.equals(portalVersionNumber)){
+                                ToastUtils.showToast(AppSetting.this,"当前已是最新版本!");
+                            }else {
                            /* Intent intent = new Intent(AppSetting.this,InfoDetailsActivity.class);
                             intent.putExtra("appUrl",portalVersionDownloadAdress);
                             intent.putExtra("title2","下载地址");
                             startActivity(intent);*/
 
-                            String[] split = portalVersionNumber.split("\\.");
-                            String[] splitLocal = localVersionName.split("\\.");
-                            if(split.length == 3 && splitLocal.length == 3) {
-                                int sp0 = Integer.parseInt(split[0]);//服务器版本号
-                                int sp1 = Integer.parseInt(split[1]);
-                                int sp2 = Integer.parseInt(split[2]);
-                                int sl0 = Integer.parseInt(splitLocal[0]);//本地版本号
-                                int sl1 = Integer.parseInt(splitLocal[1]);
-                                int sl2 = Integer.parseInt(splitLocal[2]);
+                                String[] split = portalVersionNumber.split("\\.");
+                                String[] splitLocal = localVersionName.split("\\.");
+                                if(split.length == 3 && splitLocal.length == 3) {
+                                    int sp0 = Integer.parseInt(split[0]);//服务器版本号
+                                    int sp1 = Integer.parseInt(split[1]);
+                                    int sp2 = Integer.parseInt(split[2]);
+                                    int sl0 = Integer.parseInt(splitLocal[0]);//本地版本号
+                                    int sl1 = Integer.parseInt(splitLocal[1]);
+                                    int sl2 = Integer.parseInt(splitLocal[2]);
 
-                                if (sp0 == sl0) {//主版本号相等
-                                    //判断第二位
-                                    if (sp1 == sl1) {//服务器第二位版本号等于于本地第二位版本号 不执行更新操作
+                                    if (sp0 == sl0) {//主版本号相等
+                                        //判断第二位
+                                        if (sp1 == sl1) {//服务器第二位版本号等于于本地第二位版本号 不执行更新操作
 
-                                        if (sp2 <= sl2) {//服务器第三位版本号等于于本地第三位版本号 不执行更新操作
+                                            if (sp2 <= sl2) {//服务器第三位版本号等于于本地第三位版本号 不执行更新操作
 
-                                        } else {
+                                            } else {
+                                                Intent intent = new Intent(AppSetting.this,InfoDetailsActivity2.class);
+                                                intent.putExtra("appUrl",portalVersionDownloadAdress);
+                                                intent.putExtra("title2","下载地址");
+                                                startActivity(intent);
+                                            }
+
+
+                                        } else if (sp1 < sl1) {//服务器第二位版本号小于本地第二位版本号 不执行更新操作
+
+                                        } else {//服务器第二位版本号大于本地第二位版本号 不执行更新操作
                                             Intent intent = new Intent(AppSetting.this,InfoDetailsActivity2.class);
                                             intent.putExtra("appUrl",portalVersionDownloadAdress);
                                             intent.putExtra("title2","下载地址");
                                             startActivity(intent);
                                         }
 
+                                    } else if (sp0 < sl0) {//服务器主版本号小于本地主版本号 不执行更新操作
 
-                                    } else if (sp1 < sl1) {//服务器第二位版本号小于本地第二位版本号 不执行更新操作
-
-                                    } else {//服务器第二位版本号大于本地第二位版本号 不执行更新操作
+                                    } else {//服务器主版本号大于本地版本号 执行更新操作
                                         Intent intent = new Intent(AppSetting.this,InfoDetailsActivity2.class);
                                         intent.putExtra("appUrl",portalVersionDownloadAdress);
                                         intent.putExtra("title2","下载地址");
                                         startActivity(intent);
                                     }
-
-                                } else if (sp0 < sl0) {//服务器主版本号小于本地主版本号 不执行更新操作
-
-                                } else {//服务器主版本号大于本地版本号 执行更新操作
-                                    Intent intent = new Intent(AppSetting.this,InfoDetailsActivity2.class);
-                                    intent.putExtra("appUrl",portalVersionDownloadAdress);
-                                    intent.putExtra("title2","下载地址");
-                                    startActivity(intent);
                                 }
                             }
+                            ViewUtils.cancelLoadingDialog();
                         }
-                        ViewUtils.cancelLoadingDialog();
-                    }
 
-                    @Override
-                    public void onError(Response<String> response) {
-                        super.onError(response);
-                        ViewUtils.cancelLoadingDialog();
-                    }
-                });
+                        @Override
+                        public void onError(Response<String> response) {
+                            super.onError(response);
+                            ViewUtils.cancelLoadingDialog();
+                        }
+                    });
+        }else {
+            OkGo.<String>get(UrlRes.HOME_URL+UrlRes.getNewVersionInfo)
+                    .params("system","android")
+                    .params("currentVersion",getLocalVersionName(this))
+                    .params("memberName",userId)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Log.e("ss",response.body());
+                            UpdateBean updateBean = JSON.parseObject(response.body(),UpdateBean.class);
+
+                            portalVersionNumber = updateBean.getObj().getPortalVersionNumber();
+                            String portalVersionDownloadAdress = updateBean.getObj().getPortalVersionDownloadAdress();
+                            if(localVersionName.equals(portalVersionNumber)){
+                                ToastUtils.showToast(AppSetting.this,"当前已是最新版本!");
+                            }else {
+                           /* Intent intent = new Intent(AppSetting.this,InfoDetailsActivity.class);
+                            intent.putExtra("appUrl",portalVersionDownloadAdress);
+                            intent.putExtra("title2","下载地址");
+                            startActivity(intent);*/
+
+                                String[] split = portalVersionNumber.split("\\.");
+                                String[] splitLocal = localVersionName.split("\\.");
+                                if(split.length == 3 && splitLocal.length == 3) {
+                                    int sp0 = Integer.parseInt(split[0]);//服务器版本号
+                                    int sp1 = Integer.parseInt(split[1]);
+                                    int sp2 = Integer.parseInt(split[2]);
+                                    int sl0 = Integer.parseInt(splitLocal[0]);//本地版本号
+                                    int sl1 = Integer.parseInt(splitLocal[1]);
+                                    int sl2 = Integer.parseInt(splitLocal[2]);
+
+                                    if (sp0 == sl0) {//主版本号相等
+                                        //判断第二位
+                                        if (sp1 == sl1) {//服务器第二位版本号等于于本地第二位版本号 不执行更新操作
+
+                                            if (sp2 <= sl2) {//服务器第三位版本号等于于本地第三位版本号 不执行更新操作
+
+                                            } else {
+                                                Intent intent = new Intent(AppSetting.this,InfoDetailsActivity2.class);
+                                                intent.putExtra("appUrl",portalVersionDownloadAdress);
+                                                intent.putExtra("title2","下载地址");
+                                                startActivity(intent);
+                                            }
+
+
+                                        } else if (sp1 < sl1) {//服务器第二位版本号小于本地第二位版本号 不执行更新操作
+
+                                        } else {//服务器第二位版本号大于本地第二位版本号 不执行更新操作
+                                            Intent intent = new Intent(AppSetting.this,InfoDetailsActivity2.class);
+                                            intent.putExtra("appUrl",portalVersionDownloadAdress);
+                                            intent.putExtra("title2","下载地址");
+                                            startActivity(intent);
+                                        }
+
+                                    } else if (sp0 < sl0) {//服务器主版本号小于本地主版本号 不执行更新操作
+
+                                    } else {//服务器主版本号大于本地版本号 执行更新操作
+                                        Intent intent = new Intent(AppSetting.this,InfoDetailsActivity2.class);
+                                        intent.putExtra("appUrl",portalVersionDownloadAdress);
+                                        intent.putExtra("title2","下载地址");
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                            ViewUtils.cancelLoadingDialog();
+                        }
+
+                        @Override
+                        public void onError(Response<String> response) {
+                            super.onError(response);
+                            ViewUtils.cancelLoadingDialog();
+                        }
+                    });
+        }
+
     }
 
 

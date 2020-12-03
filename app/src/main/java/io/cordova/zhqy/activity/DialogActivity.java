@@ -249,7 +249,8 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                                     boolean success = baseBean.isSuccess();
                                     imageid = 0;
                                     if(success){
-
+                                        //签名方式签名方式(0:人脸识别,1:指纹,2:PIN码,3:面部识别)
+                                        SPUtils.put(DialogActivity.this,"caSignType","0");
                                         getSDKSignData();
 
                                     }else {
@@ -735,6 +736,8 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
                 .params( "signId",signId)
                 .params( "cert",cert)
                 .params( "signature",signature)
+                .params( "signType",(String) SPUtils.get(this,"caSignType",""))
+                .params( "singer",(String) SPUtils.get(this,"userId",""))
                 .execute(new StringCallback(){
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -840,6 +843,8 @@ public class DialogActivity extends BaseActivity3 implements View.OnClickListene
             SPUtil.getInstance().putBoolean(Constants.SP_HAD_OPEN_FINGERPRINT_LOGIN, true);
             saveLocalFingerprintInfo();
             //SPUtils.put(CertificateSignTypeActivity.this,"signType","1");
+            //签名方式签名方式(0:人脸识别,1:指纹,2:PIN码,3:面部识别)
+            SPUtils.put(DialogActivity.this,"caSignType","1");
             getSDKSignData();
         }
     }

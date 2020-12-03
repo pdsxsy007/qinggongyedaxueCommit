@@ -287,6 +287,8 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
                             String signature = result.getSignature();
                             String cert = result.getCert();
 
+                            //签名方式签名方式(0:人脸识别,1:指纹,2:PIN码,3:面部识别)
+                            SPUtils.put(CertificateActivateNextTwoActivity.this,"caSignType","2");
                             clickSignData(signature,cert);
                         }
                     });
@@ -343,6 +345,8 @@ public class CertificateActivateNextTwoActivity extends BaseActivity {
                 .params( "signId",signId)
                 .params( "cert",cert)
                 .params( "signature",signature)
+                .params( "signType",(String) SPUtils.get(this,"caSignType",""))
+                .params( "singer",(String) SPUtils.get(this,"userId",""))
                 .execute(new StringCallback(){
                     @Override
                     public void onSuccess(Response<String> response) {
